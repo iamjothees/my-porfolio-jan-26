@@ -16,7 +16,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="z-10 max-w-6xl w-full"
+                className="z-10 max-w-12xl w-full"
             >
                 {/* Name Tag */}
                 <motion.p
@@ -29,17 +29,17 @@ export default function Hero() {
                 </motion.p>
 
                 {/* Main Headline */}
-                <h1 className="text-5xl md:text-8xl font-bold text-white mb-8 leading-tight tracking-tight">
-                    Full-Stack Engineer. <br className="hidden md:block" />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-pink">
-                        Part-Time Family Financier.
+                <h1 className="text-4xl md:text-8xl font-bold text-white mb-8 leading-tight tracking-tight break-words max-w-full">
+                    Full-Stack Engineer. <br className="block" />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-pink inline-block">
+                        Part-Time Burgman Pioneer.
                     </span>
                 </h1>
 
                 {/* Subtitle / Description */}
                 <p className="text-lg md:text-2xl text-gray-400 max-w-2xl mx-auto mb-12 font-light leading-relaxed flex flex-col md:block items-center">
                     <span>Fluent in <span className="text-white font-medium">Core PHP, Laravel & React</span>. Learning <span className="text-white font-medium">Go</span> because the benchmarks told me to.</span>
-                    <span className="mt-8 md:mt-2 block flex items-center justify-center">
+                    <span className="mt-8 md:mt-2 block flex items-center justify-center italic font-normal">
                         Cruising through life (and bugs) at
                     </span>
                     <Speedometer />
@@ -50,6 +50,7 @@ export default function Hero() {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
                         className="bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-colors shadow-[0px_0px_20px_rgba(255,255,255,0.3)]"
                     >
                         View Works

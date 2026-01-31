@@ -101,3 +101,12 @@ body {
     clip: rect(2px, 9999px, 99px, 0);
   }
 }
+
+@keyframes scan {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0%); }
+}
+
+.animate-scan {
+  animation: scan 3s linear infinite;
+}

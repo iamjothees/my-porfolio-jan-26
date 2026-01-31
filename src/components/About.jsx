@@ -24,7 +24,7 @@ export default function About() {
                         The <span className="text-neon-pink">Indoor Enthusiast</span>
                     </h2>
                     <p className="text-gray-400 max-w-2xl mx-auto">
-                        Full-Stack Sorcerer. Lefty. Anti-Solar Agent.
+                        Full-Stack Sorcerer. Lefty. Certified Homebody.
                     </p>
                 </motion.div>
 
@@ -116,7 +116,7 @@ export default function About() {
                                     The "Chill" Simulator
                                 </h3>
                                 <p className="text-gray-400 text-sm mb-8">
-                                    I can sit on my balcony (simulated) for hours. Can you survive 30 seconds of doing absolutely nothing?
+                                    I can stay indoors for days (it's cozy in here). Can you survive 30 seconds of digital hibernation?
                                 </p>
                             </div>
 
@@ -145,7 +145,7 @@ export default function About() {
                         <div className="space-y-3">
                             <h4 className="text-neon-green font-mono text-sm uppercase tracking-wider">Mon - Sat: The Process</h4>
                             <p className="text-gray-300 leading-relaxed text-sm">
-                                I don't rush. I <span className="text-white font-medium">cruise through the process</span>.
+                                I don't rush. I <span className="text-white font-medium">cruise through the process</span>. <br />
                                 My debugging philosophy? Simple.
                                 <code className="bg-gray-800 px-1 py-0.5 rounded text-neon-pink mx-1">dd($var)</code> and
                                 <code className="bg-gray-800 px-1 py-0.5 rounded text-neon-blue mx-1">console.log()</code>.
@@ -188,15 +188,15 @@ function BalconySimulator() {
     const [isActive, setIsActive] = useState(false);
 
     const MESSAGES = [
-        { p: 1, text: "Finding a comfortable spot..." },
-        { p: 10, text: "Adjusting cushions..." },
-        { p: 20, text: "Sipping coffee..." },
-        { p: 30, text: "Watching a random bird..." },
-        { p: 45, text: "Contemplating variable names..." },
-        { p: 60, text: "Suppressing the sun..." },
-        { p: 80, text: "Entering Zen Mode..." },
-        { p: 95, text: "Almost enlightened..." },
-        { p: 100, text: "ACHIEVEMENT UNLOCKED: Master Loafer" }
+        { p: 1, text: "Initializing hibernation protocols..." },
+        { p: 10, text: "Ordering digital snacks..." },
+        { p: 20, text: "Routing power to AC..." },
+        { p: 30, text: "Optimizing comfort levels..." },
+        { p: 45, text: "Buffering Netflix queue..." },
+        { p: 60, text: "Ignoring outdoor notifications..." },
+        { p: 80, text: "Syncing circadian rhythm to 'Night Owl'..." },
+        { p: 95, text: "Outdoor activities: POSTPONED." },
+        { p: 100, text: "ACHIEVEMENT UNLOCKED: Indoor Zen Master" }
     ];
 
     useEffect(() => {
@@ -223,10 +223,16 @@ function BalconySimulator() {
         if (isActive && currentMsg) setStatus(currentMsg.text);
     }, [progress, isActive]);
 
+    const [isTouch, setIsTouch] = useState(false);
+
+    useEffect(() => {
+        setIsTouch(('ontouchstart' in window) || navigator.maxTouchPoints > 0);
+    }, []);
+
     return (
         <div className="w-full h-full flex flex-col justify-end">
             <div className="mb-4 h-8 flex items-center justify-between text-xs font-mono text-neon-green">
-                <span>{status}</span>
+                <span className="truncate mr-2">{status}</span>
                 <span>{progress}%</span>
             </div>
 
@@ -234,24 +240,39 @@ function BalconySimulator() {
                 <motion.div
                     className="h-full bg-gradient-to-r from-neon-blue to-neon-pink"
                     animate={{ width: `${progress}%` }}
-                    transition={{ useEase: "linear", duration: 0.6 }}
+                    transition={{ type: "tween", ease: "linear", duration: 0.1 }}
                 />
             </div>
 
             <button
-                className={`w-full py-4 rounded-xl font-bold transition-all ${progress === 100
+                className={`w-full py-4 rounded-xl font-bold transition-all select-none touch-none ${progress === 100
                     ? "bg-neon-green text-black cursor-default"
                     : isActive
                         ? "bg-gray-800 text-gray-400 border border-gray-600"
                         : "bg-white text-black hover:bg-gray-200"
                     }`}
-                onMouseEnter={() => progress < 100 && setIsActive(true)}
-                onMouseLeave={() => progress < 100 && setIsActive(false)}
+                onMouseEnter={() => !isTouch && progress < 100 && setIsActive(true)}
+                onMouseLeave={() => !isTouch && progress < 100 && setIsActive(false)}
+                onTouchStart={(e) => {
+                    if (progress < 100) {
+                        setIsActive(true);
+                    }
+                }}
+                onTouchEnd={(e) => {
+                    if (progress < 100) {
+                        setIsActive(false);
+                    }
+                }}
+                onContextMenu={(e) => e.preventDefault()} // Prevent right click on hold
             >
-                {progress === 100 ? "You are now one with the balcony." : isActive ? "Keep hovering to chill..." : "Hover to Chill"}
+                {progress === 100
+                    ? "Maximum Comfort Achieved."
+                    : isActive
+                        ? (isTouch ? "Holding Simulation..." : "Charging Social Battery...")
+                        : (isTouch ? "Hold to Hibernate" : "Hover to Hibernate")}
             </button>
             <p className="text-center text-xs text-gray-600 mt-2">
-                (Don't move your mouse away or you lose the vibe)
+                {isTouch ? "(Don't lift your finger or you lose the vibe)" : "(Don't move your mouse away or you lose the vibe)"}
             </p>
         </div>
     );
