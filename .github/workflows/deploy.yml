@@ -26,13 +26,11 @@ jobs:
         run: npm run build # Vite outputs to the 'dist' folder by default
 
       - name: Deploy to Hostinger via SSH
-        uses: easedy/ssh-deploy@main
-        env:
-          ARGS: "-rlgoDzvc --delete"
-          SOURCE: "dist/" # Vite's default output
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_USER: ${{ secrets.SSH_USER }}
-          REMOTE_PORT: ${{ secrets.SSH_PORT }}
-          TARGET: "~/domains/joecodes.in/public_html" 
-          EXCLUDE: "/node_modules/"
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "dist/"
+          target: "~/domains/joecodes.in/public_html/" 
