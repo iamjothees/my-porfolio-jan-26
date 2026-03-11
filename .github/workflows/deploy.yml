@@ -32,5 +32,5 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "dist/"
+          source: "dist/*"
           target: "~/domains/joecodes.in/public_html/" 
