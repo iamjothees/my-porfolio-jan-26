@@ -34,3 +34,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           source: "dist/*"
           target: "~/domains/joecodes.in/public_html/" 
+          strip_components: 1
