@@ -25,7 +25,7 @@ export default function Hero() {
                     transition={{ delay: 0.2 }}
                     className="text-gray-400 font-mono text-sm md:text-base mb-6 tracking-widest uppercase"
                 >
-                    <span className="text-white font-normal">Jotheeswaran</span> <span className="text-neon-green mx-2">•</span> <span className="text-white font-normal">Joeee</span> <span className="text-neon-green mx-2">•</span> <span className="text-white font-normal lowercase">joecodes.in</span>
+                    <span className="text-white font-normal">Jotheeswaran</span> <span className="text-neon-green mx-2">•</span> <span className="text-white font-normal">Joe</span> <span className="text-neon-green mx-2">•</span> <span className="text-white font-normal lowercase">joecodes.in</span>
                 </motion.p>
 
                 {/* Main Headline */}
