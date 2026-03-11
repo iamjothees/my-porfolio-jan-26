@@ -53,6 +53,7 @@ export default function Contact() {
                         pigeon.style.top = `${Math.random() * (window.innerHeight - 100)}px`;
                         pigeon.style.fontSize = "3rem";
                         pigeon.style.zIndex = "9999";
+                        pigeon.style.whiteSpace = "nowrap";
                         pigeon.style.transition = "left 2s linear";
                         document.body.appendChild(pigeon);
 
