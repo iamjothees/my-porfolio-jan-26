@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useSpring, useMotionValue, useTransform, AnimatePresence } from "motion/react";
-import { Zap, Octagon, Wind } from "lucide-react";
+import { Zap, Octagon, Wind, ArrowUpRight, Github } from "lucide-react";
 
 export default function Hero() {
     return (
@@ -18,6 +18,52 @@ export default function Hero() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="z-10 max-w-12xl w-full"
             >
+                {/* Status Badges & Identity */}
+                <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-neon-green/10 border border-neon-green/30 text-neon-green">
+                        <span className="w-2 h-2 rounded-full bg-neon-green animate-pulse" />
+                        <span>AVAILABLE FOR FREELANCE & ARCHITECTURE</span>
+                    </span>
+                    <a
+                        href="https://github.com/iamjothees"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:border-white/30 transition-all"
+                    >
+                        <Github size={13} />
+                        <span>VIEW REPO</span>
+                        <ArrowUpRight size={12} className="text-gray-400" />
+                    </a>
+                </div>
+
+                {/* PRIMARY HERO TERMINAL BANNER / SHOWCASE BRIDGE */}
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15, duration: 0.6 }}
+                    className="max-w-4xl mx-auto mb-8 px-4 py-3 rounded-2xl bg-gray-950/90 border border-neon-blue/40 shadow-[0_0_30px_rgba(0,255,255,0.18)] backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left group hover:border-neon-blue/70 transition-all"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-xl bg-neon-blue/10 border border-neon-blue/30 text-neon-blue shrink-0">
+                            <Zap size={18} className="fill-current text-neon-blue animate-pulse" />
+                        </div>
+                        <div className="text-xs md:text-sm font-mono text-gray-200 leading-snug">
+                            <span className="text-neon-blue font-bold">⚡ SYSTEM UPDATE:</span>{" "}
+                            Full project directory, live ERP systems, and production SaaS MVPs are deployed at{" "}
+                            <span className="text-white font-semibold underline decoration-neon-blue/50">showcase.joecodes.in</span>
+                        </div>
+                    </div>
+
+                    <a
+                        href="https://showcase.joecodes.in/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-mono font-bold bg-neon-blue text-black hover:bg-white hover:shadow-[0_0_20px_rgba(0,255,255,0.4)] transition-all active:scale-95 group-hover:scale-[1.02] cursor-pointer whitespace-nowrap"
+                    >
+                        <span>Explore Production Works →</span>
+                    </a>
+                </motion.div>
+
                 {/* Name Tag */}
                 <motion.p
                     initial={{ opacity: 0 }}
@@ -46,22 +92,25 @@ export default function Hero() {
                 </p>
 
                 {/* CTA Buttons */}
-                <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
+                <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+                    <motion.a
+                        href="https://showcase.joecodes.in/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="bg-gradient-to-r from-neon-blue to-neon-pink text-black px-8 py-4 rounded-full font-bold text-lg hover:opacity-90 transition-all shadow-[0px_0px_25px_rgba(0,255,255,0.3)] inline-flex items-center gap-2"
+                    >
+                        <span>Explore Showcase Portal</span>
+                        <ArrowUpRight size={20} />
+                    </motion.a>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-                        className="bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-colors shadow-[0px_0px_20px_rgba(255,255,255,0.3)]"
+                        className="bg-white/10 text-white border border-white/20 px-8 py-4 rounded-full font-bold text-lg hover:bg-white/20 hover:border-white transition-all shadow-[0px_0px_20px_rgba(255,255,255,0.1)]"
                     >
-                        View Works
-                    </motion.button>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-8 py-4 rounded-full font-bold text-lg text-white border border-gray-700 hover:border-white hover:bg-gray-900 transition-all flex items-center gap-2"
-                    >
-                        <span>Read Blog</span>
-                        <span className="text-xs bg-neon-green text-black px-1.5 py-0.5 rounded font-mono">Coming Soon</span>
+                        View Shipped MVPs
                     </motion.button>
                 </div>
             </motion.div>
@@ -152,8 +201,7 @@ function Speedometer() {
     return (
         <motion.div
             className={`inline-flex items-center gap-3 p-3 rounded-2xl bg-gray-900/80 backdrop-blur-md border transition-all duration-300 ${borderColor} mt-4 relative`}
-            style={{ x: shake ? Math.sin(Date.now()) * shake : 0 }}
-            animate={shake > 0 ? { x: [-1, 1, -1, 1, 0] } : {}}
+            animate={shake > 0 ? { x: [-2, 2, -2, 2, 0] } : {}}
             transition={{ duration: 0.2, repeat: shake > 0 ? Infinity : 0 }}
         >
             {/* Breeze Effect */}
@@ -177,7 +225,7 @@ function Speedometer() {
                                     opacity: [0, 1, 0]
                                 }}
                                 transition={{
-                                    duration: windDuration + Math.random() * 0.5,
+                                    duration: windDuration + (i * 0.15),
                                     repeat: Infinity,
                                     delay: i * 2,
                                     ease: "linear"

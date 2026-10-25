@@ -14,12 +14,23 @@ function App() {
         <Hero />
         <About />
         <Skills />
-        <Projects />
+        {/* Shipped Code & MVPs hidden */}
+        {/* <Projects /> */}
         <Contact />
 
-        <footer className="py-8 text-center text-gray-600 text-xs font-mono">
-          &copy; {new Date().getFullYear()} Jotheeswaran. Use at your own risk. <br />
-          Powered by Caffeine and StackOverflow.
+        <footer className="py-10 px-4 border-t border-gray-900/80 bg-[#070707] text-center text-gray-500 text-xs font-mono">
+          <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-gray-400">
+              <span className="w-2 h-2 rounded-full bg-neon-green inline-block animate-pulse" />
+              <span>KERNEL_VERSION: 2026.1 // JOECODES.IN</span>
+            </div>
+            <div>
+              &copy; {new Date().getFullYear()} Jotheeswaran. Built for high performance & functional chaos.
+            </div>
+            <div className="text-gray-500">
+              Powered by PHP, React & 30km/h Burgman rides.
+            </div>
+          </div>
         </footer>
       </div>
     </main>

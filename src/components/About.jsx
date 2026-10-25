@@ -184,8 +184,8 @@ export default function About() {
 
 function BalconySimulator() {
     const [progress, setProgress] = useState(0);
-    const [status, setStatus] = useState("Idle");
     const [isActive, setIsActive] = useState(false);
+    const [isTouch] = useState(() => typeof window !== "undefined" && (('ontouchstart' in window) || navigator.maxTouchPoints > 0));
 
     const MESSAGES = [
         { p: 1, text: "Initializing hibernation protocols..." },
@@ -214,20 +214,14 @@ function BalconySimulator() {
         return () => clearInterval(interval);
     }, [isActive, progress]);
 
-    // Update message based on progress
-    useEffect(() => {
-        if (progress === 0 && !isActive) setStatus("Ready to chill?");
-        if (!isActive && progress > 0 && progress < 100) setStatus("Hey! You moved! Vibe lost.");
-
-        const currentMsg = MESSAGES.slice().reverse().find(m => progress >= m.p);
-        if (isActive && currentMsg) setStatus(currentMsg.text);
-    }, [progress, isActive]);
-
-    const [isTouch, setIsTouch] = useState(false);
-
-    useEffect(() => {
-        setIsTouch(('ontouchstart' in window) || navigator.maxTouchPoints > 0);
-    }, []);
+    // Derive status directly based on progress and active state
+    const currentMsg = MESSAGES.slice().reverse().find(m => progress >= m.p);
+    let status = "Ready to chill?";
+    if (!isActive && progress > 0 && progress < 100) {
+        status = "Hey! You moved! Vibe lost.";
+    } else if (isActive && currentMsg) {
+        status = currentMsg.text;
+    }
 
     return (
         <div className="w-full h-full flex flex-col justify-end">
@@ -253,12 +247,12 @@ function BalconySimulator() {
                     }`}
                 onMouseEnter={() => !isTouch && progress < 100 && setIsActive(true)}
                 onMouseLeave={() => !isTouch && progress < 100 && setIsActive(false)}
-                onTouchStart={(e) => {
+                onTouchStart={() => {
                     if (progress < 100) {
                         setIsActive(true);
                     }
                 }}
-                onTouchEnd={(e) => {
+                onTouchEnd={() => {
                     if (progress < 100) {
                         setIsActive(false);
                     }
