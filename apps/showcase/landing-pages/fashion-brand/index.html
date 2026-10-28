@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER — Experimental High-Streetwear</title>
+
+    <!--
+    ╔══════════════════════════════════════════════════════════════════════════════╗
+    ║  AETHER: Avant-Garde Streetwear Landing Page                                ║
+    ║  Architecture: Single-file HTML5 / Tailwind CSS (CDN) / Vanilla JS          ║
+    ║  Portfolio Focus: Complex CSS layouts, custom animations, non-standard grids ║
+    ╚══════════════════════════════════════════════════════════════════════════════╝
+    -->
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter (System UI Sans) + JetBrains Mono (Monospace) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'aether-black': '#0C0C0C',
+                        'aether-charcoal': '#141414',
+                        'aether-green': '#C8FF00',
+                        'aether-white': '#F5F5F5',
+                        'aether-gray': '#8A8A8A',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ══════════════════════════════════════════════════════════════════════════
+           BASE STYLES & CUSTOM PROPERTIES
+           ══════════════════════════════════════════════════════════════════════════ */
+        :root {
+            --aether-black: #0C0C0C;
+            --aether-charcoal: #141414;
+            --aether-green: #C8FF00;
+            --aether-white: #F5F5F5;
+            --aether-gray: #8A8A8A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--aether-black);
+            color: var(--aether-white);
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           CUSTOM SCROLLBAR STYLING
+           ══════════════════════════════════════════════════════════════════════════ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--aether-black);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--aether-green);
+            border-radius: 3px;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           SCANLINE SUBTLE OVERLAY
+           ══════════════════════════════════════════════════════════════════════════ */
+        .scanline-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0px,
+                transparent 2px,
+                rgba(0, 0, 0, 0.03) 2px,
+                rgba(0, 0, 0, 0.03) 4px
+            );
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           IMAGE WITH FALLBACK
+           ══════════════════════════════════════════════════════════════════════════ */
+        .img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease, opacity 0.4s ease;
+        }
+
+        .img-wrapper img.loading {
+            opacity: 0;
+        }
+
+        /* Fallback gradient shown while loading or if image fails */
+        .img-fallback {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #1f1f1f 0%, #141414 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: -1;
+        }
+
+        .img-fallback::after {
+            content: '';
+            width: 40%;
+            height: 60%;
+            background: #252525;
+            clip-path: polygon(25% 0%, 75% 0%, 80% 5%, 75% 5%, 75% 100%, 25% 100%, 25% 5%, 20% 5%);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           NAVIGATION: FLOAT-CENTER PILL NAV BAR
+           ══════════════════════════════════════════════════════════════════════════ */
+        .nav-container {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-pill {
+            background: rgba(12, 12, 12, 0.85);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 100px;
+            padding: 0.875rem 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-container.scrolled .nav-pill {
+            padding: 0.625rem 2rem;
+            background: rgba(12, 12, 12, 0.95);
+            border-color: rgba(200, 255, 0, 0.2);
+        }
+
+        .nav-logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.3em;
+            color: var(--aether-white);
+        }
+
+        .nav-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--aether-gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--aether-green);
+        }
+
+        .nav-cart {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: var(--aether-green);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           HERO SECTION: CINEMATIC FASHION EDITORIAL
+           ══════════════════════════════════════════════════════════════════════════ */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, #0C0C0C 0%, #141414 100%);
+            overflow: hidden;
+        }
+
+        .hero-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 2rem;
+            padding: 8rem 4rem 4rem;
+            min-height: 90vh;
+            align-items: center;
+        }
+
+        .hero-left {
+            text-align: right;
+            padding-right: 2rem;
+        }
+
+        .hero-center {
+            position: relative;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-right {
+            text-align: left;
+            padding-left: 2rem;
+        }
+
+        .volume-label {
+            position: absolute;
+            top: 6rem;
+            left: 4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.4em;
+            color: var(--aether-green);
+        }
+
+        .hero-title-large {
+            font-weight: 300;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            color: var(--aether-white);
+        }
+
+        .hero-title-accent {
+            font-weight: 700;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            color: var(--aether-green);
+            display: block;
+        }
+
+        .hero-tagline {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            color: var(--aether-gray);
+            text-transform: uppercase;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .hero-image-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 50%, rgba(12,12,12,0.6) 100%);
+        }
+
+        .hero-scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(180deg, var(--aether-green), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0.5; transform: scaleY(0.8); }
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           GLITCH HOVER EFFECT
+           ══════════════════════════════════════════════════════════════════════════ */
+        .glitch-btn {
+            position: relative;
+            margin-top: 2.5rem;
+            padding: 1.1rem 2.5rem;
+            background: var(--aether-green);
+            color: var(--aether-black);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .glitch-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--aether-white);
+            transition: left 0.4s ease;
+        }
+
+        .glitch-btn:hover::before {
+            left: 0;
+        }
+
+        .glitch-btn:hover {
+            color: var(--aether-black);
+        }
+
+        .glitch-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           THE DROP CAROUSEL
+           ══════════════════════════════════════════════════════════════════════════ */
+        .drop-section {
+            padding: 8rem 0;
+            background: var(--aether-black);
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.4em;
+            color: var(--aether-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-weight: 300;
+            font-size: clamp(2rem, 4vw, 3rem);
+            letter-spacing: -0.02em;
+            color: var(--aether-white);
+        }
+
+        .drop-carousel {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 3rem 4vw;
+            scrollbar-width: none;
+        }
+
+        .drop-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .drop-item {
+            flex: 0 0 32vw;
+            min-height: 70vh;
+            scroll-snap-align: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .drop-item-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 900;
+            font-size: clamp(10rem, 18vw, 16rem);
+            color: rgba(255, 255, 255, 0.03);
+            z-index: 0;
+            pointer-events: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .drop-item-image {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 65%;
+            overflow: hidden;
+        }
+
+        .drop-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .drop-item:hover .drop-item-image img {
+            transform: scale(1.05);
+        }
+
+        /* Blueprint overlay on hover */
+        .drop-item-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(90deg, transparent 49.5%, rgba(200,255,0,0.3) 49.5%, rgba(200,255,0,0.3) 50.5%, transparent 50.5%),
+                linear-gradient(0deg, transparent 49.5%, rgba(200,255,0,0.3) 49.5%, rgba(200,255,0,0.3) 50.5%, transparent 50.5%);
+            background-size: 30px 30px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .drop-item:hover .drop-item-image::after {
+            opacity: 1;
+        }
+
+        .drop-item-info {
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .drop-item-name {
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.02em;
+            color: var(--aether-white);
+        }
+
+        .drop-item-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            color: var(--aether-gray);
+            margin-top: 0.4rem;
+        }
+
+        .drop-item-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--aether-green);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           BENTO-GRID CATEGORIES
+           ══════════════════════════════════════════════════════════════════════════ */
+        .bento-section {
+            padding: 6rem 4vw;
+            background: var(--aether-charcoal);
+        }
+
+        .bento-header {
+            margin-bottom: 3rem;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 280px);
+            gap: 1rem;
+        }
+
+        .bento-tile {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .bento-tile:nth-child(1) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .bento-tile:nth-child(2) {
+            grid-column: span 1;
+        }
+
+        .bento-tile:nth-child(3) {
+            grid-column: span 1;
+        }
+
+        .bento-tile:nth-child(4) {
+            grid-column: span 2;
+        }
+
+        .bento-tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .bento-tile:hover img {
+            transform: scale(1.08);
+        }
+
+        .bento-tile-inner {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            z-index: 2;
+            background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, transparent 100%);
+        }
+
+        .bento-tile-label {
+            font-weight: 600;
+            font-size: clamp(1.25rem, 2vw, 1.75rem);
+            letter-spacing: -0.01em;
+            color: var(--aether-white);
+            margin-bottom: 0.25rem;
+        }
+
+        .bento-tile-sublabel {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.25em;
+            color: var(--aether-green);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .bento-tile:hover .bento-tile-sublabel {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bento-tile:hover {
+            box-shadow: 0 0 40px rgba(200, 255, 0, 0.15);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           PRODUCT MATRIX
+           ══════════════════════════════════════════════════════════════════════════ */
+        .product-section {
+            padding: 8rem 4vw;
+            background: var(--aether-black);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            position: relative;
+            background: var(--aether-charcoal);
+        }
+
+        .product-image {
+            aspect-ratio: 3/4;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .sold-out-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--aether-white);
+            color: var(--aether-black);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            padding: 0.4rem 0.8rem;
+        }
+
+        .product-info {
+            padding: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .product-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+            color: var(--aether-white);
+        }
+
+        .product-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--aether-green);
+        }
+
+        .quick-deploy {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem;
+            background: var(--aether-green);
+            color: var(--aether-black);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-align: center;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover .quick-deploy {
+            transform: translateY(0);
+        }
+
+        .product-card:hover {
+            box-shadow: 0 0 30px rgba(200, 255, 0, 0.1);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           BRAND MANIFESTO
+           ══════════════════════════════════════════════════════════════════════════ */
+        .manifesto-section {
+            padding: 6rem 0;
+            overflow: hidden;
+            background: var(--aether-charcoal);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .marquee-track {
+            display: inline-flex;
+            animation: marquee 25s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .marquee-text {
+            font-weight: 900;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            letter-spacing: 0.08em;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--aether-white);
+            padding: 0 2.5rem;
+        }
+
+        .marquee-text span {
+            color: var(--aether-green);
+            padding: 0 2.5rem;
+        }
+
+        .manifesto-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 5rem;
+            padding: 6rem 4vw;
+            align-items: center;
+        }
+
+        .manifesto-text {
+            font-weight: 300;
+            font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+        }
+
+        .manifesto-text span {
+            color: var(--aether-green);
+            font-weight: 600;
+        }
+
+        .manifesto-statement {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--aether-gray);
+            margin-top: 2rem;
+            font-weight: 300;
+        }
+
+        .manifesto-image {
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(200, 255, 0, 0.2);
+        }
+
+        .manifesto-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .manifesto-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 49%, rgba(200,255,0,0.05) 49%, rgba(200,255,0,0.05) 51%, transparent 51%),
+                        linear-gradient(0deg, transparent 49%, rgba(200,255,0,0.05) 49%, rgba(200,255,0,0.05) 51%, transparent 51%);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           FOOTER
+           ══════════════════════════════════════════════════════════════════════════ */
+        .footer-section {
+            padding: 5rem 4vw;
+            background: var(--aether-black);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-column h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            color: var(--aether-green);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.875rem;
+        }
+
+        .footer-column a {
+            color: var(--aether-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--aether-white);
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--aether-gray);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--aether-green);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .back-to-top-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+        }
+
+        .back-to-top-orbit {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(200, 255, 0, 0.3);
+            border-radius: 50%;
+            animation: orbit-rotate 15s linear infinite;
+        }
+
+        @keyframes orbit-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .back-to-top-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 42px;
+            height: 42px;
+            background: var(--aether-green);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-top-btn:hover {
+            background: var(--aether-white);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           INTERSECTION OBSERVER ANIMATIONS
+           ══════════════════════════════════════════════════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* ══════════════════════════════════════════════════════════════════════════
+           RESPONSIVE
+           ══════════════════════════════════════════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .hero-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 7rem 2rem 2rem;
+            }
+
+            .hero-left, .hero-right {
+                text-align: center;
+                padding: 0;
+            }
+
+            .hero-center {
+                height: 50vh;
+                order: -1;
+            }
+
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: auto;
+            }
+
+            .bento-tile {
+                grid-column: span 1 !important;
+                grid-row: span 1 !important;
+                min-height: 220px;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .manifesto-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .manifesto-image {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-pill {
+                gap: 1.5rem;
+                padding: 0.625rem 1.5rem;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .drop-item {
+                flex: 0 0 80vw;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .drop-section, .bento-section, .product-section {
+                padding: 4rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Scanline Overlay -->
+    <div class="scanline-overlay"></div>
+
+    <!-- ══════════════════════════════════════════════════════════════════════════
+         SECTION 1: DYNAMIC NAVIGATION
+         ══════════════════════════════════════════════════════════════════════════ -->
+    <nav class="nav-container" id="mainNav">
+        <div class="nav-pill">
+            <span class="nav-logo">AETHER</span>
+            <a href="#drops" class="nav-link">[DROPS]</a>
+            <a href="#categories" class="nav-link">[ARCHIVE]</a>
+            <a href="#manifesto" class="nav-link">[LAB]</a>
+            <span class="nav-cart">CART(0)</span>
+        </div>
+    </nav>
+
+    <!-- ══════════════════════════════════════════════════════════════════════════
+         SECTION 2: CINEMATIC HERO
+         ══════════════════════════════════════════════════════════════════════════ -->
+    <section class="hero-section" id="hero">
+        <div class="volume-label">VOL. 04 / DISTORTION</div>
+
+        <div class="hero-layout">
+            <!-- Left: Title -->
+            <div class="hero-left">
+                <h1 class="hero-title-large reveal">
+                    WEAR<br>
+                    <span class="hero-title-accent">THE</span><br>
+                    FUTURE
+                </h1>
+                <p class="hero-tagline reveal reveal-delay-1">Experimental High-Streetwear — 2026</p>
+            </div>
+
+            <!-- Center: Editorial Image -->
+            <div class="hero-center reveal reveal-delay-2">
+                <div class="hero-image-wrapper">
+                    <div class="img-fallback"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80"
+                        alt="Fashion editorial model in techwear"
+                        loading="eager"
+                        onerror="this.parentElement.classList.add('error'); this.style.display='none';"
+                    >
+                </div>
+            </div>
+
+            <!-- Right: CTA -->
+            <div class="hero-right">
+                <p style="font-size: 0.9rem; line-height: 1.8; color: var(--aether-gray); font-weight: 300; max-width: 280px;">
+                    Redefining the boundaries between technology and streetwear culture. Each piece engineered for the next generation.
+                </p>
+                <button class="glitch-btn">
+                    <span>ENTER THE LAB</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="hero-scroll-indicator">
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════════
+         SECTION 3: THE "DROP" CAROUSEL
+         ══════════════════════════════════════════════════════════════════════════ -->
+    <section class="drop-section" id="drops">
+        <div style="padding: 0 4vw;">
+            <p class="section-label reveal">// FEATURED DROPS</p>
+            <h2 class="section-title reveal reveal-delay-1">Latest Collections</h2>
+        </div>
+
+        <div class="drop-carousel">
+            <!-- Drop Item 1 -->
+            <div class="drop-item reveal">
+                <span class="drop-item-number">01</span>
+                <div class="drop-item-image">
+                    <div class="img-fallback"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80"
+                        alt="Quantum Jacket - Tech Outerwear"
+                        loading="lazy"
+                        onerror="this.parentElement.querySelector('.img-fallback').style.display='flex'; this.style.display='none';"
+                    >
+                </div>
+                <div class="drop-item-info">
+                    <div>
+                        <h3 class="drop-item-name">QUANTUM JACKET</h3>
+                        <p class="drop-item-type">TECH OUTERWEAR</p>
+                    </div>
+                    <span class="drop-item-price">$485</span>
+                </div>
+            </div>
+
+            <!-- Drop Item 2 -->
+            <div class="drop-item reveal reveal-delay-1">
+                <span class="drop-item-number">02</span>
+                <div class="drop-item-image">
+                    <div class="img-fallback"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600&q=80"
+                        alt="Void Hoodie - Premium Knitwear"
+                        loading="lazy"
+                        onerror="this.parentElement.querySelector('.img-fallback').style.display='flex'; this.style.display='none';"
+                    >
+                </div>
+                <div class="drop-item-info">
+                    <div>
+                        <h3 class="drop-item-name">VOID HOODIE</h3>
+                        <p class="drop-item-type">PREMIUM KNITWEAR</p>
+                    </div>
+                    <span class="drop-item-price">$295</span>
+                </div>
+            </div>
+
+            <!-- Drop Item 3 -->
+            <div class="drop-item reveal reveal-delay-2">
+                <span class="drop-item-number">03</span>
+                <div class="drop-item-image">
+                    <div class="img-fallback"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&q=80"
+                        alt="Phase Pants - Tech Trousers"
+                        loading="lazy"
+                        onerror="this.parentElement.querySelector('.img-fallback').style.display='flex'; this.style.display='none';"
+                    >
+                </div>
+                <div class="drop-item-info">
+                    <div>
+                        <h3 class="drop-item-name">PHASE PANTS</h3>
+                        <p class="drop-item-type">TECH TROUSERS</p>
+                    </div>
+                    <span class="drop-item-price">$340</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════════
+         SECTION 4: BENTO-GRID CATEGORIES
+         ══════════════════════════════════════════════════════════════════════════ -->
+    <section class="bento-section" id="categories">
+        <div style="padding: 0 4vw;" class="bento-header">
+            <p class="section-label reveal">// CATEGORIES</p>
+            <h2 class="section-title reveal reveal-delay-1">Explore the Collection</h2>
+        </div>
+
+        <div class="bento-grid" style="padding: 0 4vw;">
+            <!-- Outerwear: spans 2x2 -->
+            <div class="bento-tile reveal" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                <div class="img-fallback" style="background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);"></div>
+                <img
+                    src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=80"
+                    alt="Outerwear Collection"
+                    loading="lazy"
+                    onerror="this.style.display='none';"
+                >
+                <div class="bento-tile-inner">
+                    <h3 class="bento-tile-label">Outerwear</h3>
+                    <p class="bento-tile-sublabel">EXPLORE →</p>
+                </div>
+            </div>
+
+            <!-- Accessories -->
+            <div class="bento-tile reveal reveal-delay-1" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                <div class="img-fallback" style="background: linear-gradient(135deg, #1f1f1f 0%, #151515 100%);"></div>
+                <img
+                    src="https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=600&q=80"
+                    alt="Accessories Collection"
+                    loading="lazy"
+                    onerror="this.style.display='none';"
+                >
+                <div class="bento-tile-inner">
+                    <h3 class="bento-tile-label">Accessories</h3>
+                    <p class="bento-tile-sublabel">EXPLORE →</p>
+                </div>
+            </div>
+
+            <!-- Footwear -->
+            <div class="bento-tile reveal reveal-delay-2" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                <div class="img-fallback" style="background: linear-gradient(135deg, #252520 0%, #1a1a18 100%);"></div>
+                <img
+                    src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80"
+                    alt="Footwear Collection"
+                    loading="lazy"
+                    onerror="this.style.display='none';"
+                >
+                <div class="bento-tile-inner">
+                    <h3 class="bento-tile-label">Footwear</h3>
+                    <p class="bento-tile-sublabel">EXPLORE →</p>
+                </div>
+            </div>
+
+            <!-- Digital Wearables: spans 2 columns -->
+            <div class="bento-tile reveal reveal-delay-3" onmousemove="handleTilt(event, this)" onmouseleave="resetTilt(this)">
+                <div class="img-fallback" style="background: linear-gradient(135deg, #1a1a25 0%, #12121a 100%);"></div>
+                <img
+                    src="https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=800&q=80"
+                    alt="Digital Wearables NFT AR"
+                    loading="lazy"
+                    onerror="this.style.display='none';"
+                >
+                <div class="bento-tile-inner">
+                    <h3 class="bento-tile-label">Digital Wearables</h3>
+                    <p class="bento-tile-sublabel">NFT / AR →</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════════
+         SECTION 5: PRODUCT MATRIX
+         ══════════════════════════════════════════════════════════════════════════ -->
+    <section class="product-section" id="products">
+        <div style="padding: 0 4vw; margin-bottom: 3rem;">
+            <p class="section-label reveal">// PRODUCT MATRIX</p>
+            <h2 class="section-title reveal reveal-delay-1">Full Collection</h2>
+        </div>
+
+        <div class="product-grid" style="padding: 0 4vw;">
+            <!-- Product 1 -->
+            <div class="product-card reveal">
+                <div class="product-image">
+                    <span class="sold-out-badge">SOLD OUT</span>
+                    <div class="img-fallback"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&q=80"
+                        alt="Nexus Cargo Pants"
+                        loading="lazy"
+                        onerror="this.parentElement.querySelector('.img-fallback').style.display='flex'; this.style.display='none';"
+                    >
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">NEXUS CARGO</h3>
+                    <span class="product-price">$265</span>
+                </div>
+                <div class="quick-deploy">QUICK-DEPLOY</div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card reveal reveal-delay-1">
+                <div class="product-image">
+                    <div class="img-fallback"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&q=80"
+                        alt="Cipher Long Sleeve"
+                        loading="lazy"
+                        onerror="this.parentElement.querySelector('.img-fallback').style.display='flex'; this.style.display='none';"
+                    >
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">CIPHER LONG SLEEVE</h3>
+                    <span class="product-price">$145</span>
+                </div>
+                <div class="quick-deploy">QUICK-DEPLOY</div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card reveal reveal-delay-2">
+                <div class="product-image">
+                    <div class="img-fallback"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=500&q=80"
+                        alt="Pulse Beanie"
+                        loading="lazy"
+                        onerror="this.parentElement.querySelector('.img-fallback').style.display='flex'; this.style.display='none';"
+                    >
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">PULSE BEANIE</h3>
+                    <span class="product-price">$85</span>
+                </div>
+                <div class="quick-deploy">QUICK-DEPLOY</div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card reveal reveal-delay-3">
+                <div class="product-image">
+                    <span class="sold-out-badge">SOLD OUT</span>
+                    <div class="img-fallback"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&q=80"
+                        alt="Vector Jacket"
+                        loading="lazy"
+                        onerror="this.parentElement.querySelector('.img-fallback').style.display='flex'; this.style.display='none';"
+                    >
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">VECTOR JACKET</h3>
+                    <span class="product-price">$520</span>
+                </div>
+                <div class="quick-deploy">QUICK-DEPLOY</div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card reveal">
+                <div class="product-image">
+                    <div class="img-fallback"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=500&q=80"
+                        alt="Matrix Short"
+                        loading="lazy"
+                        onerror="this.parentElement.querySelector('.img-fallback').style.display='flex'; this.style.display='none';"
+                    >
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">MATRIX SHORT</h3>
+                    <span class="product-price">$175</span>
+                </div>
+                <div class="quick-deploy">QUICK-DEPLOY</div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card reveal reveal-delay-1">
+                <div class="product-image">
+                    <div class="img-fallback"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1618354691438-25bc04584c23?w=500&q=80"
+                        alt="Prime Tee"
+                        loading="lazy"
+                        onerror="this.parentElement.querySelector('.img-fallback').style.display='flex'; this.style.display='none';"
+                    >
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">PRIME TEE</h3>
+                    <span class="product-price">$95</span>
+                </div>
+                <div class="quick-deploy">QUICK-DEPLOY</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════════
+         SECTION 6: BRAND MANIFESTO
+         ══════════════════════════════════════════════════════════════════════════ -->
+    <section class="manifesto-section" id="manifesto">
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <span class="marquee-text">FORM FOLLOWS FUNCTION <span>—</span></span>
+                <span class="marquee-text">AETHER <span>—</span></span>
+                <span class="marquee-text">SUSTAINABLE TECHWEAR <span>—</span></span>
+                <span class="marquee-text">FORM FOLLOWS FUNCTION <span>—</span></span>
+                <span class="marquee-text">AETHER <span>—</span></span>
+                <span class="marquee-text">SUSTAINABLE TECHWEAR <span>—</span></span>
+            </div>
+        </div>
+
+        <div class="manifesto-content">
+            <div class="manifesto-text reveal">
+                We Build <span>the Future</span> of High-Streetwear
+                <p class="manifesto-statement reveal reveal-delay-1">
+                    AETHER represents the intersection of brutalist design philosophy and sustainable technology.
+                    Every garment is engineered for longevity, crafted with precision, and designed to transcend
+                    seasonal trends. This is fashion for the next generation.
+                </p>
+            </div>
+
+            <div class="manifesto-image reveal reveal-delay-2">
+                <div class="img-fallback" style="background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);"></div>
+                <img
+                    src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80"
+                    alt="Aether Lab - Fashion Atelier"
+                    loading="lazy"
+                    onerror="this.style.display='none';"
+                >
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════════
+         SECTION 7: FOOTER
+         ══════════════════════════════════════════════════════════════════════════ -->
+    <footer class="footer-section">
+        <div class="footer-grid">
+            <!-- System Status -->
+            <div class="footer-column reveal">
+                <h4>SYSTEM STATUS</h4>
+                <div class="system-status">
+                    <span class="status-dot"></span>
+                    <span>ALL SYSTEMS OPERATIONAL</span>
+                </div>
+            </div>
+
+            <!-- Connect -->
+            <div class="footer-column reveal reveal-delay-1">
+                <h4>CONNECT</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter / X</a></li>
+                    <li><a href="#">Discord</a></li>
+                    <li><a href="#">TikTok</a></li>
+                </ul>
+            </div>
+
+            <!-- Legal -->
+            <div class="footer-column reveal reveal-delay-2">
+                <h4>LEGAL</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+
+            <!-- Community -->
+            <div class="footer-column reveal reveal-delay-3">
+                <h4>COMMUNITY</h4>
+                <ul>
+                    <li><a href="#">Membership</a></li>
+                    <li><a href="#">Affiliate Program</a></li>
+                    <li><a href="#">Wholesale</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
+            <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: rgba(255,255,255,0.3);">
+                © 2026 AETHER. ALL RIGHTS RESERVED. CRAFTED IN THE LAB. · <strong style="color: var(--aether-green);">Template by</strong> <a href="https://joecodes.in" target="_blank" rel="noopener" style="color: var(--aether-green); text-decoration: none;">joecodes.in</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Circular Back-to-Top -->
+    <div class="back-to-top-container">
+        <div class="back-to-top-orbit"></div>
+        <button class="back-to-top-btn" onclick="scrollToTop()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════════════
+         JAVASCRIPT
+         ══════════════════════════════════════════════════════════════════════════ -->
+    <script>
+        /* Navigation: Shrink on scroll */
+        const nav = document.getElementById('mainNav');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        /* Intersection Observer: Reveal animations */
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -30px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        /* Bento Tilt Effect */
+        function handleTilt(e, element) {
+            const rect = element.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 25;
+            const rotateY = (centerX - x) / 25;
+
+            element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        }
+
+        function resetTilt(element) {
+            element.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        }
+
+        /* Scroll to top */
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* Initialize: Check elements in viewport on load */
+        window.addEventListener('load', () => {
+            revealElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    el.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

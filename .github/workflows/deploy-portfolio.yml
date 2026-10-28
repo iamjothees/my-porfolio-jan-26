@@ -1,9 +1,15 @@
-name: Build and Deplo
+name: Deploy Portfolio (joecodes.in)
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'apps/portfolio/**'
+      - '.github/workflows/deploy-portfolio.yml'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -16,14 +22,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22' # Using Node 22 for better performance with Vite 8
-          cache: 'npm' # Built-in caching for node_modules
+          node-version: '22'
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build Project
-        run: npm run build # Vite outputs to the 'dist' folder by default
+      - name: Build Portfolio
+        run: npm run build:portfolio
 
       - name: Deploy to Hostinger via SSH
         uses: appleboy/scp-action@v0.1.7
@@ -32,6 +38,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "dist/*"
-          target: "~/domains/joecodes.in/public_html/" 
-          strip_components: 1
+          source: "apps/portfolio/dist/*"
+          target: "~/domains/joecodes.in/public_html/"
+          strip_components: 3

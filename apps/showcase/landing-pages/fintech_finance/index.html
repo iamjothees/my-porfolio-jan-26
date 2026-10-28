@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLEAR — Banking for Builders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --cream: #F7F4EE;
+      --warm-white: #FDFCF8;
+      --ink: #1C1B18;
+      --ink-light: #4A4943;
+      --gold: #B8872A;
+      --gold-light: #D4A94B;
+      --rust: #C4622D;
+      --grid-line: #E5E1D8;
+      --card-bg: #FFFFFF;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--gold);
+      color: var(--warm-white);
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--cream);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold);
+    }
+
+    /* ─── LAYOUT ─── */
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(247, 244, 238, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--grid-line);
+      transition: all 0.3s;
+    }
+
+    .nav-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--gold);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--gold);
+    }
+
+    .nav-cta {
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      padding: 0.6rem 1.4rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      padding-top: 72px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      padding: 5rem 2rem 5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-issue {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hero-issue::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(4.5rem, 8vw, 7.5rem);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 2rem;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--ink-light);
+    }
+
+    .hero-title .highlight {
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    .hero-body {
+      max-width: 420px;
+      font-size: 0.875rem;
+      line-height: 1.8;
+      color: var(--ink-light);
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--warm-white);
+      border: none;
+      padding: 1rem 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-primary:hover {
+      background: var(--ink);
+    }
+
+    .btn-primary svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s;
+    }
+
+    .btn-primary:hover svg {
+      transform: translateX(3px);
+    }
+
+    .btn-secondary {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      color: var(--gold);
+    }
+
+    .hero-stats {
+      margin-top: 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--grid-line);
+    }
+
+    .hero-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+    }
+
+    .hero-stat-value {
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .hero-stat-value .currency {
+      font-size: 1.2rem;
+      color: var(--gold);
+      margin-right: 0.1em;
+    }
+
+    .hero-stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+    }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card-stack {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ─── REWARD CARD ─── */
+    .reward-card {
+      width: 340px;
+      height: 440px;
+      background: var(--ink);
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 40px 80px rgba(28, 27, 24, 0.25), 0 0 0 1px rgba(255,255,255,0.05);
+      transform: rotate(8deg);
+      transition: transform 0.4s ease;
+    }
+
+    .reward-card:hover {
+      transform: rotate(0deg) scale(1.02);
+    }
+
+    .card-chip {
+      width: 40px;
+      height: 30px;
+      background: linear-gradient(135deg, #D4A94B, #B8872A);
+      border-radius: 6px;
+      margin-bottom: auto;
+    }
+
+    .card-reward-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-reward-points {
+      font-family: 'Fraunces', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-reward-sub {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.05em;
+    }
+
+    .card-tiers {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .card-tier {
+      flex: 1;
+      padding: 0.75rem 0.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .card-tier-name {
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.25rem;
+    }
+
+    .card-tier-value {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+
+    .card-tier.active {
+      background: rgba(184, 135, 42, 0.15);
+      border-color: rgba(184, 135, 42, 0.4);
+    }
+
+    .card-metal {
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      background: linear-gradient(135deg, #E8C96B, #B8872A);
+      border-radius: 0 20px 0 12px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.55rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    /* ─── EDITORIAL DIVIDER ─── */
+    .editorial-divider {
+      padding: 5rem 0;
+      border-top: 1px solid var(--grid-line);
+      border-bottom: 1px solid var(--grid-line);
+      overflow: hidden;
+    }
+
+    .divider-track {
+      display: flex;
+      gap: 4rem;
+      white-space: nowrap;
+      animation: editorialMarquee 30s linear infinite;
+    }
+
+    @keyframes editorialMarquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .divider-item {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      font-style: italic;
+      color: var(--grid-line);
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+    }
+
+    .divider-item span {
+      color: var(--gold);
+    }
+
+    /* ─── REWARDS SECTION ─── */
+    .rewards-section {
+      padding: 7rem 0;
+    }
+
+    .rewards-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+      align-items: end;
+    }
+
+    .rewards-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .rewards-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--gold);
+    }
+
+    .rewards-intro {
+      font-size: 0.875rem;
+      line-height: 1.8;
+      color: var(--ink-light);
+      font-weight: 300;
+      max-width: 440px;
+    }
+
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--grid-line);
+      border: 1px solid var(--grid-line);
+    }
+
+    .tier-card {
+      background: var(--card-bg);
+      padding: 2.5rem 2rem;
+      position: relative;
+      transition: all 0.3s;
+      cursor: default;
+    }
+
+    .tier-card:hover {
+      background: var(--ink);
+    }
+
+    .tier-card:hover .tier-name,
+    .tier-card:hover .tier-points,
+    .tier-card:hover .tier-desc {
+      color: var(--cream);
+    }
+
+    .tier-card:hover .tier-name {
+      color: var(--gold-light);
+    }
+
+    .tier-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .tier-badge.bronze {
+      background: #CD7F32;
+      color: white;
+    }
+
+    .tier-badge.silver {
+      background: #C0C0C0;
+      color: var(--ink);
+    }
+
+    .tier-badge.gold {
+      background: var(--gold);
+      color: white;
+    }
+
+    .tier-badge.platinum {
+      background: linear-gradient(135deg, #E5E4E2, #8B8680);
+      color: var(--ink);
+    }
+
+    .tier-name {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 1rem;
+      transition: color 0.3s;
+    }
+
+    .tier-points {
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s;
+    }
+
+    .tier-points .pct {
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+
+    .tier-desc {
+      font-size: 0.75rem;
+      color: var(--ink-light);
+      line-height: 1.6;
+      font-weight: 300;
+      transition: color 0.3s;
+    }
+
+    .tier-perks {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--grid-line);
+      list-style: none;
+    }
+
+    .tier-perks li {
+      font-size: 0.7rem;
+      color: var(--ink-light);
+      padding: 0.4rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.3s;
+    }
+
+    .tier-card:hover .tier-perks li {
+      color: rgba(247, 244, 238, 0.6);
+    }
+
+    .tier-perks li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ─── DATA DASHBOARD SECTION ─── */
+    .dashboard-section {
+      padding: 7rem 0;
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard-section::before {
+      content: 'DATA';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif;
+      font-size: 30vw;
+      font-weight: 900;
+      font-style: italic;
+      color: rgba(255,255,255,0.02);
+      pointer-events: none;
+      letter-spacing: -0.05em;
+    }
+
+    .dashboard-header {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 4rem;
+    }
+
+    .dashboard-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .dashboard-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      color: var(--cream);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .dashboard-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: rgba(247, 244, 238, 0.4);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1px;
+      background: rgba(255,255,255,0.05);
+      position: relative;
+      z-index: 2;
+    }
+
+    .dashboard-main {
+      grid-row: span 2;
+      background: rgba(255,255,255,0.03);
+      padding: 2rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .dashboard-chart-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(247, 244, 238, 0.4);
+      margin-bottom: 2rem;
+    }
+
+    .chart-svg-container {
+      position: relative;
+      height: 300px;
+    }
+
+    .chart-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .chart-grid-line {
+      stroke: rgba(255,255,255,0.05);
+      stroke-width: 1;
+    }
+
+    .chart-area-fill {
+      fill: url(#goldGradientDark);
+      opacity: 0.3;
+    }
+
+    .chart-main-line {
+      fill: none;
+      stroke: var(--gold-light);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .chart-dot {
+      fill: var(--gold-light);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .chart-dot:hover {
+      fill: var(--cream);
+      r: 6;
+    }
+
+    .chart-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-size: 0.65rem;
+      color: rgba(247, 244, 238, 0.3);
+      letter-spacing: 0.05em;
+    }
+
+    .dashboard-stat {
+      background: rgba(255,255,255,0.03);
+      padding: 2rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .dashboard-stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(247, 244, 238, 0.4);
+      margin-bottom: 1rem;
+    }
+
+    .dashboard-stat-value {
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-stat-value .accent {
+      color: var(--gold-light);
+    }
+
+    .dashboard-stat-change {
+      font-size: 0.7rem;
+      color: #4ADE80;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .dashboard-stat-change.negative {
+      color: var(--rust);
+    }
+
+    .dashboard-stat-trend {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.25rem;
+      align-items: flex-end;
+    }
+
+    .trend-bar {
+      width: 8px;
+      background: rgba(184, 135, 42, 0.2);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .trend-bar.active {
+      background: var(--gold-light);
+    }
+
+    .dashboard-mini-chart {
+      grid-column: span 2;
+      background: rgba(255,255,255,0.03);
+      padding: 2rem;
+      border: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .mini-chart-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(247, 244, 238, 0.4);
+      margin-bottom: 1rem;
+    }
+
+    .mini-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 60px;
+    }
+
+    .mini-bar {
+      flex: 1;
+      background: rgba(184, 135, 42, 0.2);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .mini-bar.active {
+      background: var(--gold-light);
+    }
+
+    /* ─── FEATURES EDITORIAL ─── */
+    .features-section {
+      padding: 7rem 0;
+    }
+
+    .features-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .features-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      max-width: 700px;
+      margin-bottom: 4rem;
+    }
+
+    .features-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--gold);
+    }
+
+    .features-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--grid-line);
+      border: 1px solid var(--grid-line);
+    }
+
+    .feature-item {
+      background: var(--cream);
+      padding: 2.5rem 2rem;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .feature-item:hover {
+      background: var(--card-bg);
+      box-shadow: 0 8px 40px rgba(28, 27, 24, 0.08);
+      z-index: 2;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--grid-line);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      color: var(--gold);
+      transition: all 0.3s;
+    }
+
+    .feature-item:hover .feature-icon {
+      background: var(--gold);
+      color: var(--warm-white);
+      border-color: var(--gold);
+    }
+
+    .feature-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .feature-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-desc {
+      font-size: 0.8rem;
+      color: var(--ink-light);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .feature-tag {
+      margin-top: 1.5rem;
+      display: inline-block;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--grid-line);
+      border-radius: 4px;
+      color: var(--ink-light);
+    }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonials-section {
+      padding: 7rem 0;
+      border-top: 1px solid var(--grid-line);
+    }
+
+    .testimonials-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+    }
+
+    .testimonials-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .testimonials-nav {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .testimonials-nav button {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--grid-line);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--ink-light);
+    }
+
+    .testimonials-nav button:hover {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+
+    .testimonials-nav button svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--grid-line);
+      border: 1px solid var(--grid-line);
+    }
+
+    .testimonial-card {
+      background: var(--card-bg);
+      padding: 2.5rem 2rem;
+    }
+
+    .testimonial-quote {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    .testimonial-quote::before {
+      content: '"';
+      font-size: 3rem;
+      color: var(--gold);
+      line-height: 0;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-style: normal;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .testimonial-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--grid-line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .testimonial-name {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .testimonial-role {
+      font-size: 0.7rem;
+      color: var(--ink-light);
+      margin-top: 0.2rem;
+    }
+
+    .testimonial-stars {
+      display: flex;
+      gap: 0.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .testimonial-stars svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--gold);
+    }
+
+    /* ─── CTA BANNER ─── */
+    .cta-section {
+      padding: 7rem 0;
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-bg-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .cta-bg-text span {
+      font-family: 'Fraunces', serif;
+      font-size: 18vw;
+      font-weight: 900;
+      font-style: italic;
+      color: rgba(255,255,255,0.03);
+      letter-spacing: -0.05em;
+      white-space: nowrap;
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .cta-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900;
+      color: var(--cream);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--gold-light);
+    }
+
+    .cta-subtitle {
+      font-size: 0.875rem;
+      color: rgba(247, 244, 238, 0.5);
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 0;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .cta-input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-right: none;
+      color: var(--cream);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .cta-input::placeholder {
+      color: rgba(247, 244, 238, 0.3);
+    }
+
+    .cta-input:focus {
+      border-color: var(--gold);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .cta-submit {
+      padding: 1rem 2rem;
+      background: var(--gold);
+      color: var(--warm-white);
+      border: 1px solid var(--gold);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .cta-submit:hover {
+      background: var(--gold-light);
+    }
+
+    .cta-disclaimer {
+      font-size: 0.65rem;
+      color: rgba(247, 244, 238, 0.3);
+      margin-top: 1rem;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 4rem 0;
+      border-top: 1px solid var(--grid-line);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 4rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.8rem;
+      color: var(--ink-light);
+      line-height: 1.8;
+      margin-top: 1rem;
+      font-weight: 300;
+      max-width: 280px;
+    }
+
+    .footer-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-logo span {
+      color: var(--gold);
+    }
+
+    .footer-col h4 {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-col a {
+      font-size: 0.8rem;
+      color: var(--ink-light);
+      text-decoration: none;
+      transition: color 0.2s;
+      font-weight: 300;
+    }
+
+    .footer-col a:hover {
+      color: var(--gold);
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 2rem;
+      border-top: 1px solid var(--grid-line);
+    }
+
+    .footer-copy {
+      font-size: 0.65rem;
+      color: var(--ink-light);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .footer-legal a {
+      font-size: 0.65rem;
+      color: var(--ink-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-legal a:hover {
+      color: var(--gold);
+    }
+
+    /* ─── ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-right {
+        height: 50vh;
+        position: relative;
+      }
+
+      .hero-left {
+        padding: 5rem 2rem;
+      }
+
+      .rewards-header {
+        grid-template-columns: 1fr;
+      }
+
+      .tiers-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-main {
+        grid-row: span 1;
+      }
+
+      .features-list {
+        grid-template-columns: 1fr;
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-title {
+        font-size: 3.5rem;
+      }
+
+      .tiers-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-actions .nav-link {
+        display: none;
+      }
+
+      .cta-form {
+        flex-direction: column;
+      }
+
+      .cta-input {
+        border-right: 1px solid rgba(255,255,255,0.1);
+        border-bottom: none;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">CLEAR<span>.</span></a>
+    <div class="nav-actions">
+      <a href="#rewards" class="nav-link">Rewards</a>
+      <a href="#dashboard" class="nav-link">Dashboard</a>
+      <a href="#features" class="nav-link">Features</a>
+      <button class="nav-cta">Open Account</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-issue">Issue No. 01 — Personal Banking Reimagined</p>
+      <h1 class="hero-title">
+        Bank<br>
+        <em>Built</em><br>
+        for <span class="highlight">Builders.</span>
+      </h1>
+      <p class="hero-body">
+        The banking platform engineered for entrepreneurs who demand more from their money. Earn rewards that actually matter, with no monthly fees and no fine print.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary">
+          Start Building
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+        <a href="#rewards" class="btn-secondary">
+          View Rewards
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+          </svg>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-value"><span class="currency">$</span>2.4<span style="font-size: 1rem; font-weight: 300; color: var(--ink-light);">M+</span></div>
+          <div class="hero-stat-label">Cashback Paid to Members</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">4.2<span style="font-size: 1rem; font-weight: 300; color: var(--ink-light);">%</span></div>
+          <div class="hero-stat-label">Max Reward Rate</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">0</div>
+          <div class="hero-stat-label">Monthly Fees</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-card-stack">
+        <div class="reward-card">
+          <div class="card-metal">Platinum</div>
+          <div class="card-chip"></div>
+          <div class="card-reward-label">Available Rewards</div>
+          <div class="card-reward-points">8,420</div>
+          <div class="card-reward-sub">Points — Worth up to $1,012 in travel</div>
+          <div class="card-tiers">
+            <div class="card-tier">
+              <div class="card-tier-name">Bronze</div>
+              <div class="card-tier-value">1%</div>
+            </div>
+            <div class="card-tier">
+              <div class="card-tier-name">Silver</div>
+              <div class="card-tier-value">2%</div>
+            </div>
+            <div class="card-tier">
+              <div class="card-tier-name">Gold</div>
+              <div class="card-tier-value">3%</div>
+            </div>
+            <div class="card-tier active">
+              <div class="card-tier-name">Platinum</div>
+              <div class="card-tier-value">4.2%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDITORIAL DIVIDER -->
+  <div class="editorial-divider">
+    <div class="divider-track">
+      <span class="divider-item">CLEAR BANKING <span>—</span></span>
+      <span class="divider-item">REWARDS THAT MATTER <span>—</span></span>
+      <span class="divider-item">BUILT FOR BUILDERS <span>—</span></span>
+      <span class="divider-item">CLEAR BANKING <span>—</span></span>
+      <span class="divider-item">REWARDS THAT MATTER <span>—</span></span>
+      <span class="divider-item">BUILT FOR BUILDERS <span>—</span></span>
+    </div>
+  </div>
+
+  <!-- REWARDS SECTION -->
+  <section class="rewards-section" id="rewards">
+    <div class="container">
+      <div class="rewards-header reveal">
+        <h2 class="rewards-title">
+          Every Dollar<br>
+          Earns <em>You More.</em>
+        </h2>
+        <p class="rewards-intro">
+          Four tiers of rewards, no spending caps, no categories to activate. Just you spending money, and us rewarding you for it. Points never expire.
+        </p>
+      </div>
+
+      <div class="tiers-grid">
+        <div class="tier-card reveal">
+          <span class="tier-badge bronze">Tier 1</span>
+          <div class="tier-name">Bronze Member</div>
+          <div class="tier-points"><span class="pct">1%</span> cashback</div>
+          <div class="tier-desc">On every purchase, every time. No limits, no activation required.</div>
+          <ul class="tier-perks">
+            <li>Instant cashback</li>
+            <li>No foreign transaction fees</li>
+            <li>Mobile banking</li>
+            <li>Virtual cards</li>
+          </ul>
+        </div>
+
+        <div class="tier-card reveal reveal-delay-1">
+          <span class="tier-badge silver">Tier 2</span>
+          <div class="tier-name">Silver Member</div>
+          <div class="tier-points"><span class="pct">2%</span> cashback</div>
+          <div class="tier-desc">After $2,500 monthly spend, your rate doubles automatically.</div>
+          <ul class="tier-perks">
+            <li>All Bronze benefits</li>
+            <li>Priority support</li>
+            <li>2% APY on savings</li>
+            <li>Apple Pay & Google Pay</li>
+          </ul>
+        </div>
+
+        <div class="tier-card reveal reveal-delay-2">
+          <span class="tier-badge gold">Tier 3</span>
+          <div class="tier-name">Gold Member</div>
+          <div class="tier-points"><span class="pct">3%</span> cashback</div>
+          <div class="tier-desc">For the top spenders. At $5,000 monthly spend, you've earned it.</div>
+          <ul class="tier-perks">
+            <li>All Silver benefits</li>
+            <li>$500 ATM fee rebates</li>
+            <li>Travel concierge</li>
+            <li>Lounge access pass</li>
+          </ul>
+        </div>
+
+        <div class="tier-card reveal reveal-delay-3">
+          <span class="tier-badge platinum">Tier 4</span>
+          <div class="tier-name">Platinum Member</div>
+          <div class="tier-points"><span class="pct">4.2%</span> cashback</div>
+          <div class="tier-desc">The pinnacle. $10,000 monthly spend unlocks the maximum rate.</div>
+          <ul class="tier-perks">
+            <li>All Gold benefits</li>
+            <li>Dedicated relationship manager</li>
+            <li>5% APY on entire balance</li>
+            <li>Unlimited lounge access</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD SECTION -->
+  <section class="dashboard-section" id="dashboard">
+    <div class="container">
+      <div class="dashboard-header reveal">
+        <p class="dashboard-label">// Live Platform Data</p>
+        <h2 class="dashboard-title">
+          Your Money,<br>
+          <em>Transparently.</em>
+        </h2>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-main reveal">
+          <p class="dashboard-chart-label">Portfolio Growth — Last 12 Months</p>
+          <div class="chart-svg-container">
+            <svg class="chart-svg" viewBox="0 0 600 260" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="goldGradientDark" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#D4A94B" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#D4A94B" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <!-- Grid lines -->
+              <line class="chart-grid-line" x1="0" y1="65" x2="600" y2="65"/>
+              <line class="chart-grid-line" x1="0" y1="130" x2="600" y2="130"/>
+              <line class="chart-grid-line" x1="0" y1="195" x2="600" y2="195"/>
+              <!-- Area fill -->
+              <path class="chart-area-fill" d="M0,240 L50,228 L100,215 L150,200 L200,178 L250,155 L300,145 L350,120 L400,95 L450,75 L500,55 L550,35 L600,20 L600,260 L0,260 Z"/>
+              <!-- Main line -->
+              <path class="chart-main-line" d="M0,240 L50,228 L100,215 L150,200 L200,178 L250,155 L300,145 L350,120 L400,95 L450,75 L500,55 L550,35 L600,20"/>
+              <!-- Data points -->
+              <circle class="chart-dot" cx="0" cy="240" r="4"/>
+              <circle class="chart-dot" cx="50" cy="228" r="4"/>
+              <circle class="chart-dot" cx="100" cy="215" r="4"/>
+              <circle class="chart-dot" cx="150" cy="200" r="4"/>
+              <circle class="chart-dot" cx="200" cy="178" r="4"/>
+              <circle class="chart-dot" cx="250" cy="155" r="4"/>
+              <circle class="chart-dot" cx="300" cy="145" r="4"/>
+              <circle class="chart-dot" cx="350" cy="120" r="4"/>
+              <circle class="chart-dot" cx="400" cy="95" r="4"/>
+              <circle class="chart-dot" cx="450" cy="75" r="4"/>
+              <circle class="chart-dot" cx="500" cy="55" r="4"/>
+              <circle class="chart-dot" cx="550" cy="35" r="4"/>
+              <circle class="chart-dot" cx="600" cy="20" r="4"/>
+            </svg>
+          </div>
+          <div class="chart-labels">
+            <span>Jan</span>
+            <span>Mar</span>
+            <span>May</span>
+            <span>Jul</span>
+            <span>Sep</span>
+            <span>Nov</span>
+            <span>Dec</span>
+          </div>
+        </div>
+
+        <div class="dashboard-stat reveal reveal-delay-1">
+          <p class="dashboard-stat-label">Total Balance</p>
+          <div class="dashboard-stat-value"><span class="accent">$</span>84,291</div>
+          <div class="dashboard-stat-change">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            +$9,180 this year
+          </div>
+          <div class="dashboard-stat-trend">
+            <div class="trend-bar" style="height:20px"></div>
+            <div class="trend-bar" style="height:28px"></div>
+            <div class="trend-bar" style="height:35px"></div>
+            <div class="trend-bar" style="height:30px"></div>
+            <div class="trend-bar active" style="height:45px"></div>
+            <div class="trend-bar active" style="height:50px"></div>
+            <div class="trend-bar active" style="height:48px"></div>
+          </div>
+        </div>
+
+        <div class="dashboard-stat reveal reveal-delay-2">
+          <p class="dashboard-stat-label">Rewards Earned</p>
+          <div class="dashboard-stat-value"><span class="accent">+</span>3,847</div>
+          <div class="dashboard-stat-change">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            +$412 in rewards
+          </div>
+          <div class="dashboard-stat-trend">
+            <div class="trend-bar" style="height:18px"></div>
+            <div class="trend-bar" style="height:25px"></div>
+            <div class="trend-bar" style="height:30px"></div>
+            <div class="trend-bar active" style="height:40px"></div>
+            <div class="trend-bar active" style="height:38px"></div>
+            <div class="trend-bar active" style="height:45px"></div>
+            <div class="trend-bar active" style="height:52px"></div>
+          </div>
+        </div>
+
+        <div class="dashboard-mini-chart reveal">
+          <p class="mini-chart-label">Monthly Spend vs. Reward Rate</p>
+          <div class="mini-bars">
+            <div class="mini-bar active" style="height:40px"></div>
+            <div class="mini-bar active" style="height:55px"></div>
+            <div class="mini-bar active" style="height:48px"></div>
+            <div class="mini-bar active" style="height:62px"></div>
+            <div class="mini-bar active" style="height:70px"></div>
+            <div class="mini-bar active" style="height:60px"></div>
+            <div class="mini-bar active" style="height:75px"></div>
+            <div class="mini-bar active" style="height:80px"></div>
+            <div class="mini-bar active" style="height:72px"></div>
+            <div class="mini-bar active" style="height:85px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <p class="features-label reveal">// Platform Capabilities</p>
+      <h2 class="features-title reveal reveal-delay-1">
+        Everything a Builder<br>
+        Needs. <em>Nothing They Don't.</em>
+      </h2>
+
+      <div class="features-list">
+        <div class="feature-item reveal">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Instant Transfers</h3>
+          <p class="feature-desc">Send and receive money in seconds, not days. Domestic transfers settle instantly. International transfers in 180+ currencies at mid-market rates.</p>
+          <span class="feature-tag">24/7 Settlement</span>
+        </div>
+
+        <div class="feature-item reveal reveal-delay-1">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+              <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Smart Budgeting</h3>
+          <p class="feature-desc">AI-powered categorization that learns your spending patterns. Get weekly insights that actually help you save, not just pretty charts.</p>
+          <span class="feature-tag">AI-Powered</span>
+        </div>
+
+        <div class="feature-item reveal reveal-delay-2">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Bank-Grade Security</h3>
+          <p class="feature-desc">256-bit encryption, biometric authentication, real-time fraud detection. Your money is protected by the same security standards as Fortune 500 companies.</p>
+          <span class="feature-tag">256-bit AES</span>
+        </div>
+
+        <div class="feature-item reveal reveal-delay-1">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">4.2% APY Savings</h3>
+          <p class="feature-desc">Earn 4.2% annual percentage yield on your entire balance — no tiers, no caps, no promotional rates that expire. Just consistent growth.</p>
+          <span class="feature-tag">High-Yield Savings</span>
+        </div>
+
+        <div class="feature-item reveal reveal-delay-2">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <path d="M2 10h20"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Metal Debit Card</h3>
+          <p class="feature-desc">A physical platinum card that commands respect. RFID protection, global ATM network with $500 fee rebates monthly, and instant virtual card generation.</p>
+          <span class="feature-tag">Worldwide Access</span>
+        </div>
+
+        <div class="feature-item reveal reveal-delay-3">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Real-Time Analytics</h3>
+          <p class="feature-desc">Watch your money work in real-time. Net worth tracking, cash flow forecasting, tax optimization insights, and exportable reports for your accountant.</p>
+          <span class="feature-tag">Tax-Ready Reports</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="testimonials-header reveal">
+        <h2 class="testimonials-title">From the Builders</h2>
+        <div class="testimonials-nav">
+          <button aria-label="Previous">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <button aria-label="Next">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal">
+          <div class="testimonial-stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p class="testimonial-quote">I've burned through four banks trying to find one that actually understands running a business. CLEAR gets it. The rewards rate alone paid for my annual software subscriptions.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">M</div>
+            <div>
+              <div class="testimonial-name">Marcus Webb</div>
+              <div class="testimonial-role">Founder, Atlas Media Co. — $2.1M ARR</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="testimonial-stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p class="testimonial-quote">The analytics dashboard replaced three separate tools I was paying for. Cash flow forecasting alone saved me from a tight spot last quarter. Platinum tier was a no-brainer.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">S</div>
+            <div>
+              <div class="testimonial-name">Sofia Reyes</div>
+              <div class="testimonial-role">CEO, Prisma Digital — 14 employees</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-2">
+          <div class="testimonial-stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p class="testimonial-quote">I switched from a big bank that charged me $12/month to monitor my own money. CLEAR pays me to bank with them. That $12/month now returns $800 in annual rewards.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">J</div>
+            <div>
+              <div class="testimonial-name">James Okonkwo</div>
+              <div class="testimonial-role">Freelance Designer — 80+ clients</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-bg-text"><span>CLEAR.</span></div>
+    <div class="container">
+      <div class="cta-content reveal">
+        <p class="cta-eyebrow">// Join 140,000+ Builders</p>
+        <h2 class="cta-title">
+          Your Bank Should<br>
+          <em>Work as Hard</em> as You Do.
+        </h2>
+        <p class="cta-subtitle">Open an account in 3 minutes. No credit check. No monthly fees. Cancel anytime.</p>
+        <div class="cta-form">
+          <input type="email" class="cta-input" placeholder="Enter your email address">
+          <button class="cta-submit">Get Started</button>
+        </div>
+        <p class="cta-disclaimer">By signing up, you agree to our Terms of Service. FDIC insured up to $250,000.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">CLEAR<span>.</span></div>
+          <p>Banking for people who build. Rewards without fine print, transparency without catch.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">Checking Account</a></li>
+            <li><a href="#">High-Yield Savings</a></li>
+            <li><a href="#">Metal Card</a></li>
+            <li><a href="#">Business Accounts</a></li>
+            <li><a href="#">Mobile App</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Partners</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">Status</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 CLEAR Financial Technologies, Inc. All rights reserved. FDIC Insured. · <strong style="color:var(--gold);">Template by</strong> <a href="https://joecodes.in" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;">joecodes.in</a></p>
+        <div class="footer-legal">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Insurance</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* Intersection Observer for reveal animations */
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    /* Initialize elements already in view */
+    window.addEventListener('load', () => {
+      revealElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          el.classList.add('active');
+        }
+      });
+    });
+
+    /* Nav scroll behavior */
+    const nav = document.querySelector('nav');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        nav.style.borderBottomColor = 'transparent';
+      } else {
+        nav.style.borderBottomColor = 'var(--grid-line)';
+      }
+      lastScroll = window.scrollY;
+    });
+  </script>
+</body>
+</html>

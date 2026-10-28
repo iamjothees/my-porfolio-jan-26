@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROOTED — Farm Fresh & Sustainable</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            olive: '#3D5A35',
+            terracotta: '#E2725B',
+            cream: '#FDF5E6',
+          },
+          fontFamily: {
+            display: ['Playfair Display', 'serif'],
+            body: ['Lato', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+
+    .blob-primary {
+      clip-path: polygon(15% 0%, 85% 5%, 100% 45%, 95% 85%, 65% 100%, 20% 95%, 0% 55%, 8% 15%);
+    }
+
+    .blob-secondary {
+      clip-path: polygon(5% 10%, 90% 0%, 100% 50%, 85% 90%, 50% 100%, 10% 85%, 0% 50%, 15% 15%);
+    }
+
+    .parallax-wrapper {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .parallax-wrapper img {
+      position: absolute;
+      top: -20%;
+      left: 0;
+      width: 100%;
+      height: 140%;
+      object-fit: cover;
+      will-change: transform;
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .fade-up.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-up-delay-1 { transition-delay: 0.15s; }
+    .fade-up-delay-2 { transition-delay: 0.25s; }
+    .fade-up-delay-3 { transition-delay: 0.35s; }
+    .fade-up-delay-4 { transition-delay: 0.45s; }
+    .fade-up-delay-5 { transition-delay: 0.55s; }
+    .fade-up-delay-6 { transition-delay: 0.65s; }
+
+    .wave-divider {
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+    }
+
+    .wave-divider svg {
+      display: block;
+      width: 100%;
+    }
+
+    .timeline-stage {
+      opacity: 0;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .timeline-stage.active {
+      opacity: 1;
+    }
+
+    .timeline-left {
+      transform: translateX(-40px);
+    }
+
+    .timeline-right {
+      transform: translateX(40px);
+    }
+
+    .timeline-stage.active.timeline-left,
+    .timeline-stage.active.timeline-right {
+      transform: translateX(0);
+    }
+
+    .nav-scrolled {
+      background-color: rgba(253, 245, 230, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 20px rgba(61, 90, 53, 0.1);
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+    }
+
+    .nav-scrolled .nav-text {
+      color: #3D5A35;
+    }
+
+    .nav-scrolled .nav-text:hover {
+      color: #E2725B;
+    }
+
+    .month-btn {
+      transition: all 0.3s ease;
+    }
+
+    .month-btn.active {
+      background-color: #3D5A35;
+      color: #FDF5E6;
+      border-color: #3D5A35;
+    }
+
+    .produce-card {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .produce-card .blob-secondary {
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .produce-card:hover .blob-secondary {
+      transform: scale(1.05);
+    }
+
+    .blob-inner {
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    img[src^="data:image"] {
+      background-color: #3D5A35;
+    }
+
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #FDF5E6;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #3D5A35;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #E2725B;
+    }
+
+    .hamburger-line {
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu-open .hamburger-line:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .mobile-menu-open .hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .mobile-menu-open .hamburger-line:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .nav-link-hover:hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+  </style>
+</head>
+<body class="bg-cream font-body text-olive overflow-x-hidden">
+
+  <!-- Navbar -->
+  <nav id="mainNav" class="fixed top-0 w-full z-50 transition-all duration-400">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="#" class="nav-text font-display text-2xl text-cream hover:text-white transition-colors">ROOTED</a>
+      <div class="hidden md:flex gap-8 font-body text-sm">
+        <a href="#story" class="nav-text nav-link-hover text-cream hover:text-white transition-colors">Our Story</a>
+        <a href="#harvest" class="nav-text nav-link-hover text-cream hover:text-white transition-colors">Harvest Calendar</a>
+        <a href="#process" class="nav-text nav-link-hover text-cream hover:text-white transition-colors">Process</a>
+        <a href="#shop" class="nav-text nav-link-hover text-cream hover:text-white transition-colors">Shop</a>
+      </div>
+      <button class="hidden md:block bg-terracotta text-cream px-5 py-2 rounded-full text-sm font-body hover:bg-white hover:text-olive transition-colors">Cart (0)</button>
+      <button id="mobileMenuBtn" class="md:hidden flex flex-col gap-1.5 p-2">
+        <span class="hamburger-line w-6 h-0.5 bg-olive"></span>
+        <span class="hamburger-line w-6 h-0.5 bg-olive"></span>
+        <span class="hamburger-line w-6 h-0.5 bg-olive"></span>
+      </button>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-olive/10">
+      <div class="px-4 py-4 flex flex-col gap-4">
+        <a href="#story" class="nav-text nav-link-hover text-cream hover:text-white transition-colors">Our Story</a>
+        <a href="#harvest" class="nav-text nav-link-hover text-cream hover:text-white transition-colors">Harvest Calendar</a>
+        <a href="#process" class="nav-text nav-link-hover text-cream hover:text-white transition-colors">Process</a>
+        <a href="#shop" class="nav-text nav-link-hover text-cream hover:text-white transition-colors">Shop</a>
+        <button class="bg-terracotta text-cream px-5 py-2 rounded-full text-sm font-body w-fit hover:bg-white hover:text-olive transition-colors">Cart (0)</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center justify-center parallax-wrapper">
+    <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1920&q=85" alt="ROOTED Farm" class="parallax-bg absolute inset-0 w-full h-[140%] object-cover" onerror="this.style.background='#3D5A35'; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'" loading="eager">
+    <div class="absolute inset-0 bg-gradient-to-b from-olive/40 via-olive/60 to-olive/80"></div>
+    <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+      <div class="inline-block bg-cream/90 blob-primary px-12 py-10 mb-8 fade-up">
+        <h1 class="font-display text-5xl md:text-7xl text-olive mb-4">ROOTED</h1>
+        <p class="font-body text-lg text-terracotta tracking-widest uppercase">Farm Fresh & Sustainable</p>
+      </div>
+      <p class="font-display text-2xl md:text-3xl text-cream mb-8 fade-up fade-up-delay-1">From Our Soil To Your Table</p>
+      <p class="font-body text-cream/90 mb-8 max-w-xl mx-auto fade-up fade-up-delay-2">Experience the rhythm of sustainable farming. Every seasonal harvest, handpicked and delivered directly from our fields to your family.</p>
+      <a href="#harvest" class="inline-block bg-terracotta text-cream px-8 py-3 rounded-full font-body font-semibold hover:bg-olive transition-colors fade-up fade-up-delay-3">Explore What's In Season</a>
+    </div>
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 text-cream/70">
+      <span class="font-body text-xs tracking-widest uppercase">Scroll</span>
+      <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Wave Divider 1: Olive to Cream -->
+  <div class="wave-divider">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,60 C300,120 600,0 900,60 C1050,90 1150,90 1200,60 L1200,120 L0,120 Z" fill="#3D5A35"/>
+    </svg>
+  </div>
+
+  <!-- Seasonal Harvest Calendar -->
+  <section id="harvest" class="bg-cream py-24">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="font-display text-4xl text-olive mb-4 text-center fade-up">Seasonal Harvest</h2>
+      <p class="font-body text-olive/70 text-center mb-12 max-w-xl mx-auto fade-up fade-up-delay-1">Select a month to discover what fresh produce is ready from our fields right now.</p>
+      <div id="monthGrid" class="flex flex-wrap justify-center gap-3 mb-12 fade-up fade-up-delay-2"></div>
+      <div id="produceDisplay" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+    </div>
+  </section>
+
+  <!-- Wave Divider 2: Cream to Olive -->
+  <div class="wave-divider" style="transform: scaleY(-1);">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,60 C300,120 600,0 900,60 C1050,90 1150,90 1200,60 L1200,120 L0,120 Z" fill="#FDF5E6"/>
+    </svg>
+  </div>
+
+  <!-- Soil-to-Table Timeline -->
+  <section id="process" class="bg-olive py-24 overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="font-display text-4xl text-cream mb-4 text-center fade-up">Soil-to-Table</h2>
+      <p class="font-body text-cream/70 text-center mb-16 max-w-xl mx-auto fade-up fade-up-delay-1">Our journey from land to plate — every step done with care.</p>
+      <div class="relative">
+        <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-terracotta/50"></div>
+
+        <!-- Stage 1: Soil Prep -->
+        <div class="timeline-stage timeline-left flex md:justify-between justify-center items-center mb-16 md:mb-20" data-stage="1">
+          <div class="w-5/12 text-right pr-4 md:pr-8 hidden md:block">
+            <h3 class="font-display text-lg md:text-2xl text-cream mb-2">Soil Preparation</h3>
+            <p class="font-body text-cream/70 text-xs md:text-sm">We enrich our earth with compost and cover crops, building healthy soil teeming with life for next season's harvest.</p>
+          </div>
+          <div class="w-auto md:w-2/12 flex justify-center">
+            <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-terracotta flex items-center justify-center overflow-hidden blob-secondary">
+              <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=200&q=80" alt="Soil preparation" class="w-full h-full object-cover" onerror="this.style.background='#3D5A35'; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'" loading="lazy">
+            </div>
+          </div>
+          <div class="w-5/12 hidden md:block"></div>
+        </div>
+
+        <!-- Stage 2: Seed -->
+        <div class="timeline-stage timeline-right flex md:justify-between justify-center items-center mb-16 md:mb-20" data-stage="2">
+          <div class="w-5/12 hidden md:block"></div>
+          <div class="w-auto md:w-2/12 flex justify-center">
+            <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-terracotta flex items-center justify-center overflow-hidden blob-secondary">
+              <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=200&q=80" alt="Planting seeds" class="w-full h-full object-cover" onerror="this.style.background='#3D5A35'; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'" loading="lazy">
+            </div>
+          </div>
+          <div class="w-5/12 text-left pl-4 md:pl-8 hidden md:block">
+            <h3 class="font-display text-lg md:text-2xl text-cream mb-2">Planting Seeds</h3>
+            <p class="font-body text-cream/70 text-xs md:text-sm">Heirloom seeds go into温暖的 soil at the perfect moment, chosen to thrive without synthetic intervention.</p>
+          </div>
+        </div>
+
+        <!-- Stage 3: Grow -->
+        <div class="timeline-stage timeline-left flex md:justify-between justify-center items-center mb-16 md:mb-20" data-stage="3">
+          <div class="w-5/12 text-right pr-4 md:pr-8 hidden md:block">
+            <h3 class="font-display text-lg md:text-2xl text-cream mb-2">Cultivation</h3>
+            <p class="font-body text-cream/70 text-xs md:text-sm">Our crops grow slowly under the sun, tended by hand. We water with intention and weed with love.</p>
+          </div>
+          <div class="w-auto md:w-2/12 flex justify-center">
+            <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-terracotta flex items-center justify-center overflow-hidden blob-secondary">
+              <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=200&q=80" alt="Growing plants" class="w-full h-full object-cover" onerror="this.style.background='#3D5A35'; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'" loading="lazy">
+            </div>
+          </div>
+          <div class="w-5/12 hidden md:block"></div>
+        </div>
+
+        <!-- Stage 4: Harvest -->
+        <div class="timeline-stage timeline-right flex md:justify-between justify-center items-center mb-16 md:mb-20" data-stage="4">
+          <div class="w-5/12 hidden md:block"></div>
+          <div class="w-auto md:w-2/12 flex justify-center">
+            <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-terracotta flex items-center justify-center overflow-hidden blob-secondary">
+              <img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=200&q=80" alt="Harvest" class="w-full h-full object-cover" onerror="this.style.background='#3D5A35'; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'" loading="lazy">
+            </div>
+          </div>
+          <div class="w-5/12 text-left pl-4 md:pl-8 hidden md:block">
+            <h3 class="font-display text-lg md:text-2xl text-cream mb-2">Harvest</h3>
+            <p class="font-body text-cream/70 text-xs md:text-sm">At peak ripeness, we pick by hand. Each vegetable is inspected and prepared for transit within hours.</p>
+          </div>
+        </div>
+
+        <!-- Stage 5: Delivery -->
+        <div class="timeline-stage timeline-left flex md:justify-between justify-center items-center mb-16 md:mb-20" data-stage="5">
+          <div class="w-5/12 text-right pr-4 md:pr-8 hidden md:block">
+            <h3 class="font-display text-lg md:text-2xl text-cream mb-2">Delivery</h3>
+            <p class="font-body text-cream/70 text-xs md:text-sm">Your box travels from field to door in 24–48 hours, packed in recyclable materials to minimize our footprint.</p>
+          </div>
+          <div class="w-auto md:w-2/12 flex justify-center">
+            <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-terracotta flex items-center justify-center overflow-hidden blob-secondary">
+              <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80" alt="Delivery" class="w-full h-full object-cover" onerror="this.style.background='#3D5A35'; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'" loading="lazy">
+            </div>
+          </div>
+          <div class="w-5/12 hidden md:block"></div>
+        </div>
+
+        <!-- Stage 6: Table -->
+        <div class="timeline-stage timeline-right flex md:justify-between justify-center items-center" data-stage="6">
+          <div class="w-5/12 hidden md:block"></div>
+          <div class="w-auto md:w-2/12 flex justify-center">
+            <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-terracotta flex items-center justify-center overflow-hidden blob-secondary">
+              <img src="https://images.unsplash.com/photo-1518843875459-f738682238a6?w=200&q=80" alt="Your table" class="w-full h-full object-cover" onerror="this.style.background='#3D5A35'; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'" loading="lazy">
+            </div>
+          </div>
+          <div class="w-5/12 text-left pl-4 md:pl-8 hidden md:block">
+            <h3 class="font-display text-lg md:text-2xl text-cream mb-2">Your Table</h3>
+            <p class="font-body text-cream/70 text-xs md:text-sm">The cycle completes at your family table. Real food, grown with care, tastes like it.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave Divider 3: Olive to Cream -->
+  <div class="wave-divider">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,60 C300,120 600,0 900,60 C1050,90 1150,90 1200,60 L1200,120 L0,120 Z" fill="#3D5A35"/>
+    </svg>
+  </div>
+
+  <!-- About / Manifesto -->
+  <section id="story" class="bg-cream py-24 overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div class="relative fade-up max-w-full">
+          <div class="blob-primary overflow-hidden aspect-[4/5] max-w-full">
+            <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80" alt="Our farm" class="w-full h-full object-cover" onerror="this.style.background='#3D5A35'; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'" loading="lazy">
+          </div>
+          <div class="absolute -bottom-4 -right-4 md:-bottom-8 md:-right-8 w-20 h-20 md:w-32 md:h-32 bg-terracotta blob-secondary flex items-center justify-center">
+            <span class="font-display text-cream text-center text-xs md:text-sm leading-tight">Est.<br>2018</span>
+          </div>
+        </div>
+        <div class="fade-up fade-up-delay-2">
+          <span class="font-body text-terracotta text-sm tracking-widest uppercase mb-4 block">Our Story</span>
+          <h2 class="font-display text-4xl text-olive mb-6">Farming the Old Way,<br>For a New Generation</h2>
+          <p class="font-body text-olive/80 leading-relaxed mb-6">ROOTED started with a simple belief: food should come from soil, not factories. Our founders left desk jobs to learn the craft of sustainable agriculture, and we've been growing ever since.</p>
+          <p class="font-body text-olive/80 leading-relaxed mb-8">We partner with small family farms within 50 miles of our packing facility. Every box you receive supports not just our farm, but a network of growers committed to regenerative practices.</p>
+          <div class="grid grid-cols-3 gap-8 border-t border-olive/20 pt-8">
+            <div class="text-center">
+              <span class="font-display text-3xl text-terracotta block">50+</span>
+              <span class="font-body text-xs text-olive/70 uppercase tracking-wider">Partner Farms</span>
+            </div>
+            <div class="text-center">
+              <span class="font-display text-3xl text-terracotta block">100%</span>
+              <span class="font-body text-xs text-olive/70 uppercase tracking-wider">Organic</span>
+            </div>
+            <div class="text-center">
+              <span class="font-display text-3xl text-terracotta block">0</span>
+              <span class="font-body text-xs text-olive/70 uppercase tracking-wider">Synthetic Pesticides</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave Divider 4: Cream to Olive -->
+  <div class="wave-divider" style="transform: scaleY(-1);">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,60 C300,120 600,0 900,60 C1050,90 1150,90 1200,60 L1200,120 L0,120 Z" fill="#FDF5E6"/>
+    </svg>
+  </div>
+
+  <!-- Shop CTA -->
+  <section id="shop" class="bg-olive py-24">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="font-display text-4xl text-cream mb-4 fade-up">Ready to Get Rooted?</h2>
+      <p class="font-body text-cream/70 mb-8 max-w-xl mx-auto fade-up fade-up-delay-1">Join our community of conscious consumers. Weekly and bi-weekly boxes available now.</p>
+      <a href="#" class="inline-block bg-terracotta text-cream px-8 py-3 rounded-full font-body font-semibold hover:bg-cream hover:text-olive transition-colors fade-up fade-up-delay-2">Build Your Box</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-olive border-t border-terracotta/20">
+    <div class="max-w-6xl mx-auto px-4 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div>
+          <span class="font-display text-2xl text-cream block mb-4">ROOTED</span>
+          <p class="font-body text-cream/60 text-sm">Farm fresh produce delivered directly from our partner farms to your door.</p>
+        </div>
+        <div>
+          <h4 class="font-body text-cream font-semibold mb-4">Shop</h4>
+          <ul class="font-body text-cream/60 text-sm space-y-2">
+            <li><a href="#" class="hover:text-terracotta transition-colors">Weekly Boxes</a></li>
+            <li><a href="#" class="hover:text-terracotta transition-colors">Seasonal Specials</a></li>
+            <li><a href="#" class="hover:text-terracotta transition-colors">Gift Boxes</a></li>
+            <li><a href="#" class="hover:text-terracotta transition-colors">Farm Store</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-body text-cream font-semibold mb-4">Learn</h4>
+          <ul class="font-body text-cream/60 text-sm space-y-2">
+            <li><a href="#" class="hover:text-terracotta transition-colors">Our Practices</a></li>
+            <li><a href="#" class="hover:text-terracotta transition-colors">Partner Farms</a></li>
+            <li><a href="#" class="hover:text-terracotta transition-colors">Blog</a></li>
+            <li><a href="#" class="hover:text-terracotta transition-colors">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-body text-cream font-semibold mb-4">Connect</h4>
+          <ul class="font-body text-cream/60 text-sm space-y-2">
+            <li><a href="#" class="hover:text-terracotta transition-colors">About Us</a></li>
+            <li><a href="#" class="hover:text-terracotta transition-colors">Contact</a></li>
+            <li><a href="#" class="hover:text-terracotta transition-colors">Instagram</a></li>
+            <li><a href="#" class="hover:text-terracotta transition-colors">Newsletter</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-cream/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="font-body text-cream/40 text-xs">© 2026 ROOTED Farm Co. All rights reserved. · <strong style="color: var(--terracotta);">Template by</strong> <a href="https://joecodes.in" target="_blank" rel="noopener" style="color: var(--terracotta); text-decoration: none;">joecodes.in</a></p>
+        <div class="flex gap-6 font-body text-cream/40 text-xs">
+          <a href="#" class="hover:text-terracotta transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-terracotta transition-colors">Terms of Service</a>
+          <a href="#" class="hover:text-terracotta transition-colors">Accessibility</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button id="backToTop" class="fixed bottom-8 right-8 w-12 h-12 bg-terracotta text-cream rounded-full shadow-lg flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:bg-olive z-50">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+    </svg>
+  </button>
+
+  <script>
+    // =====================
+    // Navbar Scroll Behavior
+    // =====================
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('nav-scrolled', window.scrollY > 80);
+    });
+
+    // =====================
+    // Mobile Menu Toggle
+    // =====================
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let mobileMenuOpen = false;
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenuOpen = !mobileMenuOpen;
+      mobileMenu.classList.toggle('hidden', !mobileMenuOpen);
+      mobileMenuBtn.classList.toggle('mobile-menu-open', mobileMenuOpen);
+    });
+
+    // Close mobile menu when clicking a link
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenuOpen = false;
+        mobileMenu.classList.add('hidden');
+        mobileMenuBtn.classList.remove('mobile-menu-open');
+      });
+    });
+
+    // =====================
+    // Parallax Scroll Effect
+    // =====================
+    function updateParallax() {
+      const scrolled = window.scrollY;
+      document.querySelectorAll('.parallax-wrapper img').forEach(img => {
+        img.style.transform = `translateY(${scrolled * 0.3}px)`;
+      });
+    }
+    window.addEventListener('scroll', updateParallax);
+
+    // =====================
+    // Intersection Observer for Fade-up Reveals
+    // =====================
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    document.querySelectorAll('.fade-up').forEach(el => revealObserver.observe(el));
+
+    // Initialize elements already in viewport
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.fade-up').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          el.classList.add('active');
+        }
+      });
+    });
+
+    // =====================
+    // Timeline Intersection Observer
+    // =====================
+    const timelineObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.timeline-stage').forEach(el => timelineObserver.observe(el));
+
+    // =====================
+    // Monthly Picker & Produce Data
+    // =====================
+    const monthsData = [
+      {
+        name: 'January',
+        produce: [
+          { name: 'Blood Oranges', variety: 'Sicilian Blood Orange', img: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&q=80' },
+          { name: 'Kale', variety: 'Tuscan Lacinato', img: 'https://images.unsplash.com/photo-1524179091875-bf99a9a6af57?w=600&q=80' },
+          { name: 'Brussels Sprouts', variety: 'Long Island', img: 'https://images.unsplash.com/photo-1438118907704-7718ee9a61a1?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'February',
+        produce: [
+          { name: 'Meyer Lemons', variety: 'California Meyer', img: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600&q=80' },
+          { name: 'Swiss Chard', variety: 'Rainbow Chard', img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&q=80' },
+          { name: 'Parsnips', variety: 'Hollow Crown', img: 'https://images.unsplash.com/photo-1585412727339-54e4bae4b0ea?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'March',
+        produce: [
+          { name: 'Asparagus', variety: 'Purple Passion', img: 'https://images.unsplash.com/photo-1515471209610-dae1c92d8777?w=600&q=80' },
+          { name: 'Artichokes', variety: 'Globe Artichoke', img: 'https://images.unsplash.com/photo-1580645943333-50f7176f733b?w=600&q=80' },
+          { name: 'Spring Peas', variety: 'Sugar Snap', img: 'https://images.unsplash.com/photo-1587735243615-c03f28f6c2b4?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'April',
+        produce: [
+          { name: 'Strawberries', variety: 'Chandler Strawberry', img: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=600&q=80' },
+          { name: 'Fava Beans', variety: 'Sweet Fava', img: 'https://images.unsplash.com/photo-1568584711271-6c929fcd1e09?w=600&q=80' },
+          { name: 'Watercress', variety: 'Upland Watercress', img: 'https://images.unsplash.com/photo-1585618375335-99f3b7c7c91e?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'May',
+        produce: [
+          { name: 'Cherries', variety: 'Bing Cherry', img: 'https://images.unsplash.com/photo-1528821128474-27f9b57958dd?w=600&q=80' },
+          { name: 'Apricots', variety: 'Royal Blenheim', img: 'https://images.unsplash.com/photo-1563911302283-d2bc129e1e2e?w=600&q=80' },
+          { name: 'Fresh Herbs', variety: 'Mixed Herb Bundle', img: 'https://images.unsplash.com/photo-1515023115689-589c33041d3c?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'June',
+        produce: [
+          { name: 'Tomatoes', variety: 'Heirloom Beefsteak', img: 'https://images.unsplash.com/photo-1560023907-5f339617ea55?w=600&q=80' },
+          { name: 'Zucchini', variety: 'Black Beauty', img: 'https://images.unsplash.com/photo-1568584711271-6c929fcd1e09?w=600&q=80' },
+          { name: 'Blueberries', variety: 'Highbush Blueberry', img: 'https://images.unsplash.com/photo-1498557850523-fd3d118b962e?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'July',
+        produce: [
+          { name: 'Sweet Corn', variety: 'Golden Bantam', img: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=600&q=80' },
+          { name: 'Peaches', variety: 'Elberta Peach', img: 'https://images.unsplash.com/photo-1595704947134-14a4248b8c8e?w=600&q=80' },
+          { name: 'Green Beans', variety: 'Haricot Vert', img: 'https://images.unsplash.com/photo-1567377556372-7c6d022f5a90?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'August',
+        produce: [
+          { name: 'Bell Peppers', variety: 'California Wonder', img: 'https://images.unsplash.com/photo-1563561595-3c6f6f3d5f5e?w=600&q=80' },
+          { name: 'Plums', variety: 'Italian Prune', img: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=600&q=80' },
+          { name: 'Watermelon', variety: 'Sugar Baby', img: 'https://images.unsplash.com/photo-1589984662646-e7b2e4962f18?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'September',
+        produce: [
+          { name: 'Apples', variety: 'Honeycrisp Apple', img: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=600&q=80' },
+          { name: 'Pumpkin', variety: 'Sugar Pie', img: 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?w=600&q=80' },
+          { name: 'Pears', variety: 'Bartlett Pear', img: 'https://images.unsplash.com/photo-1514756331097-6d8b3a7b9bbf?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'October',
+        produce: [
+          { name: 'Butternut Squash', variety: 'Waltham Butternut', img: 'https://images.unsplash.com/photo-1574226516831-e1dff420f562?w=600&q=80' },
+          { name: 'Sweet Potatoes', variety: 'Covington', img: 'https://images.unsplash.com/photo-1596097635121-14b63b7a0c19?w=600&q=80' },
+          { name: 'Cauliflower', variety: 'Snowball Y', img: 'https://images.unsplash.com/photo-1564093497595-593b96d80180?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'November',
+        produce: [
+          { name: 'Root Vegetables', variety: 'Mixed Medley', img: 'https://images.unsplash.com/photo-1585412727339-54e4bae4b0ea?w=600&q=80' },
+          { name: 'Persimmons', variety: 'Fuyu Persimmon', img: 'https://images.unsplash.com/photo-1601493700631-2b300ec9fc64?w=600&q=80' },
+          { name: 'Clementines', variety: 'Algerian Clementine', img: 'https://images.unsplash.com/photo-1604999334302-958caa7c2f35?w=600&q=80' }
+        ]
+      },
+      {
+        name: 'December',
+        produce: [
+          { name: 'Turnips', variety: 'Purple Top', img: 'https://images.unsplash.com/photo-1596451190630-2ee48bb4c6d4?w=600&q=80' },
+          { name: 'Winter Citrus', variety: 'Mixed Citrus', img: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&q=80' },
+          { name: 'Pomegranate', variety: 'Wonderful Pomegranate', img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80' }
+        ]
+      }
+    ];
+
+    const monthGrid = document.getElementById('monthGrid');
+    const produceDisplay = document.getElementById('produceDisplay');
+    let selectedMonthIndex = new Date().getMonth(); // Default to current month
+
+    // Render month buttons
+    monthsData.forEach((month, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'month-btn px-4 py-2 rounded-full border border-olive text-sm font-body hover:bg-olive hover:text-cream transition-all';
+      btn.textContent = month.name;
+      btn.addEventListener('click', () => selectMonth(index));
+      monthGrid.appendChild(btn);
+    });
+
+    function selectMonth(index) {
+      selectedMonthIndex = index;
+
+      // Update button active states
+      document.querySelectorAll('.month-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+      });
+
+      // Render produce cards
+      renderProduce(monthsData[index].produce);
+    }
+
+    function renderProduce(items) {
+      produceDisplay.innerHTML = '';
+
+      items.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'produce-card text-center fade-up';
+        card.style.transitionDelay = `${i * 0.1}s`;
+
+        const imageWrapper = document.createElement('div');
+        imageWrapper.className = 'blob-secondary w-48 h-48 mx-auto overflow-hidden mb-4';
+        const img = document.createElement('img');
+        img.src = item.img;
+        img.alt = item.name;
+        img.className = 'w-full h-full object-cover blob-inner';
+        img.onerror = function() { this.style.background='#3D5A35'; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22/>'; };
+        img.loading = 'lazy';
+        imageWrapper.appendChild(img);
+
+        const title = document.createElement('h3');
+        title.className = 'font-display text-xl text-olive mb-1';
+        title.textContent = item.name;
+
+        const variety = document.createElement('p');
+        variety.className = 'font-body text-sm text-terracotta';
+        variety.textContent = item.variety;
+
+        card.appendChild(imageWrapper);
+        card.appendChild(title);
+        card.appendChild(variety);
+        produceDisplay.appendChild(card);
+
+        // Trigger fade-in after a brief delay
+        setTimeout(() => card.classList.add('active'), 50);
+      });
+    }
+
+    // Initialize with current month
+    selectMonth(selectedMonthIndex);
+
+    // =====================
+    // Back to Top Button
+    // =====================
+    const backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) {
+        backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+        backToTopBtn.classList.add('opacity-100');
+      } else {
+        backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+        backToTopBtn.classList.remove('opacity-100');
+      }
+    });
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

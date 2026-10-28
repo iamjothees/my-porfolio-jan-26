@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Plus - Your Health, Our Priority</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231E40AF'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1E40AF',
+                        secondary: '#3B82F6',
+                        accent: '#10B981',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3B82F6;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        .step-indicator.active {
+            background: #3B82F6;
+            color: white;
+        }
+        .step-indicator.completed {
+            background: #10B981;
+            color: white;
+        }
+        .wizard-step {
+            display: none;
+        }
+        .wizard-step.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .time-slot {
+            transition: all 0.2s ease;
+        }
+        .time-slot:hover {
+            transform: scale(1.02);
+        }
+        .time-slot.selected {
+            border-color: #3B82F6;
+            background: #EFF6FF;
+        }
+        .calendar-day:hover:not(.disabled) {
+            background: #EFF6FF;
+        }
+        .calendar-day.selected {
+            background: #3B82F6;
+            color: white;
+        }
+        .calendar-day.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 50%, #1E40AF 100%);
+        }
+        .testimonial-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-md z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center space-x-2">
+                        <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                        <span class="text-xl font-bold text-primary">MediCare Plus</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-primary font-medium">Home</a>
+                    <a href="#services" class="nav-link text-gray-700 hover:text-primary font-medium">Services</a>
+                    <a href="#doctors" class="nav-link text-gray-700 hover:text-primary font-medium">Doctors</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-primary font-medium">About</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-primary font-medium">Contact</a>
+                    <a href="#contact" class="bg-secondary hover:bg-primary text-white px-5 py-2 rounded-lg font-medium transition-colors">Book Appointment</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-primary focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="#home" class="text-gray-700 hover:text-primary font-medium py-2">Home</a>
+                    <a href="#services" class="text-gray-700 hover:text-primary font-medium py-2">Services</a>
+                    <a href="#doctors" class="text-gray-700 hover:text-primary font-medium py-2">Doctors</a>
+                    <a href="#about" class="text-gray-700 hover:text-primary font-medium py-2">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-primary font-medium py-2">Contact</a>
+                    <a href="#contact" class="bg-secondary hover:bg-primary text-white px-5 py-2 rounded-lg font-medium text-center transition-colors">Book Appointment</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient min-h-screen flex items-center pt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 fade-in">Your Health, Our Priority</h1>
+                <p class="text-xl md:text-2xl text-blue-100 mb-10 max-w-3xl mx-auto fade-in">Expert medical care with compassion. Book your appointment today.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in">
+                    <a href="#contact" class="bg-white text-primary px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg">Schedule Consultation</a>
+                    <a href="#services" class="border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/10 transition-colors">View Our Services</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Medical Services</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Comprehensive healthcare services tailored to your needs</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- General Medicine -->
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover fade-in">
+                    <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-2h2v2zm0-4h-2V9h2v4zm4 4h-2v-6h2v6zm0-8h-2V7h2v2zm-8 8H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">General Medicine</h3>
+                    <p class="text-gray-600">Comprehensive primary care for all ages. Diagnosis, treatment, and preventive health services.</p>
+                </div>
+
+                <!-- Cardiology -->
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover fade-in">
+                    <div class="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Cardiology</h3>
+                    <p class="text-gray-600">Heart health expertise including diagnostics, monitoring, and treatment of cardiovascular conditions.</p>
+                </div>
+
+                <!-- Pediatrics -->
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover fade-in">
+                    <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-green-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Pediatrics</h3>
+                    <p class="text-gray-600">Specialized care for infants, children, and adolescents. Gentle, thorough, and family-centered approach.</p>
+                </div>
+
+                <!-- Dermatology -->
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover fade-in">
+                    <div class="w-14 h-14 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-yellow-600" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM8 17.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zM9.5 8c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5S9.5 9.38 9.5 8zm3.5 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Dermatology</h3>
+                    <p class="text-gray-600">Skin health services from routine exams to advanced treatments for all skin conditions.</p>
+                </div>
+
+                <!-- Orthopedics -->
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover fade-in">
+                    <div class="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-purple-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Orthopedics</h3>
+                    <p class="text-gray-600">Bone, joint, and muscle care including sports medicine, surgery, and rehabilitation.</p>
+                </div>
+
+                <!-- Laboratory Tests -->
+                <div class="bg-white rounded-xl p-6 shadow-md card-hover fade-in">
+                    <div class="w-14 h-14 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-teal-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.5 3.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2v14H3v3c0 1.66 1.34 3 3 3h12c1.66 0 3-1.34 3-3V2l-1.5 1.5zM15 20H6c-.55 0-1-.45-1-1v-1h10v2zm4-1c0 .55-.45 1-1 1s-1-.45-1-1v-3H8V5h11v14z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Laboratory Tests</h3>
+                    <p class="text-gray-600">Accurate diagnostics with state-of-the-art equipment. Quick results and comprehensive panels.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Choose MediCare Plus</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Experience healthcare that puts you first</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center fade-in">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Experienced Doctors</h3>
+                    <p class="text-gray-600 mb-4">Board-certified physicians with decades of combined expertise</p>
+                    <span class="text-4xl font-bold text-primary">50+</span>
+                    <p class="text-gray-500 text-sm">Specialists</p>
+                </div>
+
+                <div class="text-center fade-in">
+                    <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">24/7 Emergency Care</h3>
+                    <p class="text-gray-600 mb-4">Round-the-clock emergency services for critical situations</p>
+                    <span class="text-4xl font-bold text-primary">24/7</span>
+                    <p class="text-gray-500 text-sm">Availability</p>
+                </div>
+
+                <div class="text-center fade-in">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-green-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.5 1h-8C6.12 1 5 2.12 5 3.5v17C5 21.88 6.12 23 7.5 23h8c1.38 0 2.5-1.12 2.5-2.5v-17C18 2.12 16.88 1 15.5 1zm-4 21c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5-4H7V4h9v14z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Modern Equipment</h3>
+                    <p class="text-gray-600 mb-4">Cutting-edge medical technology for precise diagnostics</p>
+                    <span class="text-4xl font-bold text-primary">100%</span>
+                    <p class="text-gray-500 text-sm">Advanced Tech</p>
+                </div>
+
+                <div class="text-center fade-in">
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-purple-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Insurance Accepted</h3>
+                    <p class="text-gray-600 mb-4">We work with all major insurance providers</p>
+                    <span class="text-4xl font-bold text-primary">30+</span>
+                    <p class="text-gray-500 text-sm">Insurance Partners</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meet Our Doctors Section -->
+    <section id="doctors" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Meet Our Doctors</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Dedicated professionals committed to your well-being</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Doctor 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover fade-in">
+                    <div class="h-64 bg-gradient-to-br from-blue-200 to-blue-300 flex items-center justify-center">
+                        <svg class="w-32 h-32 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-1">Dr. Sarah Mitchell</h3>
+                        <p class="text-secondary font-medium mb-3">Cardiologist</p>
+                        <p class="text-gray-600 text-sm mb-4">Board-certified cardiologist with 15 years of experience in interventional cardiology and heart disease prevention.</p>
+                        <div class="flex space-x-3">
+                            <a href="#" class="text-gray-400 hover:text-blue-500 transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Doctor 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover fade-in">
+                    <div class="h-64 bg-gradient-to-br from-green-200 to-green-300 flex items-center justify-center">
+                        <svg class="w-32 h-32 text-green-400" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-1">Dr. James Rodriguez</h3>
+                        <p class="text-secondary font-medium mb-3">Orthopedic Surgeon</p>
+                        <p class="text-gray-600 text-sm mb-4">Leading orthopedic specialist specializing in sports medicine, joint replacement, and minimally invasive procedures.</p>
+                        <div class="flex space-x-3">
+                            <a href="#" class="text-gray-400 hover:text-blue-500 transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Doctor 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-md card-hover fade-in">
+                    <div class="h-64 bg-gradient-to-br from-purple-200 to-purple-300 flex items-center justify-center">
+                        <svg class="w-32 h-32 text-purple-400" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-1">Dr. Emily Chen</h3>
+                        <p class="text-secondary font-medium mb-3">Pediatric Specialist</p>
+                        <p class="text-gray-600 text-sm mb-4">Compassionate pediatrician dedicated to providing comprehensive care for children from infancy through adolescence.</p>
+                        <div class="flex space-x-3">
+                            <a href="#" class="text-gray-400 hover:text-blue-500 transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Patients Say</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Real experiences from real patients</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card rounded-xl p-6 shadow-md card-hover fade-in">
+                    <div class="flex mb-3">
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </div>
+                    <p class="text-gray-600 mb-4 italic">"The care I received at MediCare Plus was exceptional. Dr. Mitchell took the time to explain everything about my heart condition and made me feel completely at ease during my treatment."</p>
+                    <div class="border-t pt-4">
+                        <p class="font-bold text-gray-900">Michael Thompson</p>
+                        <p class="text-sm text-gray-500">Cardiac Bypass Surgery</p>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card rounded-xl p-6 shadow-md card-hover fade-in">
+                    <div class="flex mb-3">
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </div>
+                    <p class="text-gray-600 mb-4 italic">"Dr. Chen is absolutely wonderful with children. My daughter actually looks forward to her check-ups now! The entire staff goes above and beyond to make every visit comfortable."</p>
+                    <div class="border-t pt-4">
+                        <p class="font-bold text-gray-900">Jennifer Williams</p>
+                        <p class="text-sm text-gray-500">Pediatric Care</p>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card rounded-xl p-6 shadow-md card-hover fade-in">
+                    <div class="flex mb-3">
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </div>
+                    <p class="text-gray-600 mb-4 italic">"After my knee replacement surgery with Dr. Rodriguez, I'm back to hiking again! The rehabilitation program was thorough and the staff genuinely cared about my recovery."</p>
+                    <div class="border-t pt-4">
+                        <p class="font-bold text-gray-900">Robert Martinez</p>
+                        <p class="text-sm text-gray-500">Knee Replacement</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Contact Us</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Book your appointment or reach out with any questions</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Info -->
+                <div class="fade-in">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Get In Touch</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Address</h4>
+                                <p class="text-gray-600">123 Healthcare Boulevard, Suite 400<br>San Francisco, CA 94102</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Phone</h4>
+                                <p class="text-gray-600">(415) 555-0123</p>
+                                <p class="text-sm text-gray-500">Emergency: (415) 555-0199</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Email</h4>
+                                <p class="text-gray-600">info@medicareplus.com</p>
+                                <p class="text-sm text-gray-500">appointments@medicareplus.com</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Operating Hours</h4>
+                                <p class="text-gray-600">Mon - Fri: 8:00 AM - 8:00 PM</p>
+                                <p class="text-gray-600">Sat - Sun: 9:00 AM - 5:00 PM</p>
+                                <p class="text-sm text-accent font-medium">Emergency: 24/7</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appointment Booking Wizard -->
+                <div class="bg-white rounded-xl p-8 shadow-md fade-in">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Book an Appointment</h3>
+
+                    <!-- Step Indicators -->
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center">
+                            <div id="step1-indicator" class="step-indicator w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 border-secondary active">1</div>
+                            <div class="w-12 h-0.5 bg-gray-200" id="line1"></div>
+                            <div id="step2-indicator" class="step-indicator w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 border-gray-300 text-gray-400">2</div>
+                            <div class="w-12 h-0.5 bg-gray-200" id="line2"></div>
+                            <div id="step3-indicator" class="step-indicator w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 border-gray-300 text-gray-400">3</div>
+                        </div>
+                    </div>
+
+                    <form id="appointment-form">
+                        <!-- Step 1: Personal Details -->
+                        <div id="step1" class="wizard-step active">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">Personal Details</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                    <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-colors" placeholder="John Doe">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-colors" placeholder="john@example.com">
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                                    <input type="tel" id="phone" name="phone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-colors" placeholder="(415) 555-0123">
+                                </div>
+                                <div>
+                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Reason for Visit (Optional)</label>
+                                    <textarea id="message" name="message" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent transition-colors resize-none" placeholder="Brief description of your health concern..."></textarea>
+                                </div>
+                            </div>
+                            <button type="button" onclick="nextStep(1)" class="w-full mt-6 bg-secondary hover:bg-primary text-white font-bold py-3 px-6 rounded-lg transition-colors">Continue to Date Selection</button>
+                        </div>
+
+                        <!-- Step 2: Date & Time Selection -->
+                        <div id="step2" class="wizard-step">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">Select Date & Time</h4>
+
+                            <!-- Calendar -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Choose a Date</label>
+                                <div class="border rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <button type="button" onclick="changeMonth(-1)" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                                        </button>
+                                        <span id="calendar-month" class="font-semibold"></span>
+                                        <button type="button" onclick="changeMonth(1)" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                        </button>
+                                    </div>
+                                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 mb-2">
+                                        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                                    </div>
+                                    <div id="calendar-days" class="grid grid-cols-7 gap-1"></div>
+                                </div>
+                                <input type="hidden" id="selected-date" name="appointment-date">
+                            </div>
+
+                            <!-- Time Slots -->
+                            <div id="time-slots-container" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Choose a Time Slot</label>
+                                <div class="grid grid-cols-3 gap-3">
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '09:00')">
+                                        <div class="font-semibold text-sm">09:00 AM</div>
+                                        <div class="text-xs text-gray-500">Morning</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '09:30')">
+                                        <div class="font-semibold text-sm">09:30 AM</div>
+                                        <div class="text-xs text-gray-500">Morning</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '10:00')">
+                                        <div class="font-semibold text-sm">10:00 AM</div>
+                                        <div class="text-xs text-gray-500">Morning</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '10:30')">
+                                        <div class="font-semibold text-sm">10:30 AM</div>
+                                        <div class="text-xs text-gray-500">Morning</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '11:00')">
+                                        <div class="font-semibold text-sm">11:00 AM</div>
+                                        <div class="text-xs text-gray-500">Morning</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '11:30')">
+                                        <div class="font-semibold text-sm">11:30 AM</div>
+                                        <div class="text-xs text-gray-500">Morning</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '14:00')">
+                                        <div class="font-semibold text-sm">02:00 PM</div>
+                                        <div class="text-xs text-gray-500">Afternoon</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '14:30')">
+                                        <div class="font-semibold text-sm">02:30 PM</div>
+                                        <div class="text-xs text-gray-500">Afternoon</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '15:00')">
+                                        <div class="font-semibold text-sm">03:00 PM</div>
+                                        <div class="text-xs text-gray-500">Afternoon</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '15:30')">
+                                        <div class="font-semibold text-sm">03:30 PM</div>
+                                        <div class="text-xs text-gray-500">Afternoon</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '16:00')">
+                                        <div class="font-semibold text-sm">04:00 PM</div>
+                                        <div class="text-xs text-gray-500">Afternoon</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectTimeSlot(this, '16:30')">
+                                        <div class="font-semibold text-sm">04:30 PM</div>
+                                        <div class="text-xs text-gray-500">Afternoon</div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="selected-time" name="appointment-time">
+                            </div>
+
+                            <div class="flex gap-3 mt-6">
+                                <button type="button" onclick="prevStep(2)" class="flex-1 border-2 border-secondary text-secondary hover:bg-blue-50 font-bold py-3 px-6 rounded-lg transition-colors">Back</button>
+                                <button type="button" id="toPaymentBtn" onclick="nextStep(2)" class="flex-1 bg-secondary hover:bg-primary text-white font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>Continue to Payment</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Payment & Confirmation -->
+                        <div id="step3" class="wizard-step">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">Appointment Summary</h4>
+                            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <span class="text-gray-500">Patient:</span>
+                                        <p id="summary-name" class="font-medium"></p>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">Phone:</span>
+                                        <p id="summary-phone" class="font-medium"></p>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">Date:</span>
+                                        <p id="summary-date" class="font-medium"></p>
+                                    </div>
+                                    <div>
+                                        <span class="text-gray-500">Time:</span>
+                                        <p id="summary-time" class="font-medium"></p>
+                                    </div>
+                                    <div class="col-span-2">
+                                        <span class="text-gray-500">Email:</span>
+                                        <p id="summary-email" class="font-medium"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-t pt-4 mb-6">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-gray-600">Consultation Fee:</span>
+                                    <span class="font-medium">₹12,450</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm text-gray-500">
+                                    <span>Processing Fee:</span>
+                                    <span>₹415</span>
+                                </div>
+                                <div class="flex justify-between items-center mt-3 pt-3 border-t">
+                                    <span class="font-bold text-lg">Total:</span>
+                                    <span class="font-bold text-lg text-primary">₹12,865</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+                                <div class="grid grid-cols-3 gap-3">
+                                    <div class="time-slot selected border-2 border-secondary rounded-lg p-3 text-center cursor-pointer" onclick="selectPayment(this)">
+                                        <svg class="w-8 h-8 mx-auto mb-1 text-gray-700" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                                        <div class="text-xs font-medium">Credit Card</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectPayment(this)">
+                                        <svg class="w-8 h-8 mx-auto mb-1 text-gray-700" viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+                                        <div class="text-xs font-medium">Insurance</div>
+                                    </div>
+                                    <div class="time-slot border-2 border-gray-200 rounded-lg p-3 text-center cursor-pointer" onclick="selectPayment(this)">
+                                        <svg class="w-8 h-8 mx-auto mb-1 text-gray-700" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-9-1c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm13-6v11c0 1.1-.9 2-2 2H4v-2h17V7h2z"/></svg>
+                                        <div class="text-xs font-medium">PayPal</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <button type="button" onclick="prevStep(3)" class="flex-1 border-2 border-secondary text-secondary hover:bg-blue-50 font-bold py-3 px-6 rounded-lg transition-colors">Back</button>
+                                <button type="button" onclick="proceedToPayment()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                                    <span>Proceed to Payment</span>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <!-- About -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <svg class="w-8 h-8 text-secondary" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                        <span class="text-xl font-bold">MediCare Plus</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Providing exceptional medical care with compassion and expertise since 1998. Your health is our priority.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-secondary transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-secondary transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-secondary transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-secondary transition-colors">Home</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-secondary transition-colors">Services</a></li>
+                        <li><a href="#doctors" class="text-gray-400 hover:text-secondary transition-colors">Our Doctors</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-secondary transition-colors">About Us</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-secondary transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Our Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#services" class="text-gray-400 hover:text-secondary transition-colors">General Medicine</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-secondary transition-colors">Cardiology</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-secondary transition-colors">Pediatrics</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-secondary transition-colors">Dermatology</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-secondary transition-colors">Orthopedics</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>123 Healthcare Boulevard</li>
+                        <li>San Francisco, CA 94102</li>
+                        <li>Phone: (415) 555-0123</li>
+                        <li>Email: info@medicareplus.com</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+                <p>&copy; 2026 MediCare Plus. All rights reserved.</p>
+                <p class="mt-2 text-sm"><strong style="color: #3B82F6;">Template by</strong> <a href="https://joecodes.in" target="_blank" class="text-secondary hover:text-white transition-colors">joecodes.in</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Fade-in on scroll animation
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Wizard Logic
+        let currentStep = 1;
+        let currentDate = new Date();
+        let selectedDate = null;
+        let selectedTime = null;
+
+        function nextStep(step) {
+            if (step === 1) {
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                if (!name || !email || !phone) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+            }
+
+            document.getElementById(`step${step}`).classList.remove('active');
+            currentStep = step + 1;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+
+            updateStepIndicators();
+            initCalendar();
+
+            if (currentStep === 3) {
+                populateSummary();
+            }
+        }
+
+        function prevStep(step) {
+            document.getElementById(`step${step}`).classList.remove('active');
+            currentStep = step - 1;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            updateStepIndicators();
+        }
+
+        function updateStepIndicators() {
+            for (let i = 1; i <= 3; i++) {
+                const indicator = document.getElementById(`step${i}-indicator`);
+                const line = document.getElementById(`line${i-1}`);
+                indicator.classList.remove('active', 'completed');
+                if (i < currentStep) {
+                    indicator.classList.add('completed');
+                    if (line) line.classList.add('bg-green-500');
+                } else if (i === currentStep) {
+                    indicator.classList.add('active');
+                    if (line) line.classList.add('bg-gray-300');
+                } else {
+                    if (line) line.classList.add('bg-gray-200');
+                }
+            }
+        }
+
+        // Calendar Logic
+        function initCalendar() {
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('calendar-month').textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+
+            const daysContainer = document.getElementById('calendar-days');
+            daysContainer.innerHTML = '';
+
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+            const today = new Date();
+
+            // Empty cells for days before first day
+            for (let i = 0; i < firstDay; i++) {
+                daysContainer.innerHTML += '<div></div>';
+            }
+
+            // Days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+                const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
+
+                let classes = 'calendar-day p-2 text-sm rounded-lg cursor-pointer hover:bg-blue-50';
+                if (isPast || isWeekend) classes += ' disabled';
+                if (isSelected) classes += ' selected';
+
+                daysContainer.innerHTML += `<div class="${classes}" onclick="${!isPast && !isWeekend ? `selectDate(${date.getFullYear()}, ${date.getMonth()}, ${date.getDate()})` : ''}">${day}</div>`;
+            }
+        }
+
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function selectDate(year, month, day) {
+            selectedDate = new Date(year, month, day);
+            document.getElementById('selected-date').value = selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('time-slots-container').classList.remove('hidden');
+            renderCalendar();
+        }
+
+        function selectTimeSlot(el, time) {
+            document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedTime = time;
+            document.getElementById('selected-time').value = time;
+            document.getElementById('toPaymentBtn').disabled = false;
+        }
+
+        function selectPayment(el) {
+            document.querySelectorAll('#step3 .time-slot').forEach(slot => {
+                if (slot.querySelector('.text-xs')) {
+                    slot.classList.remove('selected');
+                    slot.classList.add('border-gray-200');
+                    slot.classList.remove('border-secondary');
+                }
+            });
+            el.classList.add('selected');
+            el.classList.remove('border-gray-200');
+            el.classList.add('border-secondary');
+        }
+
+        function populateSummary() {
+            document.getElementById('summary-name').textContent = document.getElementById('name').value;
+            document.getElementById('summary-email').textContent = document.getElementById('email').value;
+            document.getElementById('summary-phone').textContent = document.getElementById('phone').value;
+            document.getElementById('summary-date').textContent = document.getElementById('selected-date').value;
+
+            const timeValue = document.getElementById('selected-time').value;
+            if (timeValue) {
+                const [hours, minutes] = timeValue.split(':');
+                const hour = parseInt(hours);
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                const hour12 = hour % 12 || 12;
+                document.getElementById('summary-time').textContent = `${hour12}:${minutes} ${ampm}`;
+            }
+        }
+
+        function proceedToPayment() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const date = document.getElementById('selected-date').value;
+            const time = document.getElementById('selected-time').value;
+
+            if (!name || !email || !phone || !date || !time) {
+                alert('Please complete all steps');
+                return;
+            }
+
+            // Simulate payment redirect
+            const paymentWindow = window.open('', '_blank');
+            paymentWindow.document.write(`
+                <html>
+                <head><title>Payment - MediCare Plus</title></head>
+                <body style="font-family: system-ui, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background: #f3f4f6;">
+                    <div style="text-align: center; padding: 40px; background: white; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px;">
+                        <div style="width: 64px; height: 64px; background: #10B981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                            <svg width="32" height="32" fill="white" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </div>
+                        <h1 style="font-size: 24px; margin: 0 0 10px; color: #1f2937;">Appointment Confirmed!</h1>
+                        <p style="color: #6b7280; margin: 0 0 20px;">Thank you, ${name}</p>
+                        <div style="text-align: left; background: #f9fafb; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="margin: 0 0 8px; color: #374151;"><strong>Date:</strong> ${date}</p>
+                            <p style="margin: 0 0 8px; color: #374151;"><strong>Time:</strong> ${time}</p>
+                            <p style="margin: 0 0 8px; color: #374151;"><strong>Total:</strong> ₹12,865</p>
+                            <p style="margin: 0; color: #6b7280; font-size: 14px;">Payment processed successfully. A confirmation email has been sent to ${email}.</p>
+                        </div>
+                        <button onclick="window.close()" style="background: #3B82F6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px;">Close</button>
+                    </div>
+                </body>
+                </html>
+            `);
+            paymentWindow.document.close();
+        }
+    </script>
+</body>
+</html>
