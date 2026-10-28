@@ -14,8 +14,7 @@ function App() {
         <Hero />
         <About />
         <Skills />
-        {/* Shipped Code & MVPs hidden */}
-        {/* <Projects /> */}
+        <Projects />
         <Contact />
 
         <footer className="py-10 px-4 border-t border-gray-900/80 bg-[#070707] text-center text-gray-500 text-xs font-mono">
