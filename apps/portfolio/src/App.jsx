@@ -2,6 +2,7 @@ import Hero from "./components/Hero";
 import About from "./components/About";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
+import BurgmanGame from "./components/BurgmanGame";
 import Contact from "./components/Contact";
 import CoreTerminal from "./components/CoreTerminal";
 
@@ -16,6 +17,7 @@ function App() {
         <About />
         <Skills />
         <Projects />
+        <BurgmanGame />
         <Contact />
         <CoreTerminal />
 

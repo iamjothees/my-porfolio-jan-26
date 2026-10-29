@@ -11,7 +11,6 @@ import {
     Zap,
     Smartphone
 } from "lucide-react";
-import BurgmanGame from "./BurgmanGame";
 
 const projectsData = [
     {
@@ -210,11 +209,8 @@ export default function Projects() {
                     </motion.div>
                 </div>
 
-                {/* Option C: The 30 km/h Burgman Cruiser Retro Mini-Game */}
-                <BurgmanGame />
-
                 {/* Projects Grid: Clean, Responsive Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {projectsData.map((project) => {
                         const Icon = project.icon;
                         return (
