@@ -7,7 +7,6 @@ import {
     Sparkles,
     CheckCircle2,
     AlertTriangle,
-    ShieldCheck,
     RotateCcw,
     Gauge,
     Maximize2,
@@ -772,20 +771,10 @@ export default function BurgmanGame() {
                                 <span className="text-xs text-gray-400 font-bold uppercase">meters</span>
                             </div>
 
-                            <div className="mb-4">
+                            <div>
                                 <span className={`inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${currentRank.badge}`}>
                                     {currentRank.title}
                                 </span>
-                            </div>
-
-                            <div className="p-2.5 rounded-xl bg-black/40 border border-gray-800 text-[11px] text-gray-400 flex items-start gap-2">
-                                <ShieldCheck size={14} className="text-neon-green shrink-0 mt-0.5" />
-                                <div>
-                                    <p className="font-semibold text-gray-300">Where is this saved?</p>
-                                    <p className="text-[10px] text-gray-400 leading-relaxed mt-0.5">
-                                        Saved right in your browser's <code className="text-neon-blue">localStorage</code>. It stays preserved even when you refresh the page.
-                                    </p>
-                                </div>
                             </div>
                         </div>
 
