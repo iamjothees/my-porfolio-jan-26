@@ -71,6 +71,27 @@ export const projects = [
     color: '#0EA5E9',
     description: 'Travel agency with destination highlights, package gallery, and booking inquiry form.',
   },
+  {
+    name: 'QWIK PREVIEW',
+    dir: 'qwik-preview',
+    tagline: '1-Click LAN Mobile Preview for Developers',
+    industry: 'Dev Tools',
+    tag: 'TOOL ↗',
+    color: '#00F0FF',
+    description: 'Zero-friction mobile testing for developers. Instant 1-click push from laptop to phone over LAN with 24/7 Stay-Awake desk mode, real-time WebSocket relay, and automatic localhost IP translation.',
+    url: 'https://qwik-preview.joecodes.in/',
+    githubUrl: 'https://github.com/iamjothees/qwik-mobile-preview',
+    dockerHub: 'iamjothees/qwik-mobile-preview:latest',
+    techStack: [
+      'Docker',
+      'Manifest V3',
+      'WebSockets',
+      'PWA',
+      'Cloudflare Tunnel',
+      'Node.js',
+      'Screen Wake Lock API'
+    ],
+  },
 ];
 
 export const filterMap = {
@@ -80,4 +101,5 @@ export const filterMap = {
   'EdTech': 'edtech',
   'Agriculture': 'agriculture',
   'Travel': 'travel',
+  'Dev Tools': 'devtools',
 };
