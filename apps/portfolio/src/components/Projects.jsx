@@ -17,7 +17,11 @@ import {
     Box,
     Layers,
     Play,
-    Zap
+    Zap,
+    Smartphone,
+    Copy,
+    Check,
+    Radio
 } from "lucide-react";
 
 const Bug = ({ id, onSquash }) => {
@@ -57,91 +61,126 @@ const Bug = ({ id, onSquash }) => {
 const projectsData = [
     {
         id: "ecommerce-system",
-        title: "E-Commerce System",
-        tagline: "High-Throughput Storefront & Containerized Commerce Engine",
-        category: "FULL-STACK ARCHITECTURE",
+        title: "Online Store Platform",
+        tagline: "Fast checkout, instant cart updates, and hassle-free shopping.",
+        category: "ONLINE STORE",
         icon: ShoppingCart,
         accentColor: "from-purple-500 to-indigo-500",
         badgeColor: "border-purple-500/40 text-purple-400 bg-purple-500/10",
         stack: [
-            { name: "PHP 8.2", role: "Backend Core" },
-            { name: "Laravel", role: "API & Multi-Guard Auth" },
-            { name: "React", role: "Custom Cart State & UI" },
-            { name: "MySQL", role: "ACID Relational Schemas" },
-            { name: "Docker", role: "Containerized Infra" },
+            { name: "PHP & Laravel", role: "Store Engine & Secure Accounts" },
+            { name: "React", role: "Instant Cart & Interactive Catalog" },
+            { name: "MySQL", role: "Reliable Product & Order Database" },
+            { name: "Tailwind CSS", role: "Mobile-Friendly Design" },
         ],
         description:
-            "Engineered an end-to-end commerce architecture with reactive custom cart states, bulletproof multi-guard authentication flows, and relational inventory schemas in MySQL. Fully containerized with Docker multi-stage builds for zero-headache local-to-production parity. Built to survive flash traffic without screaming.",
+            "A complete online shopping platform designed for speed and ease of use. Shoppers can search products with instant results, add items to their cart with zero lag, and check out securely. The system automatically tracks stock levels in real time so customers never purchase an item that just went out of stock.",
         highlights: [
             {
-                label: "Custom Cart States",
-                detail: "Optimistic UI synchronization, client-side persistence, and automated guest-to-user cart reconciliation."
+                label: "Instant Shopping Cart",
+                detail: "Add items and watch totals and taxes calculate right away without slow page reloads."
             },
             {
-                label: "Secure Auth Flows",
-                detail: "Multi-guard session isolation with Laravel Sanctum, customer/merchant RBAC, and CSRF-shielded checkout."
+                label: "Safe & Secure Accounts",
+                detail: "Keeps customer logins, passwords, and purchase history protected and easy to manage."
             },
             {
-                label: "Docker Infrastructure",
-                detail: "Multi-container compose topology orchestrating PHP-FPM, Nginx, MySQL 8.0, and Redis cache workers."
+                label: "Smart Stock Tracking",
+                detail: "Automatically updates item counts the second an order is placed, preventing overselling."
             },
             {
-                label: "ACID Relational Schemas",
-                detail: "Atomic transactions preventing inventory overselling, composite indexing, and sub-10ms catalog queries."
+                label: "Mobile-First Shopping",
+                detail: "Designed and tested to feel as smooth and natural on a phone as it does on a desktop."
             }
         ],
         sourceUrl: "https://github.com/iamjothees",
         liveUrl: "https://showcase.joecodes.in/#ecommerce",
-        previewBadge: "Live on showcase.joecodes.in • One-click access",
+        previewBadge: "Live on showcase.joecodes.in • 1-Click Access",
         demoType: "ecommerce"
     },
     {
         id: "food-ordering-app",
-        title: "Online Food Ordering Application",
-        tagline: "Real-Time Kitchen Dispatch & Concurrency-Safe Order Pipeline",
-        category: "REAL-TIME MVP",
+        title: "Food Ordering & Delivery App",
+        tagline: "Order hot meals and track delivery straight to your doorstep.",
+        category: "ORDERING APP",
         icon: Utensils,
         accentColor: "from-orange-500 to-red-500",
         badgeColor: "border-orange-500/40 text-orange-400 bg-orange-500/10",
         stack: [
-            { name: "React", role: "Mobile-First Ordering UI" },
-            { name: "Laravel", role: "Order Dispatch Engine" },
-            { name: "PHP 8.2", role: "Queue & Job Processing" },
-            { name: "MySQL", role: "Transactional Integrity" },
-            { name: "Tailwind CSS", role: "Fluid Responsive Design" },
+            { name: "React", role: "Easy Mobile Menu & Checkout" },
+            { name: "Laravel", role: "Kitchen Dispatch & Order Manager" },
+            { name: "MySQL", role: "Live Order Records" },
+            { name: "Tailwind CSS", role: "App-like Interface" },
         ],
         description:
-            "Engineered for when hunger meets impatience. Features sub-second cart recalculations, live kitchen-to-doorstep order pipeline state tracking, and resilient MySQL transactional queries so double-ordered biryanis are impossible (unless intentional).",
+            "Built for hungry customers and busy kitchens. Browse food menus with appetizing photos, customize meals (extra cheese, no onions, combo options), and watch your order update in real time from the chef's pan to the delivery scooter on the road.",
         highlights: [
             {
-                label: "Real-Time Dispatch Pipeline",
-                detail: "State machine orchestrating kitchen prep, courier assignment, and live delivery updates without polling lag."
+                label: "Live Order Status",
+                detail: "Follow along as your meal moves from kitchen prep to rider pickup and arrival at your door."
             },
             {
-                label: "Pessimistic Locking & Safety",
-                detail: "Row-level database locks protecting limited-inventory menu items during peak dinner rush hours."
+                label: "Easy Meal Customizer",
+                detail: "Choose portion sizes, toppings, and special cooking notes with simple, clear taps."
             },
             {
-                label: "Adaptive Menu Discovery",
-                detail: "Sub-millisecond instant search across extensive categorizations, modifier addons, and dietary tags."
+                label: "Rush-Hour Ready",
+                detail: "Handles hundreds of orders during lunch or dinner rush without slowing down or duplicating tickets."
             },
             {
-                label: "Frictionless Onboarding",
-                detail: "Single-tap guest checkout with cached delivery coordinates, instant OTP fallback, and order tracking."
+                label: "Fast Reordering",
+                detail: "Saves delivery addresses and past orders so dinner can be reordered in two taps."
             }
         ],
         sourceUrl: "https://github.com/iamjothees",
         liveUrl: "https://showcase.joecodes.in/#food-ordering",
-        previewBadge: "Live on showcase.joecodes.in • One-click access",
+        previewBadge: "Live on showcase.joecodes.in • 1-Click Access",
         demoType: "food"
+    },
+    {
+        id: "qwik-preview",
+        title: "Qwik Preview",
+        tagline: "1-Click tool to preview web projects on your real phone.",
+        category: "PRODUCTIVITY TOOL",
+        icon: Smartphone,
+        accentColor: "from-cyan-400 to-blue-500",
+        badgeColor: "border-cyan-500/40 text-cyan-400 bg-cyan-500/10",
+        stack: [
+            { name: "Web Tool", role: "1-Click Phone Mirror" },
+            { name: "Stay-Awake Mode", role: "Keeps Phone Display On" },
+            { name: "Docker", role: "Easy 1-Command Setup" },
+        ],
+        description:
+            "A tool I built to solve an everyday headache: testing how a new website looks on an actual phone. Instead of typing long numbers or scanning codes over and over, one click on the laptop screen immediately opens the page on a phone sitting on the desk.",
+        highlights: [
+            {
+                label: "1-Click Phone Mirror",
+                detail: "Click once on your computer and the page opens immediately on your phone."
+            },
+            {
+                label: "Screen Stays Awake",
+                detail: "Keeps your phone screen turned on while you work so it doesn't constantly lock or go dark."
+            },
+            {
+                label: "Zero Manual Typing",
+                detail: "Eliminates having to email links to yourself or type awkward IP numbers into mobile browsers."
+            },
+            {
+                label: "Instant Live Updates",
+                detail: "Change a color or layout on your laptop and see it on your phone in a flash."
+            }
+        ],
+        sourceUrl: "https://github.com/iamjothees/qwik-mobile-preview",
+        liveUrl: "https://qwik-preview.joecodes.in/",
+        dockerHub: "iamjothees/qwik-mobile-preview:latest",
+        previewBadge: "Live on qwik-preview.joecodes.in",
+        demoType: "qwik-preview"
     }
 ];
 
 export default function Projects() {
     const [bugs, setBugs] = useState([0, 1, 2, 3]);
     const [squashedCount, setSquashedCount] = useState(0);
-    const [hackerMode, setHackerMode] = useState(false);
-    const [matrixRainText, setMatrixRainText] = useState("");
     const [activeModalProject, setActiveModalProject] = useState(null);
 
     // Interactive Demo Sandbox State
@@ -152,6 +191,45 @@ export default function Projects() {
     ]);
     const [foodOrderStatus, setFoodOrderStatus] = useState(0); // 0: placed, 1: prep, 2: transit, 3: delivered
 
+    // Qwik Preview Interactive Sandbox State
+    const [qwikSampleUrl, setQwikSampleUrl] = useState("http://localhost:3000/checkout");
+    const [qwikTranslatedUrl, setQwikTranslatedUrl] = useState("http://192.168.1.42:3000/checkout");
+    const [qwikWakeLockActive, setQwikWakeLockActive] = useState(true);
+    const [isPushingQwik, setIsPushingQwik] = useState(false);
+    const [qwikCopiedDocker, setQwikCopiedDocker] = useState(false);
+    const [qwikLogPackets, setQwikLogPackets] = useState([
+        "[READY] Manifest V3 Extension toolbar beacon idle",
+        "[STATUS] WebSocket relay established: wss://qwik-preview.joecodes.in/relay",
+        "[DOCK] Screen Wake Lock API active (24/7 Desk Dock Stay-Awake: ON)"
+    ]);
+
+    const handleQwikPush = () => {
+        setIsPushingQwik(true);
+        const translated = qwikSampleUrl
+            .replace("localhost", "192.168.1.42")
+            .replace("127.0.0.1", "192.168.1.42");
+        setQwikTranslatedUrl(translated);
+
+        const newLog = [
+            `[EXT-TRIGGER] Captured active tab: ${qwikSampleUrl}`,
+            `[IP-RESOLVER] Auto-translated loopback: ${qwikSampleUrl} -> ${translated}`,
+            `[RELAY-HUB] Dispatched WS packet over Cloudflare Tunnel (14ms ping)`,
+            `[PWA-RECEIVER] Phone viewport mirrored & rendered successfully`
+        ];
+
+        setQwikLogPackets((prev) => [...newLog, ...prev.slice(0, 4)]);
+
+        setTimeout(() => {
+            setIsPushingQwik(false);
+        }, 500);
+    };
+
+    const copyQwikDocker = () => {
+        navigator.clipboard.writeText("docker pull iamjothees/qwik-mobile-preview:latest");
+        setQwikCopiedDocker(true);
+        setTimeout(() => setQwikCopiedDocker(false), 2000);
+    };
+
     const squashBug = (id) => {
         setBugs(prev => prev.filter(b => b !== id));
         setSquashedCount(c => c + 1);
@@ -160,15 +238,6 @@ export default function Projects() {
                 setBugs(prev => [...prev, (prev.length ? Math.max(...prev) : 0) + 1]);
             }, 2500);
         }
-    };
-
-    const triggerHackerMode = () => {
-        const randomHex = Array.from({ length: 450 }, () =>
-            Math.random().toString(36).substring(2, 8)
-        ).join(" ");
-        setMatrixRainText(randomHex);
-        setHackerMode(true);
-        setTimeout(() => setHackerMode(false), 3200);
     };
 
     const simulateGuestLogin = () => {
@@ -221,28 +290,28 @@ export default function Projects() {
                         initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neon-green/30 bg-neon-green/5 text-neon-green text-xs font-mono mb-4"
+                        className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-neon-green/30 bg-neon-green/5 text-neon-green text-xs font-medium mb-4"
                     >
                         <Sparkles size={13} className="text-neon-green" />
-                        <span>PRODUCTION SHIPPED ARTIFACTS</span>
+                        <span>REAL THINGS I'VE BUILT</span>
                     </motion.div>
 
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-4xl md:text-6xl font-black text-white tracking-tight mb-4"
+                        className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-4"
                     >
-                        Shipped Code & MVPs
+                        Featured Projects
                     </motion.h2>
 
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-gray-300 font-mono text-sm md:text-base leading-relaxed max-w-3xl mx-auto"
+                        className="text-gray-300 text-base leading-relaxed max-w-2xl mx-auto"
                     >
-                        I build systems that run in production. Explore the full high-density interactive vault of live SaaS platforms, ERP systems, and custom web builds over at{" "}
+                        Built for speed, ease of use, and everyday humans. Looking for more designs? Explore all 9 interactive templates and demos on{" "}
                         <a
                             href="https://showcase.joecodes.in/"
                             target="_blank"
@@ -259,57 +328,36 @@ export default function Projects() {
                         initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="mt-5"
+                        className="mt-6"
                     >
                         <a
                             href="https://showcase.joecodes.in/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-neon-blue/40 bg-neon-blue/10 text-neon-blue hover:bg-neon-blue hover:text-black font-mono text-xs font-bold transition-all shadow-[0_0_20px_rgba(0,255,255,0.2)] active:scale-95 group cursor-pointer"
+                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-neon-blue/40 bg-neon-blue/10 text-neon-blue hover:bg-neon-blue hover:text-black text-xs font-bold transition-all shadow-[0_0_20px_rgba(0,255,255,0.18)] active:scale-95 group cursor-pointer"
                         >
                             <Zap size={14} className="text-neon-blue group-hover:text-black fill-current" />
-                            <span>Explore Full Showcase Directory (showcase.joecodes.in)</span>
+                            <span>Browse 9 Live Templates on showcase.joecodes.in</span>
                             <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                         </a>
                     </motion.div>
 
-                    {/* Interactive Telemetry Bar */}
-                    <div className="flex flex-wrap items-center justify-center gap-3 mt-6 text-xs font-mono">
+                    {/* Friendly Bug Squasher Game */}
+                    <div className="flex flex-wrap items-center justify-center gap-3 mt-6 text-xs">
                         <button
-                            onClick={triggerHackerMode}
-                            className="px-3 py-1.5 rounded-lg border border-red-500/40 bg-red-950/20 text-red-400 hover:bg-red-900/30 hover:border-red-500 transition-colors flex items-center gap-1.5"
+                            onClick={() => setBugs(prev => [...prev, (prev.length ? Math.max(...prev) : 0) + 1])}
+                            className="px-3 py-1.5 rounded-lg border border-yellow-500/30 bg-yellow-950/20 text-yellow-300 hover:bg-yellow-900/30 transition-colors flex items-center gap-1.5 cursor-pointer"
                         >
-                            <Terminal size={14} />
-                            <span>{hackerMode ? "DIAGNOSTICS_RUNNING..." : "AUDIT SYSTEM LOGS"}</span>
+                            <span>Spawn a Bug 🐛</span>
                         </button>
-                        <span className="px-3 py-1.5 rounded-lg border border-gray-800 bg-gray-900/50 text-gray-400">
-                            BUGS SQUASHED: <span className="text-neon-green font-bold">{squashedCount}</span>
+                        <span className="px-3 py-1.5 rounded-lg border border-gray-800 bg-gray-900/50 text-gray-300 font-medium">
+                            Bugs Squashed: <span className="text-neon-green font-bold">{squashedCount}</span>
                         </span>
                         <span className="px-3 py-1.5 rounded-lg border border-gray-800 bg-gray-900/50 text-gray-400">
-                            BUGS IN THE WILD: <span className="text-neon-pink font-bold">{bugs.length}</span>
+                            Bugs on screen: <span className="text-neon-pink font-bold">{bugs.length}</span> (Click to squash!)
                         </span>
                     </div>
                 </div>
-
-                {/* Matrix Rain Diagnostics Overlay */}
-                <AnimatePresence>
-                    {hackerMode && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="relative mb-12 bg-black/90 border border-green-500/50 rounded-xl p-6 overflow-hidden shadow-[0_0_40px_rgba(34,197,94,0.25)]"
-                        >
-                            <div className="flex items-center justify-between pb-3 border-b border-green-500/20 mb-3 text-xs font-mono text-green-400">
-                                <span>KERNEL MEMORY & AUTH STREAM // DECRYPTED</span>
-                                <span>STATUS: 200 OK</span>
-                            </div>
-                            <p className="text-green-400 font-mono text-xs opacity-80 break-all leading-5">
-                                {matrixRainText}
-                            </p>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
 
                 {/* Projects Grid: Clean, Responsive Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -346,42 +394,42 @@ export default function Projects() {
                                         </div>
                                     </div>
 
-                                    {/* Architectural Stack Pills */}
+                                    {/* Tools Used Pills */}
                                     <div className="mb-6">
                                         <p className="text-[11px] font-mono text-gray-500 uppercase tracking-wider mb-2">
-                                            Architectural Stack
+                                            Tools Used
                                         </p>
                                         <div className="flex flex-wrap gap-2">
                                             {project.stack.map((item) => (
                                                 <span
                                                     key={item.name}
-                                                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono bg-black/60 border border-white/10 text-gray-200"
+                                                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs bg-black/60 border border-white/10 text-gray-200"
                                                 >
                                                     <span className="w-1.5 h-1.5 rounded-full bg-neon-green" />
                                                     <span className="font-semibold text-white">{item.name}</span>
-                                                    <span className="text-gray-500 text-[10px]">({item.role})</span>
+                                                    <span className="text-gray-400 text-[11px]">({item.role})</span>
                                                 </span>
                                             ))}
                                         </div>
                                     </div>
 
-                                    {/* Punchy Description */}
-                                    <p className="text-gray-300 text-sm leading-relaxed mb-6 font-sans">
+                                    {/* Clear Description */}
+                                    <p className="text-gray-300 text-sm leading-relaxed mb-6 font-normal">
                                         {project.description}
                                     </p>
 
-                                    {/* Architecture Highlights Grid */}
+                                    {/* Key Features Grid */}
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                                         {project.highlights.map((h) => (
                                             <div
                                                 key={h.label}
                                                 className="p-3 rounded-lg bg-black/40 border border-white/5 text-xs flex flex-col justify-between"
                                             >
-                                                <div className="flex items-center gap-1.5 font-mono text-neon-blue font-semibold mb-1">
+                                                <div className="flex items-center gap-1.5 text-neon-blue font-semibold mb-1">
                                                     <CheckCircle2 size={13} className="shrink-0" />
                                                     <span>{h.label}</span>
                                                 </div>
-                                                <p className="text-gray-400 text-[11px] leading-relaxed">
+                                                <p className="text-gray-300 text-[11px] leading-relaxed">
                                                     {h.detail}
                                                 </p>
                                             </div>
@@ -389,46 +437,45 @@ export default function Projects() {
                                     </div>
                                 </div>
 
-                                {/* Dual Action Buttons & Sub-text Badge */}
+                                {/* Action Buttons */}
                                 <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                                     <div className="flex flex-wrap items-center gap-3">
-                                        {/* Explore Source Code button */}
-                                        <a
-                                            href={project.sourceUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono font-bold bg-white/5 border border-white/15 text-white hover:bg-white/10 hover:border-white/30 transition-all active:scale-95"
-                                        >
-                                            <Github size={15} />
-                                            <span>Explore Source Code</span>
-                                            <ArrowUpRight size={13} className="text-gray-400" />
-                                        </a>
-
-                                        {/* Launch Live Preview button */}
+                                        {/* Try Live Demo button */}
                                         <a
                                             href={project.liveUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-neon-blue to-neon-pink text-black hover:opacity-90 transition-all shadow-[0_0_20px_rgba(0,255,255,0.25)] active:scale-95 cursor-pointer no-underline"
+                                            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-neon-blue to-neon-pink text-black hover:opacity-90 transition-all shadow-[0_0_20px_rgba(0,255,255,0.25)] active:scale-95 cursor-pointer no-underline"
                                         >
-                                            <Play size={14} className="fill-black" />
-                                            <span>Launch Live Preview</span>
+                                            <Play size={13} className="fill-black" />
+                                            <span>Try Live Demo</span>
                                             <ArrowUpRight size={13} className="text-black" />
                                         </a>
 
                                         {/* Interactive Walkthrough Sandbox Launcher */}
                                         <button
                                             onClick={() => setActiveModalProject(project)}
-                                            title="Inspect Sandbox & Telemetry"
-                                            className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-mono font-medium bg-black/40 border border-white/10 text-gray-400 hover:text-white hover:border-white/25 transition-all active:scale-95 cursor-pointer"
+                                            title="Try interactive demo"
+                                            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-medium bg-white/5 border border-white/10 text-gray-200 hover:text-white hover:border-white/30 transition-all active:scale-95 cursor-pointer"
                                         >
-                                            <Terminal size={13} className="text-neon-blue" />
-                                            <span>Sandbox</span>
+                                            <Sparkles size={13} className="text-neon-green" />
+                                            <span>Quick Test</span>
                                         </button>
+
+                                        {/* View Code button */}
+                                        <a
+                                            href={project.sourceUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-medium text-gray-400 hover:text-white transition-colors"
+                                        >
+                                            <Github size={14} />
+                                            <span>Code</span>
+                                        </a>
                                     </div>
 
                                     {/* Sub-text Badge */}
-                                    <div className="flex items-center gap-1.5 text-[11px] font-mono text-neon-green shrink-0">
+                                    <div className="flex items-center gap-1.5 text-[11px] text-neon-green shrink-0">
                                         <ShieldCheck size={14} className="shrink-0" />
                                         <span>{project.previewBadge}</span>
                                     </div>
@@ -482,31 +529,31 @@ export default function Projects() {
                             </div>
 
                             <div className="p-6 space-y-6">
-                                {/* Banner with one-click guest login indicator */}
+                                {/* Banner with one-click guest test indicator */}
                                 <div className="p-4 rounded-xl bg-neon-green/5 border border-neon-green/30 flex items-center justify-between">
                                     <div className="flex items-center gap-2.5">
                                         <ShieldCheck size={18} className="text-neon-green" />
                                         <div>
-                                            <p className="text-xs font-mono font-bold text-neon-green">
-                                                One-click guest login enabled
+                                            <p className="text-xs font-bold text-neon-green">
+                                                Instant Test Mode Enabled
                                             </p>
-                                            <p className="text-[11px] text-gray-400 font-mono">
-                                                Zero-friction testing token injected into sandbox state.
+                                            <p className="text-xs text-gray-400">
+                                                Test all interactive features without needing an account.
                                             </p>
                                         </div>
                                     </div>
                                     <button
                                         onClick={simulateGuestLogin}
-                                        className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-neon-green text-black hover:bg-neon-green/90 transition-colors"
+                                        className="px-3 py-1.5 rounded-lg text-xs font-bold bg-neon-green text-black hover:bg-neon-green/90 transition-colors cursor-pointer"
                                     >
-                                        {guestAuthToken ? "Token Refreshed ✓" : "Generate Guest Token"}
+                                        {guestAuthToken ? "Logged in as Guest ✓" : "One-Click Guest Login"}
                                     </button>
                                 </div>
 
                                 {guestAuthToken && (
-                                    <div className="bg-black/60 p-3 rounded-lg border border-gray-800 text-[11px] font-mono break-all text-gray-300">
-                                        <span className="text-neon-blue font-bold">SESSION_TOKEN: </span>
-                                        {guestAuthToken}
+                                    <div className="bg-black/60 p-3 rounded-lg border border-gray-800 text-xs text-gray-300">
+                                        <span className="text-neon-blue font-bold">Status: </span>
+                                        Logged in as Guest Shopper (Ready to add items to cart)
                                     </div>
                                 )}
 
@@ -514,11 +561,11 @@ export default function Projects() {
                                 {activeModalProject.demoType === "ecommerce" && (
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
-                                            <h4 className="text-sm font-mono font-bold text-white flex items-center gap-2">
+                                            <h4 className="text-sm font-bold text-white flex items-center gap-2">
                                                 <ShoppingCart size={16} className="text-neon-blue" />
-                                                Reactive Cart State Tester
+                                                Live Shopping Cart Test
                                             </h4>
-                                            <span className="text-xs font-mono text-gray-400">
+                                            <span className="text-xs text-gray-400">
                                                 Total Items: {cartItems.reduce((acc, i) => acc + i.qty, 0)}
                                             </span>
                                         </div>
@@ -527,7 +574,7 @@ export default function Projects() {
                                             {cartItems.map((item) => (
                                                 <div
                                                     key={item.id}
-                                                    className="p-3 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-between text-xs font-mono"
+                                                    className="p-3 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-between text-xs"
                                                 >
                                                     <span className="text-white font-medium">{item.name}</span>
                                                     <div className="flex items-center gap-3">
@@ -541,43 +588,43 @@ export default function Projects() {
                                         <div className="flex flex-wrap gap-2 pt-2">
                                             <button
                                                 onClick={() => addCartItem("Ergonomic Vertical Mouse", 45)}
-                                                className="px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs font-mono text-white transition-colors"
+                                                className="px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs text-white transition-colors cursor-pointer"
                                             >
-                                                + Dispatch Cart Event (Add Mouse $45)
+                                                + Add Item (Mouse $45)
                                             </button>
                                             <button
                                                 onClick={() => setCartItems([])}
-                                                className="px-3 py-1.5 rounded-lg bg-red-950/40 border border-red-500/30 text-red-400 hover:bg-red-900/50 text-xs font-mono transition-colors"
+                                                className="px-3 py-1.5 rounded-lg bg-red-950/40 border border-red-500/30 text-red-400 hover:bg-red-900/50 text-xs transition-colors cursor-pointer"
                                             >
-                                                Flush Cart State
+                                                Clear Cart
                                             </button>
                                         </div>
 
-                                        {/* Docker Topology Health Status */}
+                                        {/* Status */}
                                         <div className="mt-4 p-4 rounded-xl bg-black/60 border border-gray-800 space-y-2">
-                                            <div className="text-[11px] font-mono text-gray-400 flex items-center justify-between">
+                                            <div className="text-xs text-gray-400 flex items-center justify-between">
                                                 <span className="flex items-center gap-1.5 text-white font-bold">
                                                     <Box size={13} className="text-neon-blue" />
-                                                    Docker Compose Container Health
+                                                    Store Engine Status
                                                 </span>
-                                                <span className="text-neon-green">ALL_CONTAINERS_HEALTHY</span>
+                                                <span className="text-neon-green font-medium">All Services Running Smoothly</span>
                                             </div>
-                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono pt-1">
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs pt-1">
                                                 <div className="p-2 rounded bg-gray-900 border border-gray-800 text-center">
-                                                    <span className="text-gray-400 block">nginx:alpine</span>
-                                                    <span className="text-neon-green font-bold">80:ACTIVE</span>
+                                                    <span className="text-gray-400 block text-[11px]">Web Server</span>
+                                                    <span className="text-neon-green font-medium">Active</span>
                                                 </div>
                                                 <div className="p-2 rounded bg-gray-900 border border-gray-800 text-center">
-                                                    <span className="text-gray-400 block">php-fpm-8.2</span>
-                                                    <span className="text-neon-green font-bold">UP // OPCACHE</span>
+                                                    <span className="text-gray-400 block text-[11px]">Cart Engine</span>
+                                                    <span className="text-neon-green font-medium">Fast</span>
                                                 </div>
                                                 <div className="p-2 rounded bg-gray-900 border border-gray-800 text-center">
-                                                    <span className="text-gray-400 block">mysql:8.0</span>
-                                                    <span className="text-neon-green font-bold">HEALTHY</span>
+                                                    <span className="text-gray-400 block text-[11px]">Database</span>
+                                                    <span className="text-neon-green font-medium">Connected</span>
                                                 </div>
                                                 <div className="p-2 rounded bg-gray-900 border border-gray-800 text-center">
-                                                    <span className="text-gray-400 block">redis:7</span>
-                                                    <span className="text-neon-green font-bold">READY</span>
+                                                    <span className="text-gray-400 block text-[11px]">Inventory</span>
+                                                    <span className="text-neon-green font-medium">Synced</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -588,32 +635,32 @@ export default function Projects() {
                                 {activeModalProject.demoType === "food" && (
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
-                                            <h4 className="text-sm font-mono font-bold text-white flex items-center gap-2">
+                                            <h4 className="text-sm font-bold text-white flex items-center gap-2">
                                                 <Utensils size={16} className="text-orange-400" />
-                                                Real-Time Dispatch Stepper Simulation
+                                                Live Order Tracker Test
                                             </h4>
                                             <button
                                                 onClick={advanceFoodOrder}
-                                                className="px-3 py-1 rounded bg-orange-600 hover:bg-orange-500 text-white text-xs font-mono font-bold transition-colors"
+                                                className="px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold transition-colors cursor-pointer"
                                             >
-                                                Advance Order Pipeline →
+                                                Next Order Step →
                                             </button>
                                         </div>
 
                                         <div className="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-3">
-                                            <div className="flex items-center justify-between text-xs font-mono text-gray-400">
-                                                <span>ORDER ID: #ORD-7729-INDOOR</span>
-                                                <span className="text-orange-400 font-bold">STAGE {foodOrderStatus + 1} OF 4</span>
+                                            <div className="flex items-center justify-between text-xs text-gray-400">
+                                                <span>Order #7729 (Biryani & Chai)</span>
+                                                <span className="text-orange-400 font-bold">Step {foodOrderStatus + 1} of 4</span>
                                             </div>
 
                                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                                                 {foodStages.map((stage, idx) => (
                                                     <div
                                                         key={stage.label}
-                                                        className={`p-2.5 rounded-lg border text-xs font-mono transition-all ${
+                                                        className={`p-2.5 rounded-lg border text-xs transition-all ${
                                                             idx <= foodOrderStatus
                                                                 ? "bg-orange-500/10 border-orange-500 text-orange-300"
-                                                                : "bg-black/30 border-gray-800 text-gray-600"
+                                                                : "bg-black/30 border-gray-800 text-gray-500"
                                                         }`}
                                                     >
                                                         <div className="font-bold text-[11px] mb-1">{stage.label}</div>
@@ -623,9 +670,119 @@ export default function Projects() {
                                             </div>
                                         </div>
 
-                                        <div className="p-3 rounded-lg bg-black/60 border border-gray-800 text-xs font-mono text-gray-300">
-                                            <span className="text-neon-blue font-bold">ACID CONCURRENCY GUARD: </span>
-                                            MySQL row-level locks engaged on inventory schema. Zero duplicate orders permitted.
+                                        <div className="p-3 rounded-lg bg-black/60 border border-gray-800 text-xs text-gray-300">
+                                            <span className="text-neon-blue font-bold">Safety Guarantee: </span>
+                                            Automatic order locks guarantee zero duplicate orders even during dinner peak rush.
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Qwik Preview Walkthrough Sandbox */}
+                                {activeModalProject.demoType === "qwik-preview" && (
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                                                <Smartphone size={16} className="text-cyan-400" />
+                                                1-Click Phone Mirror Test
+                                            </h4>
+                                            <button
+                                                onClick={() => setQwikWakeLockActive(prev => !prev)}
+                                                className={`px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
+                                                    qwikWakeLockActive
+                                                        ? "bg-neon-green/20 border border-neon-green/40 text-neon-green"
+                                                        : "bg-red-950/40 border border-red-500/40 text-red-400"
+                                                }`}
+                                            >
+                                                {qwikWakeLockActive ? "⚡ Screen Stay-Awake: ON" : "Screen Stay-Awake: OFF"}
+                                            </button>
+                                        </div>
+
+                                        {/* Simulator Device Grid */}
+                                        <div className="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-4">
+                                            {/* Laptop URL input & push trigger */}
+                                            <div className="space-y-2">
+                                                <div className="flex items-center justify-between text-xs text-gray-400">
+                                                    <span className="flex items-center gap-1.5 text-white">
+                                                        <Server size={13} className="text-cyan-400" />
+                                                        Current page on your laptop:
+                                                    </span>
+                                                    <span className="text-cyan-400 text-[11px]">Instant 1-Click Sync</span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="text"
+                                                        value={qwikSampleUrl}
+                                                        onChange={(e) => setQwikSampleUrl(e.target.value)}
+                                                        className="flex-1 bg-black/70 border border-gray-700 rounded-lg px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-400"
+                                                        placeholder="http://localhost:3000..."
+                                                    />
+                                                    <button
+                                                        onClick={handleQwikPush}
+                                                        disabled={isPushingQwik}
+                                                        className="px-4 py-2 rounded-lg bg-cyan-400 hover:bg-white text-black font-bold text-xs transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)] active:scale-95 shrink-0 cursor-pointer"
+                                                    >
+                                                        {isPushingQwik ? "Sending..." : "⚡ Push to Phone"}
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {/* Translation result banner */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                                <div className="p-2.5 rounded-lg bg-black/50 border border-gray-800">
+                                                    <span className="text-gray-500 text-[10px] block uppercase font-bold">Laptop Address:</span>
+                                                    <span className="text-purple-300 font-mono font-medium">{qwikSampleUrl}</span>
+                                                </div>
+                                                <div className="p-2.5 rounded-lg bg-cyan-950/20 border border-cyan-500/30">
+                                                    <span className="text-cyan-400 text-[10px] block uppercase font-bold">Opens on Phone as:</span>
+                                                    <span className="text-neon-green font-mono font-medium">{qwikTranslatedUrl}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Real-time packet telemetry */}
+                                            <div className="p-3 rounded-lg bg-black/70 border border-gray-800 text-[11px] font-mono space-y-1 text-gray-300">
+                                                <div className="text-[10px] font-bold text-gray-500 flex items-center justify-between pb-1 border-b border-gray-800">
+                                                    <span>LIVE SYNC ACTIVITY</span>
+                                                    <span className="text-neon-green">ACTIVE</span>
+                                                </div>
+                                                {qwikLogPackets.slice(0, 4).map((log, i) => (
+                                                    <div key={i} className="text-cyan-300 truncate">{log}</div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Docker & Ingress Topology */}
+                                        <div className="p-4 rounded-xl bg-black/60 border border-gray-800 space-y-2">
+                                            <div className="text-[11px] font-mono text-gray-400 flex items-center justify-between">
+                                                <span className="flex items-center gap-1.5 text-white font-bold">
+                                                    <Box size={13} className="text-cyan-400" />
+                                                    Qwik Preview Service Topology
+                                                </span>
+                                                <button
+                                                    onClick={copyQwikDocker}
+                                                    className="inline-flex items-center gap-1 text-[10px] text-cyan-400 hover:text-white"
+                                                >
+                                                    {qwikCopiedDocker ? <Check size={11} /> : <Copy size={11} />}
+                                                    <span>{qwikCopiedDocker ? "Copied" : "Copy Docker Pull"}</span>
+                                                </button>
+                                            </div>
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono pt-1">
+                                                <div className="p-2 rounded bg-gray-900 border border-gray-800 text-center">
+                                                    <span className="text-gray-400 block">relay:hub</span>
+                                                    <span className="text-neon-green font-bold">8080:ACTIVE</span>
+                                                </div>
+                                                <div className="p-2 rounded bg-gray-900 border border-gray-800 text-center">
+                                                    <span className="text-gray-400 block">cloudflare:tunnel</span>
+                                                    <span className="text-neon-green font-bold">SECURED</span>
+                                                </div>
+                                                <div className="p-2 rounded bg-gray-900 border border-gray-800 text-center">
+                                                    <span className="text-gray-400 block">wake-lock:api</span>
+                                                    <span className="text-neon-green font-bold">24/7 AWAKE</span>
+                                                </div>
+                                                <div className="p-2 rounded bg-gray-900 border border-gray-800 text-center">
+                                                    <span className="text-gray-400 block">manifest:v3</span>
+                                                    <span className="text-neon-green font-bold">HOTKEY READY</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -650,7 +807,11 @@ export default function Projects() {
                                             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-neon-blue to-neon-pink text-black hover:opacity-90 transition-colors"
                                         >
                                             <Play size={14} className="fill-black" />
-                                            <span>Launch on showcase.joecodes.in</span>
+                                            <span>
+                                                {activeModalProject.id === "qwik-preview"
+                                                    ? "Launch Live PWA ↗"
+                                                    : "Launch on showcase.joecodes.in"}
+                                            </span>
                                             <ExternalLink size={13} />
                                         </a>
                                     </div>

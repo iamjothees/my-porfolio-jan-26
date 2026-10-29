@@ -18,39 +18,35 @@ export default function Hero() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="z-10 max-w-12xl w-full"
             >
-                {/* Status Badges & Identity */}
-                <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-neon-green/10 border border-neon-green/30 text-neon-green">
-                        <span className="w-2 h-2 rounded-full bg-neon-green animate-pulse" />
-                        <span>AVAILABLE FOR FREELANCE & ARCHITECTURE</span>
+                {/* Friendly Badges */}
+                <div className="flex flex-wrap items-center justify-center gap-2.5 mb-5">
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-sm">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span>Open for freelance & projects</span>
                     </span>
-                    <a
-                        href="https://github.com/iamjothees"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:border-white/30 transition-all"
-                    >
-                        <Github size={13} />
-                        <span>VIEW REPO</span>
-                        <ArrowUpRight size={12} className="text-gray-400" />
-                    </a>
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-gray-300">
+                        <span>🛋️ Certified Homebody</span>
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-yellow-500/10 border border-yellow-500/30 text-yellow-300">
+                        <span>🛵 30 km/h Burgman Cruiser</span>
+                    </span>
                 </div>
 
-                {/* PRIMARY HERO TERMINAL BANNER / SHOWCASE BRIDGE */}
+                {/* Friendly Showcase Bridge Banner */}
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15, duration: 0.6 }}
-                    className="max-w-4xl mx-auto mb-8 px-4 py-3 rounded-2xl bg-gray-950/90 border border-neon-blue/40 shadow-[0_0_30px_rgba(0,255,255,0.18)] backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left group hover:border-neon-blue/70 transition-all"
+                    className="max-w-3xl mx-auto mb-8 px-5 py-3.5 rounded-2xl bg-gray-900/70 border border-neon-blue/30 shadow-[0_0_30px_rgba(0,255,255,0.12)] backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left group hover:border-neon-blue/60 transition-all"
                 >
                     <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-xl bg-neon-blue/10 border border-neon-blue/30 text-neon-blue shrink-0">
-                            <Zap size={18} className="fill-current text-neon-blue animate-pulse" />
+                        <div className="p-2.5 rounded-xl bg-neon-blue/10 border border-neon-blue/20 text-neon-blue shrink-0">
+                            <Zap size={18} className="fill-current text-neon-blue" />
                         </div>
-                        <div className="text-xs md:text-sm font-mono text-gray-200 leading-snug">
-                            <span className="text-neon-blue font-bold">⚡ SYSTEM UPDATE:</span>{" "}
-                            Full project directory, live ERP systems, and production SaaS MVPs are deployed at{" "}
-                            <span className="text-white font-semibold underline decoration-neon-blue/50">showcase.joecodes.in</span>
+                        <div className="text-xs md:text-sm text-gray-200 leading-snug">
+                            <span className="text-neon-blue font-bold">Curious to see live designs?</span>{" "}
+                            Browse 9 interactive website demos & sample business pages on{" "}
+                            <span className="text-white font-semibold underline decoration-neon-blue/40">showcase.joecodes.in</span>
                         </div>
                     </div>
 
@@ -58,9 +54,9 @@ export default function Hero() {
                         href="https://showcase.joecodes.in/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-mono font-bold bg-neon-blue text-black hover:bg-white hover:shadow-[0_0_20px_rgba(0,255,255,0.4)] transition-all active:scale-95 group-hover:scale-[1.02] cursor-pointer whitespace-nowrap"
+                        className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-neon-blue text-black hover:bg-white hover:shadow-[0_0_20px_rgba(0,255,255,0.4)] transition-all active:scale-95 group-hover:scale-[1.02] cursor-pointer whitespace-nowrap shrink-0"
                     >
-                        <span>Explore Production Works →</span>
+                        <span>Explore Demos →</span>
                     </a>
                 </motion.div>
 
@@ -69,48 +65,47 @@ export default function Hero() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="text-gray-400 font-mono text-sm md:text-base mb-6 tracking-widest uppercase"
+                    className="text-gray-400 font-mono text-xs md:text-sm mb-4 tracking-widest uppercase"
                 >
-                    <span className="text-white font-normal">Jotheeswaran</span> <span className="text-neon-green mx-2">•</span> <span className="text-white font-normal">Joe</span> <span className="text-neon-green mx-2">•</span> <span className="text-white font-normal lowercase">joecodes.in</span>
+                    <span className="text-white font-normal">Jotheeswaran</span> <span className="text-neon-green mx-2">•</span> <span className="text-white font-normal">Joe</span> <span className="text-neon-green mx-2">•</span> <span className="text-gray-400 lowercase">joecodes.in</span>
                 </motion.p>
 
                 {/* Main Headline */}
-                <h1 className="text-4xl md:text-8xl font-bold text-white mb-8 leading-tight tracking-tight break-words max-w-full">
-                    Full-Stack Engineer. <br className="block" />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-pink inline-block">
+                <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 leading-tight tracking-tight break-words max-w-full">
+                    Web Developer. <br className="block" />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue via-teal-300 to-neon-pink inline-block">
                         Part-Time Burgman Pioneer.
                     </span>
                 </h1>
 
                 {/* Subtitle / Description */}
-                <p className="text-lg md:text-2xl text-gray-400 max-w-2xl mx-auto mb-12 font-light leading-relaxed flex flex-col md:block items-center">
-                    <span>Fluent in <span className="text-white font-medium">Core PHP, Laravel & React</span>. Learning <span className="text-white font-medium">Go</span> because the benchmarks told me to.</span>
-                    <span className="mt-8 md:mt-2 block flex items-center justify-center italic font-normal">
-                        Cruising through life (and bugs) at
-                    </span>
-                    <Speedometer />
-                </p>
+                <div className="text-base md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 font-normal leading-relaxed">
+                    <p>
+                        I build websites and web apps that look clean, load fast, and actually feel easy to use on any device.
+                    </p>
+                    <div className="mt-6 flex flex-col md:flex-row items-center justify-center gap-3 text-gray-400">
+                        <span className="italic">Cruising through life (and bugs) at</span>
+                        <Speedometer />
+                    </div>
+                </div>
 
                 {/* CTA Buttons */}
-                <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-                    <motion.a
-                        href="https://showcase.joecodes.in/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-gradient-to-r from-neon-blue to-neon-pink text-black px-8 py-4 rounded-full font-bold text-lg hover:opacity-90 transition-all shadow-[0px_0px_25px_rgba(0,255,255,0.3)] inline-flex items-center gap-2"
-                    >
-                        <span>Explore Showcase Portal</span>
-                        <ArrowUpRight size={20} />
-                    </motion.a>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
                         onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-                        className="bg-white/10 text-white border border-white/20 px-8 py-4 rounded-full font-bold text-lg hover:bg-white/20 hover:border-white transition-all shadow-[0px_0px_20px_rgba(255,255,255,0.1)]"
+                        className="bg-gradient-to-r from-neon-blue to-neon-pink text-black px-8 py-3.5 rounded-full font-bold text-base hover:opacity-95 transition-all shadow-[0px_0px_25px_rgba(0,255,255,0.25)] inline-flex items-center gap-2 cursor-pointer"
                     >
-                        View Shipped MVPs
+                        <span>See What I've Built ↓</span>
+                    </motion.button>
+                    <motion.button
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                        className="bg-white/10 text-white border border-white/20 px-8 py-3.5 rounded-full font-medium text-base hover:bg-white/20 hover:border-white transition-all cursor-pointer"
+                    >
+                        <span>Say Hello 👋</span>
                     </motion.button>
                 </div>
             </motion.div>

@@ -23,12 +23,12 @@ export default function About() {
                     <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
                         The <span className="text-neon-pink">Indoor Enthusiast</span>
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
-                        Full-Stack Sorcerer. Lefty. Certified Homebody.
+                    <p className="text-gray-400 max-w-2xl mx-auto text-base">
+                        Web Builder • Left-Handed • Certified Homebody
                     </p>
                 </motion.div>
 
-                {/* The Origin Story (Extracted & Styled like Week in Life) */}
+                {/* The Origin Story */}
                 <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
@@ -44,13 +44,51 @@ export default function About() {
                             <Sparkles size={32} />
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold text-white mb-2">The Origin</h3>
-                            <p className="text-gray-300 leading-relaxed text-sm max-w-3xl">
-                                "I didn't choose the coding life; the coding life chose me in Grade 11.
-                                It was an accident. I started <span className="text-neon-blue font-mono">Backend Only</span>,
-                                but realized users actually need to *see* things.
-                                Now I'm passionate about <span className="text-neon-pink font-bold">UI/UX</span> and making things accessible."
+                            <h3 className="text-xl font-bold text-white mb-2">How It Started</h3>
+                            <p className="text-gray-300 leading-relaxed text-sm md:text-base max-w-3xl">
+                                "I didn't plan on becoming a developer—it was a happy accident back in Grade 11.
+                                At first, I only cared about how computers worked behind the scenes.
+                                Then it hit me: the behind-the-scenes stuff is useless if regular people can't easily look at the screen, understand it, and click things without getting confused.
+                                Since then, I focus on building things that are simple, fast, and friendly for everyone to use."
                             </p>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Story of Qwik Preview - Relatable & Fun */}
+                <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    viewport={{ once: true }}
+                    className="w-full bg-gradient-to-r from-cyan-950/20 via-gray-900/40 to-blue-950/20 border border-cyan-500/30 rounded-3xl p-8 relative overflow-hidden group hover:border-cyan-500/50 transition-all shadow-[0_0_30px_rgba(0,240,255,0.08)]"
+                >
+                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 text-center md:text-left justify-between">
+                        <div className="flex flex-col md:flex-row items-center gap-6">
+                            <div className="p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl text-cyan-400 shrink-0 shadow-[0_0_20px_rgba(0,240,255,0.2)]">
+                                <Zap size={32} />
+                            </div>
+                            <div>
+                                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-mono text-[10px] uppercase font-bold tracking-wider mb-2">
+                                    <span>💡 THE LAZINESS INNOVATION // BUILT IN ~1 HOUR</span>
+                                </div>
+                                <h3 className="text-xl font-bold text-white mb-2">
+                                    The Story of <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Qwik Preview</span>
+                                </h3>
+                                <p className="text-gray-300 leading-relaxed text-sm md:text-base max-w-3xl">
+                                    Born from pure laziness. While building websites on my laptop, I got tired of having to email links to myself or type awkward numbers into my phone's browser just to check how a layout looks. So in about an hour, I built an instant 1-click button. You click once on the computer, and the page immediately opens on the phone sitting on your desk. No typing, no scanning—just instant preview.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="shrink-0 flex flex-col sm:flex-row md:flex-col gap-2 w-full md:w-auto">
+                            <a
+                                href="https://qwik-preview.joecodes.in/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-cyan-400 text-black hover:bg-white transition-all shadow-[0_0_20px_rgba(0,240,255,0.3)] whitespace-nowrap cursor-pointer"
+                            >
+                                <span>Try the Tool ↗</span>
+                            </a>
                         </div>
                     </div>
                 </motion.div>
@@ -70,19 +108,19 @@ export default function About() {
                                 </div>
                                 <div>
                                     <h3 className="text-2xl font-bold text-white">Jotheeswaran (Joe)</h3>
-                                    <p className="text-sm font-mono text-neon-green">
-                                        Level 25 • 3y Pro / 5y Hobby Dev
+                                    <p className="text-sm text-neon-green font-medium">
+                                        Age 25 • Building for the Web for 5+ Years
                                     </p>
                                 </div>
                             </div>
 
                             <div className="space-y-6 flex-grow">
                                 <div className="flex gap-4 items-start">
-                                    <Terminal className="text-gray-500 mt-1 shrink-0" size={20} />
+                                    <Armchair className="text-gray-500 mt-1 shrink-0" size={20} />
                                     <div>
-                                        <h4 className="text-white font-medium text-sm">Deployment Zone</h4>
+                                        <h4 className="text-white font-medium text-sm">Where I Work</h4>
                                         <p className="text-sm text-gray-400 mt-1">
-                                            <span className="text-white font-medium">AWP Solutions</span> (Office Base)
+                                            <span className="text-white font-medium">AWP Solutions</span> (Full-time team)
                                         </p>
                                     </div>
                                 </div>
@@ -92,8 +130,8 @@ export default function About() {
                                     <div>
                                         <h4 className="text-white font-medium text-sm">The Schedule</h4>
                                         <p className="text-sm text-gray-400 mt-1">
-                                            6 Days/Week • 8 Hours/Day <br />
-                                            (Incl. 30min Power Nap aka <span className="text-neon-pink italic">"Offline Rendering"</span>).
+                                            6 Days a Week • 8 Hours a Day <br />
+                                            (Including a sacred 30-min afternoon power nap aka <span className="text-neon-pink italic">"Offline Rendering"</span>).
                                         </p>
                                     </div>
                                 </div>
@@ -145,11 +183,8 @@ export default function About() {
                         <div className="space-y-3">
                             <h4 className="text-neon-green font-mono text-sm uppercase tracking-wider">Mon - Sat: The Process</h4>
                             <p className="text-gray-300 leading-relaxed text-sm">
-                                I don't rush. I <span className="text-white font-medium">cruise through the process</span>. <br />
-                                My debugging philosophy? Simple.
-                                <code className="bg-gray-800 px-1 py-0.5 rounded text-neon-pink mx-1">dd($var)</code> and
-                                <code className="bg-gray-800 px-1 py-0.5 rounded text-neon-blue mx-1">console.log()</code>.
-                                <br />If things get rough, I pull out the raw SQL queries.
+                                I don't panic. I <span className="text-white font-medium">cruise through the work</span>. <br />
+                                My philosophy on fixing issues? Keep it clean and simple. If a bug shows up, I stare at it patiently until it gets uncomfortable and leaves.
                             </p>
                         </div>
 

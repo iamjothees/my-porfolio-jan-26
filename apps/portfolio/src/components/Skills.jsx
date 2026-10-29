@@ -1,13 +1,13 @@
 import { motion } from "motion/react";
 
-// Skill Data with Terminal/Gaming Qualitative Benchmarks
+// Skill Data with Everyday, Understandable Descriptions
 const skills = [
     {
         name: "PHP",
-        tier: "Weapon of Choice",
-        rank: "S+",
-        type: "BACKEND",
-        desc: "The ancient one. Summoner of daemons & high-throughput enterprise backends.",
+        tier: "Go-To Favorite",
+        rank: "A+",
+        type: "CORE ENGINE",
+        desc: "The reliable workhorse that powers most of the web. Handles accounts, orders, and business logic smoothly behind the scenes.",
         benchmark: 95,
         color: "from-purple-500 to-indigo-500",
         stops: ["#a855f7", "#6366f1"],
@@ -15,10 +15,10 @@ const skills = [
     },
     {
         name: "Laravel",
-        tier: "Production Shielded",
+        tier: "Fast-Track",
         rank: "S",
-        type: "FRAMEWORK",
-        desc: "Rapid prototyping weaponry, artisan wizardry, and robust API architectures.",
+        type: "APP BUILDER",
+        desc: "Helps me build complete websites, member dashboards, and custom business tools in days instead of months.",
         benchmark: 90,
         color: "from-red-500 to-orange-500",
         stops: ["#ef4444", "#f97316"],
@@ -26,10 +26,10 @@ const skills = [
     },
     {
         name: "SQL",
-        tier: "Production Shielded",
+        tier: "Rock Solid",
         rank: "S",
-        type: "DATABASE",
-        desc: "Complex joins, indexing strategies, and relational schemas that refuse to deadlock.",
+        type: "SAFE STORAGE",
+        desc: "The digital filing cabinet. Keeps customer accounts, orders, and product catalogs tidy, fast, and safely protected.",
         benchmark: 92,
         color: "from-blue-500 to-cyan-500",
         stops: ["#3b82f6", "#06b6d4"],
@@ -37,58 +37,58 @@ const skills = [
     },
     {
         name: "React",
-        tier: "Fluent",
-        rank: "A+",
-        type: "FRONTEND",
-        desc: "Hook dependency array architect, reactive state, and seamless micro-interactions.",
+        tier: "Smooth & Snappy",
+        rank: "A",
+        type: "INTERACTIVE UI",
+        desc: "Makes websites feel as responsive as an iPhone app. Click buttons, open carts, and browse without slow page reloads.",
         benchmark: 86,
         color: "from-cyan-400 to-blue-400",
         stops: ["#22d3ee", "#60a5fa"],
         shadow: "shadow-cyan-400/20"
     },
     {
+        name: "Tailwind CSS",
+        tier: "Pixel Perfect",
+        rank: "A+",
+        type: "DESIGN & LAYOUT",
+        desc: "Crafting modern layouts that look sharp, readable, and fit automatically whether you are on a laptop or a small phone.",
+        benchmark: 88,
+        color: "from-teal-400 to-cyan-400",
+        stops: ["#2dd4bf", "#06b6d4"],
+        shadow: "shadow-teal-400/20"
+    },
+    {
         name: "Docker",
-        tier: "Containerized",
+        tier: "Zero Surprises",
         rank: "A",
-        type: "DEVOPS",
-        desc: "Multi-stage builds and isolated environments. Works on my machine AND production™.",
+        type: "PACKAGING",
+        desc: "Packs up the entire project neatly so 'it works on my computer' guarantees that it works on live servers too.",
         benchmark: 75,
         color: "from-blue-600 to-indigo-600",
         stops: ["#2563eb", "#4f46e5"],
         shadow: "shadow-blue-600/20"
     },
     {
-        name: "PEST",
-        tier: "Battle Tested",
-        rank: "A",
-        type: "TESTING",
-        desc: "The only bugs permitted in production are intentional aesthetic ones.",
-        benchmark: 76,
-        color: "from-green-500 to-lime-500",
-        stops: ["#22c55e", "#84cc16"],
-        shadow: "shadow-green-500/20"
-    },
-    {
         name: "Figma",
-        tier: "Fluent",
-        rank: "B",
+        tier: "Visual Blueprints",
+        rank: "B+",
         type: "DESIGN",
-        desc: "Rectangle mover extraordinaire. UI prototypes, design tokens, and components.",
-        benchmark: 60,
+        desc: "Where website layouts and ideas get sketched out and agreed upon before writing a single line of code.",
+        benchmark: 65,
         color: "from-pink-500 to-rose-500",
         stops: ["#ec4899", "#f43f5e"],
         shadow: "shadow-pink-500/20"
     },
     {
-        name: "Go",
-        tier: "Compiling...",
-        rank: "DEV",
-        type: "LOADING...",
-        desc: "Goroutines, channels, and compiling knowledge because benchmarks demanded it.",
-        benchmark: 35,
-        color: "from-teal-400 to-emerald-400",
-        stops: ["#2dd4bf", "#34d399"],
-        shadow: "shadow-teal-400/20"
+        name: "Burgman & Coffee",
+        tier: "Daily Fuel",
+        rank: "S+",
+        type: "ESSENTIALS",
+        desc: "Morning coffee to get the creativity flowing, and an evening 30 km/h scooter ride with Dad to clear the head.",
+        benchmark: 99,
+        color: "from-amber-400 to-yellow-500",
+        stops: ["#fbbf24", "#eab308"],
+        shadow: "shadow-yellow-500/20"
     },
 ];
 
@@ -155,10 +155,10 @@ export default function Skills() {
 
             <h2 className="text-4xl md:text-6xl font-bold mb-16 text-center text-white relative z-10">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-neon-pink to-neon-blue">
-                    Tech Stack
+                    Tools of the Trade
                 </span>
-                <span className="block text-sm font-mono text-gray-500 mt-2 tracking-widest uppercase">
-                    // Operational Capabilities & Benchmarks
+                <span className="block text-sm text-gray-400 mt-2 font-normal">
+                    What I use to turn ideas into working websites & web apps
                 </span>
             </h2>
 
@@ -185,12 +185,12 @@ export default function Skills() {
                             <div>
                                 <div className="flex justify-between items-start mb-3">
                                     <h3 className="text-2xl font-bold text-white tracking-tight">{skill.name}</h3>
-                                    <span className={`text-xs font-mono px-2 py-1 rounded bg-white/5 border border-white/10 ${skill.color.split(' ')[1].replace('to-', 'text-')}`}>
+                                    <span className={`text-[11px] font-medium px-2 py-1 rounded bg-white/5 border border-white/10 ${skill.color.split(' ')[1].replace('to-', 'text-')}`}>
                                         {skill.type}
                                     </span>
                                 </div>
 
-                                <p className="text-gray-400 text-sm leading-relaxed font-mono">
+                                <p className="text-gray-300 text-sm leading-relaxed font-normal">
                                     {skill.desc}
                                 </p>
                             </div>
@@ -199,8 +199,8 @@ export default function Skills() {
                             <div className="mt-4 pt-3 border-t border-white/5">
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex flex-col">
-                                        <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">TIER STATUS</span>
-                                        <span className="text-white font-mono font-bold text-sm tracking-tight">
+                                        <span className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">STATUS</span>
+                                        <span className="text-white font-medium text-sm tracking-tight">
                                             {skill.tier}
                                         </span>
                                     </div>
@@ -231,8 +231,8 @@ export default function Skills() {
                 ))}
             </div>
 
-            <div className="text-center mt-12 text-gray-600 font-mono text-xs">
-                SYSTEM_STATUS: BENCHMARKS_VERIFIED // ZERO_ARBITRARY_METRICS
+            <div className="text-center mt-12 text-gray-400 text-sm">
+                Simple, battle-tested tools that get the job done right.
             </div>
         </section>
     );

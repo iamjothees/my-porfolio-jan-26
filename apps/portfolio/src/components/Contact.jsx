@@ -78,39 +78,39 @@ export default function Contact() {
                         initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neon-blue/30 bg-neon-blue/5 text-neon-blue text-xs font-mono mb-4"
+                        className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-neon-blue/30 bg-neon-blue/5 text-neon-blue text-xs font-medium mb-4"
                     >
-                        <Terminal size={13} className="text-neon-blue" />
-                        <span>SSH PROTOCOL // DIRECT DISPATCH</span>
+                        <MessageSquare size={13} className="text-neon-blue" />
+                        <span>SAY HELLO</span>
                     </motion.div>
 
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-4xl md:text-6xl font-black text-white tracking-tight mb-4"
+                        className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-4"
                     >
-                        Initiate Handshake
+                        Get in Touch
                     </motion.h2>
 
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-gray-400 font-mono text-sm max-w-xl mx-auto"
+                        className="text-gray-300 text-base max-w-xl mx-auto font-normal leading-relaxed"
                     >
-                        Zero corporate red tape. Fast-track communications for scalable backends, full-stack MVPs, and architecture consulting.
+                        Have an idea for a website, need a web app for your business, or just want to chat? Reach out through any channel below.
                     </motion.p>
                 </div>
 
-                {/* DEDICATED TERMINAL-STYLE CTA CARD */}
+                {/* POLISHED CONTACT CARD */}
                 <motion.div
                     initial={{ opacity: 0, y: 25 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     className="rounded-2xl bg-gray-950/90 border border-gray-800 shadow-[0_0_50px_rgba(0,0,0,0.7)] overflow-hidden backdrop-blur-xl mb-16"
                 >
-                    {/* Terminal Titlebar */}
+                    {/* Header Bar */}
                     <div className="px-5 py-3.5 bg-gray-900/80 border-b border-gray-800 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="flex gap-2">
@@ -118,63 +118,75 @@ export default function Contact() {
                                 <span className="w-3 h-3 rounded-full bg-yellow-500/80 inline-block" />
                                 <span className="w-3 h-3 rounded-full bg-green-500/80 inline-block" />
                             </div>
-                            <span className="text-xs font-mono text-gray-400 font-medium truncate">
-                                bash: joe@joecodes: ~/contact --init (ssh-tunnel: active)
+                            <span className="text-xs text-gray-300 font-medium truncate">
+                                Direct Contact Channels
                             </span>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-neon-green animate-pulse" />
-                            <span className="text-[10px] font-mono font-bold text-neon-green uppercase tracking-wider">
-                                Accepting High-Impact Challenges
+                            <span className="text-[11px] font-medium text-neon-green">
+                                Replies within a few hours
                             </span>
                         </div>
                     </div>
 
-                    {/* Terminal Content Body */}
+                    {/* Content Body */}
                     <div className="p-6 md:p-8 space-y-6">
-                        {/* Terminal Command Input */}
-                        <div className="font-mono text-xs md:text-sm text-gray-400 flex items-center gap-2">
-                            <span className="text-neon-pink">joe@joecodes</span>
-                            <span className="text-gray-600">:</span>
-                            <span className="text-neon-blue">~</span>
-                            <span className="text-white">$</span>
-                            <span className="text-neon-green">./dispatch_handshake.sh --priority=urgent</span>
-                        </div>
-
-                        {/* Punchy Conversational Copy */}
-                        <div className="p-5 rounded-xl bg-black/50 border border-gray-800/80 space-y-3">
+                        {/* Friendly Intro */}
+                        <div className="p-5 rounded-xl bg-black/40 border border-gray-800/80 space-y-2">
                             <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight leading-snug">
-                                Want to build systems that scale or need an API that won't give up on you?
+                                Let's build something people love using.
                             </h3>
-                            <p className="text-gray-300 font-mono text-xs md:text-sm leading-relaxed">
-                                Whether you're architecting a high-throughput MVP from scratch, wrestling a legacy backend back to sanity,
-                                or just want to debate why cruising at <span className="text-yellow-400 font-bold">30km/h on a Burgman</span> is
-                                the peak velocity of human reasoning — drop a line below or catch me on LinkedIn.
+                            <p className="text-gray-300 text-sm leading-relaxed font-normal">
+                                Whether you're planning a new website, an online store, an internal business tool, or just want to swap stories about cruising at <span className="text-yellow-400 font-bold">30 km/h</span> on a scooter—drop a line below.
                             </p>
                         </div>
 
-                        {/* Direct Channel Action Matrix */}
+                        {/* Direct Channel Action Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                            {/* WhatsApp Channel */}
+                            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 flex flex-col justify-between hover:border-neon-green/40 transition-colors">
+                                <div>
+                                    <div className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-1">
+                                        <MessageSquare size={14} className="text-neon-green" />
+                                        <span className="uppercase font-semibold">WhatsApp (Fastest)</span>
+                                    </div>
+                                    <p className="text-sm text-white font-medium truncate mb-3">
+                                        +91 94426 08662
+                                    </p>
+                                </div>
+                                <a
+                                    href={whatsAppUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold bg-neon-green/20 border border-neon-green/40 text-neon-green hover:bg-neon-green/30 transition-all active:scale-95 cursor-pointer"
+                                >
+                                    <MessageSquare size={14} />
+                                    <span>Chat on WhatsApp</span>
+                                    <ArrowUpRight size={13} />
+                                </a>
+                            </div>
+
                             {/* Email Action Channel */}
-                            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 flex flex-col justify-between hover:border-gray-700 transition-colors">
+                            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 flex flex-col justify-between hover:border-neon-pink/40 transition-colors">
                                 <div>
                                     <div className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-1">
                                         <Mail size={14} className="text-neon-pink" />
-                                        <span className="uppercase font-semibold">Direct Email Terminal</span>
+                                        <span className="uppercase font-semibold">Email Directly</span>
                                     </div>
-                                    <p className="font-mono text-sm text-white font-medium truncate mb-3">
+                                    <p className="text-sm text-white font-medium truncate mb-3">
                                         {emailAddress}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => handleCopyEmail(true)}
-                                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold bg-white/10 hover:bg-white/20 text-white transition-all active:scale-95 cursor-pointer"
+                                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-white/10 hover:bg-white/20 text-white transition-all active:scale-95 cursor-pointer"
                                     >
                                         {copiedTerminal ? (
                                             <>
                                                 <Check size={13} className="text-neon-green" />
-                                                <span className="text-neon-green">COPIED ✓</span>
+                                                <span className="text-neon-green">Copied! ✓</span>
                                             </>
                                         ) : (
                                             <>
@@ -185,30 +197,30 @@ export default function Contact() {
                                     </button>
                                     <a
                                         href={`mailto:${emailAddress}`}
-                                        className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono font-bold bg-neon-pink/20 border border-neon-pink/40 text-neon-pink hover:bg-neon-pink/30 transition-all active:scale-95"
+                                        className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-neon-pink/20 border border-neon-pink/40 text-neon-pink hover:bg-neon-pink/30 transition-all active:scale-95"
                                     >
                                         <Send size={13} />
-                                        <span>Send Mail</span>
+                                        <span>Open Mail</span>
                                     </a>
                                 </div>
                             </div>
 
                             {/* LinkedIn Action Channel */}
-                            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 flex flex-col justify-between hover:border-gray-700 transition-colors">
+                            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 flex flex-col justify-between hover:border-neon-blue/40 transition-colors">
                                 <div>
                                     <div className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-1">
                                         <Linkedin size={14} className="text-neon-blue" />
-                                        <span className="uppercase font-semibold">Professional Network</span>
+                                        <span className="uppercase font-semibold">LinkedIn Profile</span>
                                     </div>
-                                    <p className="font-mono text-sm text-white font-medium truncate mb-3">
-                                        Jotheeswaran // LinkedIn
+                                    <p className="text-sm text-white font-medium truncate mb-3">
+                                        Jotheeswaran (Joe)
                                     </p>
                                 </div>
                                 <a
                                     href={linkedInUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-mono font-bold bg-neon-blue text-black hover:bg-neon-blue/90 transition-all active:scale-95 shadow-[0_0_15px_rgba(0,255,255,0.2)]"
+                                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold bg-neon-blue text-black hover:bg-white transition-all active:scale-95 shadow-[0_0_15px_rgba(0,255,255,0.2)]"
                                 >
                                     <Linkedin size={14} />
                                     <span>Connect on LinkedIn</span>
@@ -216,37 +228,14 @@ export default function Contact() {
                                 </a>
                             </div>
 
-                            {/* WhatsApp Channel */}
-                            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 flex flex-col justify-between hover:border-gray-700 transition-colors">
-                                <div>
-                                    <div className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-1">
-                                        <MessageSquare size={14} className="text-neon-green" />
-                                        <span className="uppercase font-semibold">Instant Ping</span>
-                                    </div>
-                                    <p className="font-mono text-sm text-white font-medium truncate mb-3">
-                                        +91 94426 08662
-                                    </p>
-                                </div>
-                                <a
-                                    href={whatsAppUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-mono font-bold bg-neon-green/20 border border-neon-green/40 text-neon-green hover:bg-neon-green/30 transition-all active:scale-95"
-                                >
-                                    <MessageSquare size={14} />
-                                    <span>Chat on WhatsApp</span>
-                                    <ArrowUpRight size={13} />
-                                </a>
-                            </div>
-
                             {/* GitHub Channel */}
-                            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 flex flex-col justify-between hover:border-gray-700 transition-colors">
+                            <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-800 flex flex-col justify-between hover:border-gray-600 transition-colors">
                                 <div>
                                     <div className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-1">
                                         <Github size={14} className="text-gray-300" />
-                                        <span className="uppercase font-semibold">Source Repositories</span>
+                                        <span className="uppercase font-semibold">Code Repositories</span>
                                     </div>
-                                    <p className="font-mono text-sm text-white font-medium truncate mb-3">
+                                    <p className="text-sm text-white font-medium truncate mb-3">
                                         github.com/iamjothees
                                     </p>
                                 </div>
@@ -254,36 +243,35 @@ export default function Contact() {
                                     href={githubUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-mono font-bold bg-white/10 hover:bg-white/20 text-white transition-all active:scale-95"
+                                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium bg-white/10 hover:bg-white/20 text-white transition-all active:scale-95"
                                 >
                                     <Github size={14} />
-                                    <span>Explore GitHub</span>
+                                    <span>View GitHub</span>
                                     <ArrowUpRight size={13} />
                                 </a>
                             </div>
                         </div>
 
-                        {/* Terminal Footer Telemetry */}
-                        <div className="pt-2 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-gray-500 border-t border-gray-900">
-                            <span>SESSION_ID: #SSH-2026-JOE</span>
-                            <span>RESPONSE_LATENCY: &lt; 24h</span>
-                            <span>LOCATION: TAMIL NADU, INDIA (INDOORS)</span>
+                        {/* Location footer note */}
+                        <div className="pt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-gray-400 border-t border-gray-900">
+                            <span>Location: Tamil Nadu, India (Comfortably Indoors)</span>
+                            <span>Preferred: WhatsApp & Email</span>
                         </div>
                     </div>
                 </motion.div>
 
-                {/* CHAOTIC FALLBACK PROTOCOLS (PRESERVED AUTHENTIC SYSTEM INTERACTIONS) */}
+                {/* FUN INTERACTIVE EXTRAS */}
                 <div className="mt-8 text-center pt-8 border-t border-gray-900/80">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-800 bg-gray-900/50 text-gray-500 text-xs font-mono mb-4">
-                        <Sparkles size={12} className="text-yellow-400" />
-                        <span>CHAOTIC PROTOCOLS // FOR THE CURIOUS</span>
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-gray-800 bg-gray-900/50 text-gray-400 text-xs mb-4">
+                        <Sparkles size={13} className="text-yellow-400" />
+                        <span>JUST FOR FUN</span>
                     </div>
 
-                    <h4 className="text-lg font-bold text-white mb-2">
-                        Prefer the Hard Way? (Or Don't)
+                    <h4 className="text-xl font-bold text-white mb-2">
+                        Try to Catch the Button! 🏃💨
                     </h4>
-                    <p className="mb-6 text-gray-400 text-xs font-mono max-w-md mx-auto">
-                        If standard contact feels too ordinary, attempt to catch the runaway button below or deploy an asynchronous carrier pigeon.
+                    <p className="mb-6 text-gray-400 text-sm max-w-md mx-auto">
+                        Test your mouse or finger reflexes against this evasive button, or fly a carrier pigeon straight to WhatsApp.
                     </p>
 
                     {/* Runaway Button */}
@@ -294,10 +282,10 @@ export default function Contact() {
                             onHoverStart={moveButton}
                             onTouchStart={moveButton}
                             onClick={() => setShowModal(true)}
-                            className="bg-red-600/90 text-white font-mono font-bold py-2.5 px-6 rounded-full shadow-[0_0_25px_rgba(239,68,68,0.4)] hover:bg-red-600 active:bg-red-700 cursor-pointer touch-manipulation text-xs uppercase tracking-wider"
+                            className="bg-red-600/90 text-white font-bold py-2.5 px-6 rounded-full shadow-[0_0_25px_rgba(239,68,68,0.4)] hover:bg-red-600 active:bg-red-700 cursor-pointer touch-manipulation text-xs tracking-wider"
                             whileTap={{ scale: 0.95 }}
                         >
-                            Send Urgent Request
+                            Catch Me If You Can! 🏃
                         </motion.button>
                     </div>
 
@@ -305,15 +293,15 @@ export default function Contact() {
                     <div className="mt-4">
                         <button
                             onClick={triggerPigeon}
-                            className="text-neon-blue underline hover:text-white transition-colors cursor-pointer bg-transparent border-none text-xs font-mono inline-flex items-center gap-1.5"
+                            className="text-neon-blue underline hover:text-white transition-colors cursor-pointer bg-transparent border-none text-xs inline-flex items-center gap-1.5"
                         >
-                            <span>🕊️ Dispatch Carrier Pigeon Protocol</span>
+                            <span>🕊️ Send a Carrier Pigeon to WhatsApp</span>
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* SYSTEM BREACH MODAL (PRESERVED FOR RUNAWAY BUTTON SUCCESS) */}
+            {/* CAUGHT BUTTON MODAL */}
             <AnimatePresence>
                 {showModal && (
                     <motion.div
@@ -327,19 +315,18 @@ export default function Contact() {
                             initial={{ scale: 0.8, y: 40 }}
                             animate={{ scale: 1, y: 0 }}
                             exit={{ scale: 0.8, y: 40 }}
-                            className="bg-gray-950 border-2 border-red-500 rounded-2xl p-8 max-w-md w-full shadow-[0_0_60px_rgba(239,68,68,0.5)] relative overflow-hidden text-left"
+                            className="bg-gray-950 border-2 border-neon-pink rounded-2xl p-8 max-w-md w-full shadow-[0_0_60px_rgba(255,0,128,0.4)] relative overflow-hidden text-left"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="flex items-center gap-3 mb-4">
-                                <ShieldAlert size={28} className="text-red-500 animate-bounce" />
-                                <h3 className="text-xl font-black text-red-500 tracking-tight font-mono">
-                                    SYSTEM BREACH DETECTED
+                                <Sparkles size={28} className="text-yellow-400 animate-bounce" />
+                                <h3 className="text-xl font-bold text-white tracking-tight">
+                                    🎉 Incredible Reflexes!
                                 </h3>
                             </div>
 
-                            <p className="text-gray-300 font-mono text-xs leading-relaxed mb-6">
-                                HOW DID YOU CLICK THIS?! The reflex evasion loop had a 99.7% evasion guarantee.
-                                You've bypassed the firewall. Here are the direct keys:
+                            <p className="text-gray-300 text-sm leading-relaxed mb-6 font-normal">
+                                How did you manage to click that?! You actually caught the runaway button. Since you won the challenge, here is the direct link to say hello:
                             </p>
 
                             <div className="space-y-3 mb-6">

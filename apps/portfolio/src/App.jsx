@@ -3,6 +3,7 @@ import About from "./components/About";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
+import CoreTerminal from "./components/CoreTerminal";
 
 function App() {
   return (
@@ -16,18 +17,28 @@ function App() {
         <Skills />
         <Projects />
         <Contact />
+        <CoreTerminal />
 
-        <footer className="py-10 px-4 border-t border-gray-900/80 bg-[#070707] text-center text-gray-500 text-xs font-mono">
+        <footer className="py-10 px-4 border-t border-gray-900/80 bg-[#070707] text-center text-gray-400 text-xs">
           <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-neon-green inline-block animate-pulse" />
-              <span>KERNEL_VERSION: 2026.1 // JOECODES.IN</span>
+              <span>All systems running smoothly • joecodes.in</span>
             </div>
             <div>
-              &copy; {new Date().getFullYear()} Jotheeswaran. Built for high performance & functional chaos.
+              &copy; {new Date().getFullYear()} Jotheeswaran (Joe). Built with care & a touch of chaos.
             </div>
-            <div className="text-gray-500">
-              Powered by PHP, React & 30km/h Burgman rides.
+            <div className="flex items-center gap-3 text-gray-400">
+              <span>Powered by tea & 30 km/h Burgman rides.</span>
+              <button
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('open-core-terminal', { detail: { command: 'help' } }));
+                }}
+                className="text-[10px] text-gray-600 hover:text-gray-300 font-mono transition-colors cursor-pointer"
+                title="Secret terminal easter egg (or press `~`)"
+              >
+                [~]
+              </button>
             </div>
           </div>
         </footer>
