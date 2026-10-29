@@ -110,3 +110,13 @@ body {
 .animate-scan {
   animation: scan 3s linear infinite;
 }
+
+/* Road scrolling animation for retro Burgman mini-game */
+@keyframes roadDashMove {
+  from {
+    background-position-y: 0px;
+  }
+  to {
+    background-position-y: 80px;
+  }
+}

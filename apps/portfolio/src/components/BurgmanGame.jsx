@@ -1,9 +1,21 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Trophy, RefreshCw, Heart, Sparkles, CheckCircle2, AlertTriangle, ShieldCheck, RotateCcw } from "lucide-react";
+import {
+    Trophy,
+    RefreshCw,
+    Heart,
+    Sparkles,
+    CheckCircle2,
+    AlertTriangle,
+    ShieldCheck,
+    RotateCcw,
+    Gauge,
+    Maximize2,
+    Minimize2,
+    Wind
+} from "lucide-react";
 
-const LANES = [0, 1, 2]; // 0: Left, 1: Center, 2: Right
-const LANE_POSITIONS = ["18%", "50%", "82%"];
+const LANE_POSITIONS = ["20%", "50%", "80%"];
 
 const OBSTACLE_TYPES = [
     { type: "barrier", emoji: "🚧", name: "Road Barrier", isBad: true },
@@ -22,6 +34,34 @@ const HOMEBODY_TIPS = [
     "A 30-minute nap is officially classified as offline rendering."
 ];
 
+// Helper: Calculate progressive speed & metadata from distance
+const calculateSpeedInfo = (dist) => {
+    // Starts at 15 km/h, climbs smoothly up to 50 km/h
+    const kmph = Math.min(50, Math.round(15 + Math.sqrt(dist) * 1.3));
+
+    // Fall step speed in percentage units per 50ms tick
+    // Starts at 1.8 at 0m, reaches ~2.8 at 250m, caps at 4.8 at high speed
+    const fallSpeed = Math.min(4.8, 1.8 + (kmph - 15) * 0.085);
+
+    let phase = "Gentle Warmup";
+    let phaseBadge = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+    if (kmph >= 45) {
+        phase = "Burgman Turbo 🚀";
+        phaseBadge = "bg-red-500/10 text-red-400 border-red-500/30";
+    } else if (kmph >= 37) {
+        phase = "Brisk Glide ⚡";
+        phaseBadge = "bg-amber-500/10 text-amber-300 border-amber-500/30";
+    } else if (kmph >= 29) {
+        phase = "30 km/h Sweet Spot ✨";
+        phaseBadge = "bg-cyan-500/10 text-cyan-300 border-cyan-500/30";
+    } else if (kmph >= 20) {
+        phase = "Sunday Breeze 🛵";
+        phaseBadge = "bg-teal-500/10 text-teal-300 border-teal-500/30";
+    }
+
+    return { kmph, fallSpeed, phase, phaseBadge };
+};
+
 export default function BurgmanGame() {
     const [gameState, setGameState] = useState("idle"); // 'idle' | 'playing' | 'gameover'
     const [playerLane, setPlayerLane] = useState(1);
@@ -29,6 +69,8 @@ export default function BurgmanGame() {
     const [chaiCount, setChaiCount] = useState(0);
     const [lives, setLives] = useState(2);
     const [items, setItems] = useState([]);
+    const [maxSpeed, setMaxSpeed] = useState(15);
+    const [isExpanded, setIsExpanded] = useState(false);
     const [highScore, setHighScore] = useState(() => {
         try {
             return parseInt(localStorage.getItem("burgman_high_score") || "0", 10);
@@ -41,18 +83,19 @@ export default function BurgmanGame() {
     const [tipIndex, setTipIndex] = useState(0);
 
     const gameLoopRef = useRef(null);
-    const spawnTimerRef = useRef(null);
     const playerLaneRef = useRef(playerLane);
     const livesRef = useRef(lives);
     const chaiCountRef = useRef(chaiCount);
     const scoreRef = useRef(score);
+    const maxSpeedRef = useRef(maxSpeed);
 
     useEffect(() => {
         playerLaneRef.current = playerLane;
         livesRef.current = lives;
         chaiCountRef.current = chaiCount;
         scoreRef.current = score;
-    }, [playerLane, lives, chaiCount, score]);
+        maxSpeedRef.current = maxSpeed;
+    }, [playerLane, lives, chaiCount, score, maxSpeed]);
 
     // Toast feedback helper
     const showToast = (text) => {
@@ -67,7 +110,7 @@ export default function BurgmanGame() {
             localStorage.removeItem("burgman_high_score");
             showToast("Best score reset! 🔄");
         } catch {
-            // Ignore
+            // Ignore storage errors
         }
     };
 
@@ -76,8 +119,13 @@ export default function BurgmanGame() {
         setGameState("playing");
         setPlayerLane(1);
         setScore(0);
+        scoreRef.current = 0;
         setChaiCount(0);
+        chaiCountRef.current = 0;
         setLives(2);
+        livesRef.current = 2;
+        setMaxSpeed(15);
+        maxSpeedRef.current = 15;
         setItems([]);
         setGameOverReason("");
         setTipIndex((prev) => (prev + 1) % HOMEBODY_TIPS.length);
@@ -129,11 +177,16 @@ export default function BurgmanGame() {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [gameState, moveLeft, moveRight]);
 
-    // Spawner Loop
+    // Adaptive Spawner Loop: Starts leisurely (1500ms) and speeds up dynamically as speed climbs
     useEffect(() => {
         if (gameState !== "playing") return;
 
-        const spawnItem = () => {
+        let timeoutId;
+        let isCancelled = false;
+
+        const spawnNext = () => {
+            if (isCancelled) return;
+
             const lane = Math.floor(Math.random() * 3);
             const template = OBSTACLE_TYPES[Math.floor(Math.random() * OBSTACLE_TYPES.length)];
             const newItem = {
@@ -144,10 +197,21 @@ export default function BurgmanGame() {
             };
 
             setItems((prev) => [...prev, newItem]);
+
+            // Calculate next spawn delay based on current score
+            const currentSpeed = calculateSpeedInfo(scoreRef.current);
+            const nextDelay = Math.max(820, 1550 - (currentSpeed.kmph - 15) * 21);
+
+            timeoutId = setTimeout(spawnNext, nextDelay);
         };
 
-        spawnTimerRef.current = setInterval(spawnItem, 1050);
-        return () => clearInterval(spawnTimerRef.current);
+        // First spawn after a gentle 800ms lead-in
+        timeoutId = setTimeout(spawnNext, 800);
+
+        return () => {
+            isCancelled = true;
+            clearTimeout(timeoutId);
+        };
     }, [gameState]);
 
     // Main Game Loop: Tick item positions & collision detection
@@ -155,18 +219,29 @@ export default function BurgmanGame() {
         if (gameState !== "playing") return;
 
         const interval = setInterval(() => {
-            // Increment cruising distance score
-            setScore((s) => s + 5);
+            const currentSpeed = calculateSpeedInfo(scoreRef.current);
+
+            // Increment cruising distance score based on current velocity
+            const distanceGain = Math.max(2, Math.round(currentSpeed.kmph / 10));
+            const updatedScore = scoreRef.current + distanceGain;
+            scoreRef.current = updatedScore;
+            setScore(updatedScore);
+
+            if (currentSpeed.kmph > maxSpeedRef.current) {
+                maxSpeedRef.current = currentSpeed.kmph;
+                setMaxSpeed(currentSpeed.kmph);
+            }
 
             setItems((prevItems) => {
                 const nextItems = [];
                 for (const item of prevItems) {
-                    const nextY = item.y + 3.8; // Falling speed
+                    const nextY = item.y + currentSpeed.fallSpeed; // Progressive falling speed
 
-                    // Collision check when item reaches player's vertical area (75% to 92%)
-                    if (nextY >= 75 && nextY <= 92 && item.lane === playerLaneRef.current) {
+                    // Collision check when item reaches player's vertical area (76% to 92%)
+                    if (nextY >= 76 && nextY <= 92 && item.lane === playerLaneRef.current) {
                         if (item.isBad) {
                             const remainingLives = livesRef.current - 1;
+                            livesRef.current = remainingLives;
                             setLives(remainingLives);
                             if (remainingLives <= 0) {
                                 let reason = "Hit a road hazard!";
@@ -186,10 +261,14 @@ export default function BurgmanGame() {
                             // Collectible
                             if (item.type === "chai") {
                                 setChaiCount((c) => c + 1);
-                                setScore((s) => s + 50);
+                                const bonusScore = scoreRef.current + 50;
+                                scoreRef.current = bonusScore;
+                                setScore(bonusScore);
                                 showToast("+50 Chai Power! ☕");
                             } else {
-                                setScore((s) => s + 30);
+                                const bonusScore = scoreRef.current + 30;
+                                scoreRef.current = bonusScore;
+                                setScore(bonusScore);
                                 showToast("+30 Maximum Comfort! 🛋️");
                             }
                         }
@@ -218,16 +297,20 @@ export default function BurgmanGame() {
         return { title: "Sunday Starter", badge: "bg-gray-800 text-gray-300 border-gray-700" };
     };
 
+    const currentSpeed = calculateSpeedInfo(score);
     const currentRank = getRank(highScore);
+    const roadScrollDuration = gameState === "playing"
+        ? Math.max(0.18, 0.72 - (currentSpeed.kmph - 15) * 0.014)
+        : 0;
 
     return (
-        <section id="game" className="py-24 px-4 relative overflow-hidden border-t border-gray-900 bg-[#0a0a0a]">
+        <section id="game" className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden border-t border-gray-900 bg-[#0a0a0a]">
             {/* Ambient Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-yellow-500/5 rounded-full blur-[160px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[450px] bg-yellow-500/5 rounded-full blur-[180px] pointer-events-none" />
 
-            <div className="max-w-6xl mx-auto relative z-10">
+            <div className="max-w-[1400px] mx-auto relative z-10">
                 {/* Section Header */}
-                <div className="text-center max-w-2xl mx-auto mb-12">
+                <div className="text-center max-w-2xl mx-auto mb-10">
                     <motion.div
                         initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -253,18 +336,18 @@ export default function BurgmanGame() {
                         viewport={{ once: true }}
                         className="text-gray-300 text-base leading-relaxed font-normal"
                     >
-                        Take a breather before getting in touch. Steer Joe down an unhurried road at a peaceful 30 km/h, sip hot chai ☕, and steer clear of outdoor obstacles!
+                        Take a breather before getting in touch. Starts at an easy 15 km/h warmup, then gently speeds up as you cruise. Pick up chai ☕ and dodge outdoor hazards!
                     </motion.p>
                 </div>
 
-                {/* 3-Column Desktop Grid (Utilizes Desktop Screen Space) */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                {/* Layout: Either Standard 3-Column or Expanded Desktop Theater View */}
+                <div className={`grid grid-cols-1 ${isExpanded ? "lg:grid-cols-12" : "lg:grid-cols-12"} gap-6 items-start`}>
                     {/* LEFT PANEL: What to Collect vs What to Dodge (Rules & Legend) */}
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        className="lg:col-span-3 space-y-4"
+                        className={`${isExpanded ? "lg:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-4 order-2" : "lg:col-span-3 space-y-4 order-2 lg:order-1"}`}
                     >
                         {/* What to Collect Card */}
                         <div className="p-5 rounded-2xl bg-gray-950/80 border border-gray-800 backdrop-blur-xl shadow-lg">
@@ -322,68 +405,101 @@ export default function BurgmanGame() {
                         </div>
 
                         {/* Keyboard Controls Guide */}
-                        <div className="p-4 rounded-2xl bg-gray-950/60 border border-gray-800/80 text-xs text-gray-400 hidden lg:block">
-                            <p className="font-semibold text-gray-300 mb-2 flex items-center gap-1.5">
+                        <div className="p-5 rounded-2xl bg-gray-950/80 border border-gray-800 backdrop-blur-xl shadow-lg hidden lg:block">
+                            <p className="font-semibold text-gray-300 mb-3 flex items-center gap-1.5 text-xs">
                                 <span>⌨️</span> <span>Desktop Controls</span>
                             </p>
-                            <div className="flex items-center justify-between text-[11px] font-mono">
-                                <span>Steer Left:</span>
-                                <span className="bg-gray-800 px-2 py-0.5 rounded text-white">[←] or [A]</span>
+                            <div className="flex items-center justify-between text-[11px] font-mono py-1 border-b border-gray-900">
+                                <span className="text-gray-400">Steer Left:</span>
+                                <span className="bg-gray-800 px-2 py-0.5 rounded text-white font-bold">[←] or [A]</span>
                             </div>
-                            <div className="flex items-center justify-between text-[11px] font-mono mt-1.5">
-                                <span>Steer Right:</span>
-                                <span className="bg-gray-800 px-2 py-0.5 rounded text-white">[→] or [D]</span>
+                            <div className="flex items-center justify-between text-[11px] font-mono py-1 border-b border-gray-900">
+                                <span className="text-gray-400">Steer Right:</span>
+                                <span className="bg-gray-800 px-2 py-0.5 rounded text-white font-bold">[→] or [D]</span>
                             </div>
-                            <div className="flex items-center justify-between text-[11px] font-mono mt-1.5">
-                                <span>Start / Restart:</span>
-                                <span className="bg-gray-800 px-2 py-0.5 rounded text-white">[SPACE]</span>
+                            <div className="flex items-center justify-between text-[11px] font-mono py-1">
+                                <span className="text-gray-400">Start / Ride Again:</span>
+                                <span className="bg-gray-800 px-2 py-0.5 rounded text-white font-bold">[SPACE]</span>
                             </div>
                         </div>
                     </motion.div>
 
                     {/* CENTER COLUMN: The Retro Road Arcade Machine */}
-                    <div className="lg:col-span-6 w-full rounded-3xl bg-gray-950/90 border border-gray-800 shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden backdrop-blur-xl">
+                    <div className={`${isExpanded ? "lg:col-span-12 max-w-4xl mx-auto order-1" : "lg:col-span-6 order-1 lg:order-2"} w-full rounded-3xl bg-gray-950/90 border border-gray-800 shadow-[0_0_60px_rgba(0,0,0,0.85)] overflow-hidden backdrop-blur-xl transition-all duration-300`}>
                         {/* Arcade Titlebar */}
                         <div className="px-5 py-3.5 bg-gray-900/90 border-b border-gray-800 flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <span className="text-xl">🛵</span>
+                                <span className="text-xl sm:text-2xl">🛵</span>
                                 <div>
-                                    <h3 className="text-sm font-bold text-white tracking-tight flex items-center gap-2">
+                                    <h3 className="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-2">
                                         <span>Burgman 30 km/h Cruise</span>
                                         <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-neon-green/10 text-neon-green border border-neon-green/30">
                                             LIVE
                                         </span>
                                     </h3>
                                     <p className="text-[11px] text-gray-400">
-                                        Sunday breeze simulator
+                                        Starts slow & breezy, then revs up
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-1.5 text-xs text-yellow-400 font-mono">
-                                    <Trophy size={14} />
+                            <div className="flex items-center gap-2.5">
+                                <div className="flex items-center gap-1.5 text-xs text-yellow-400 font-mono bg-black/40 px-2.5 py-1 rounded-lg border border-yellow-500/20">
+                                    <Trophy size={13} />
                                     <span>Best: {highScore}m</span>
                                 </div>
+
+                                {/* Desktop Theater Mode Toggle */}
+                                <button
+                                    onClick={() => setIsExpanded(!isExpanded)}
+                                    title={isExpanded ? "Collapse to standard view" : "Expand arcade screen on desktop"}
+                                    className="hidden lg:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-mono transition-colors cursor-pointer border border-gray-700"
+                                >
+                                    {isExpanded ? (
+                                        <>
+                                            <Minimize2 size={13} />
+                                            <span>Compact</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Maximize2 size={13} />
+                                            <span>Expand</span>
+                                        </>
+                                    )}
+                                </button>
                             </div>
                         </div>
 
-                        {/* Road Screen (Taller on desktop for great visual depth) */}
-                        <div className="relative h-80 sm:h-96 lg:h-[420px] bg-[#111116] overflow-hidden select-none border-b border-gray-800">
-                            {/* Scrolling Road Stripes */}
-                            <div className="absolute inset-0 flex justify-between pointer-events-none opacity-20">
-                                <div className="w-1/3 border-r-2 border-dashed border-gray-500 h-full animate-pulse" />
-                                <div className="w-1/3 border-r-2 border-dashed border-gray-500 h-full animate-pulse" />
+                        {/* Road Screen: Generously sized for desktop screens */}
+                        <div className="relative h-[460px] sm:h-[520px] lg:h-[580px] xl:h-[640px] bg-[#111116] overflow-hidden select-none border-b border-gray-800">
+                            {/* Animated Scrolling Road Stripes (Speed increases dynamically) */}
+                            <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-35">
+                                <div
+                                    className="absolute left-1/3 top-0 bottom-0 w-1 -translate-x-1/2"
+                                    style={{
+                                        backgroundImage: "repeating-linear-gradient(to bottom, transparent 0px, transparent 24px, #a1a1aa 24px, #a1a1aa 56px)",
+                                        backgroundSize: "4px 80px",
+                                        animation: gameState === "playing" ? `roadDashMove ${roadScrollDuration}s linear infinite` : "none"
+                                    }}
+                                />
+                                <div
+                                    className="absolute left-2/3 top-0 bottom-0 w-1 -translate-x-1/2"
+                                    style={{
+                                        backgroundImage: "repeating-linear-gradient(to bottom, transparent 0px, transparent 24px, #a1a1aa 24px, #a1a1aa 56px)",
+                                        backgroundSize: "4px 80px",
+                                        animation: gameState === "playing" ? `roadDashMove ${roadScrollDuration}s linear infinite` : "none"
+                                    }}
+                                />
                             </div>
 
                             {/* Road ambient side grass / sidewalk glow */}
-                            <div className="absolute left-0 top-0 bottom-0 w-2.5 bg-gradient-to-r from-neon-blue/30 to-transparent" />
-                            <div className="absolute right-0 top-0 bottom-0 w-2.5 bg-gradient-to-l from-neon-pink/30 to-transparent" />
+                            <div className="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-neon-blue/30 to-transparent pointer-events-none" />
+                            <div className="absolute right-0 top-0 bottom-0 w-3 bg-gradient-to-l from-neon-pink/30 to-transparent pointer-events-none" />
 
                             {/* In-Game HUD Overlay */}
                             {gameState === "playing" && (
                                 <div className="absolute top-3 left-4 right-4 z-20 flex items-center justify-between pointer-events-none text-xs font-mono">
-                                    <div className="flex items-center gap-3 bg-black/75 px-3 py-1.5 rounded-xl border border-gray-800">
+                                    <div className="flex items-center gap-2 sm:gap-3 bg-black/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-gray-800 shadow-md">
                                         <span className="text-white font-bold">{score}m</span>
                                         <span className="text-yellow-400 font-bold flex items-center gap-1">
                                             <span>☕</span>
@@ -391,7 +507,14 @@ export default function BurgmanGame() {
                                         </span>
                                     </div>
 
-                                    <div className="flex items-center gap-1 bg-black/75 px-3 py-1.5 rounded-xl border border-gray-800">
+                                    {/* Progressive Speedometer Badge */}
+                                    <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-bold text-[11px] backdrop-blur-md shadow-md ${currentSpeed.phaseBadge}`}>
+                                        <Gauge size={13} className="shrink-0" />
+                                        <span>{currentSpeed.kmph} km/h</span>
+                                        <span className="hidden sm:inline opacity-75">• {currentSpeed.phase}</span>
+                                    </div>
+
+                                    <div className="flex items-center gap-1 bg-black/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-gray-800 shadow-md">
                                         {[...Array(2)].map((_, i) => (
                                             <Heart
                                                 key={i}
@@ -399,10 +522,6 @@ export default function BurgmanGame() {
                                                 className={`${i < lives ? "fill-red-500 text-red-500" : "text-gray-600"}`}
                                             />
                                         ))}
-                                    </div>
-
-                                    <div className="hidden sm:inline-flex bg-neon-green/10 border border-neon-green/30 text-neon-green px-2.5 py-1 rounded-xl text-[11px] font-bold">
-                                        ⚡ 30 km/h LOCKED
                                     </div>
                                 </div>
                             )}
@@ -414,7 +533,7 @@ export default function BurgmanGame() {
                                         initial={{ opacity: 0, y: -10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -10 }}
-                                        className="absolute top-12 left-1/2 -translate-x-1/2 z-30 bg-black/90 border border-neon-blue/50 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg whitespace-nowrap"
+                                        className="absolute top-14 left-1/2 -translate-x-1/2 z-30 bg-black/90 border border-neon-blue/50 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg whitespace-nowrap"
                                     >
                                         {toastMessage}
                                     </motion.div>
@@ -425,7 +544,7 @@ export default function BurgmanGame() {
                             {items.map((item) => (
                                 <div
                                     key={item.id}
-                                    className="absolute text-2xl sm:text-3xl lg:text-4xl transform -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-all duration-75"
+                                    className="absolute text-3xl sm:text-4xl lg:text-5xl transform -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-all duration-75 filter drop-shadow-md"
                                     style={{
                                         left: LANE_POSITIONS[item.lane],
                                         top: `${item.y}%`,
@@ -438,15 +557,28 @@ export default function BurgmanGame() {
                             {/* Player Scooter */}
                             {gameState === "playing" && (
                                 <motion.div
-                                    className="absolute bottom-6 transform -translate-x-1/2 flex flex-col items-center pointer-events-none z-10"
+                                    className="absolute bottom-8 transform -translate-x-1/2 flex flex-col items-center pointer-events-none z-10"
                                     animate={{ left: LANE_POSITIONS[playerLane] }}
                                     transition={{ type: "spring", stiffness: 450, damping: 28 }}
                                 >
-                                    <div className="relative text-3xl sm:text-4xl lg:text-5xl filter drop-shadow-[0_0_15px_rgba(0,255,255,0.7)]">
+                                    {/* Breeze indicator at higher speeds */}
+                                    {currentSpeed.kmph >= 30 && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="absolute -top-4 flex items-center gap-1 text-[10px] text-cyan-300 font-mono"
+                                        >
+                                            <Wind size={12} className="animate-pulse" />
+                                            <span>BREEZE</span>
+                                        </motion.div>
+                                    )}
+
+                                    <div className="relative text-4xl sm:text-5xl lg:text-6xl filter drop-shadow-[0_0_20px_rgba(0,255,255,0.7)]">
                                         🛵
                                     </div>
-                                    <div className="text-[10px] font-mono font-bold text-cyan-300 mt-0.5">
-                                        JOE
+                                    <div className="text-[10px] sm:text-xs font-mono font-bold text-cyan-300 mt-1 flex items-center gap-1">
+                                        <span>JOE</span>
+                                        <span className="text-[9px] text-gray-400">({currentSpeed.kmph} km/h)</span>
                                     </div>
                                 </motion.div>
                             )}
@@ -457,15 +589,15 @@ export default function BurgmanGame() {
                                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-pink-500/20 border border-white/20 flex items-center justify-center text-3xl mb-4 shadow-lg">
                                         🛵
                                     </div>
-                                    <h4 className="text-xl md:text-2xl font-bold text-white mb-2">
+                                    <h4 className="text-xl md:text-3xl font-bold text-white mb-2">
                                         The Sunday 30 km/h Cruise
                                     </h4>
-                                    <p className="text-xs md:text-sm text-gray-300 max-w-sm mb-6 leading-relaxed">
-                                        Steer Joe on his Burgman. Pick up hot chai ☕, collect cozy cushions 🛋️, and dodge barriers 🚧 & blinding sun ☀️!
+                                    <p className="text-xs md:text-sm text-gray-300 max-w-md mb-6 leading-relaxed">
+                                        Starts at a calm 15 km/h, then revs up as you cover ground! Pick up hot chai ☕, cozy cushions 🛋️, and dodge barriers 🚧 & blazing sun ☀️.
                                     </p>
                                     <button
                                         onClick={startGame}
-                                        className="bg-gradient-to-r from-neon-blue to-neon-pink text-black font-bold px-8 py-3.5 rounded-xl text-sm shadow-[0_0_25px_rgba(0,255,255,0.3)] hover:opacity-95 active:scale-95 transition-all cursor-pointer"
+                                        className="bg-gradient-to-r from-neon-blue to-neon-pink text-black font-bold px-9 py-3.5 rounded-xl text-sm shadow-[0_0_25px_rgba(0,255,255,0.3)] hover:opacity-95 active:scale-95 transition-all cursor-pointer"
                                     >
                                         Start Cruising →
                                     </button>
@@ -478,34 +610,39 @@ export default function BurgmanGame() {
                             {/* Game Over Screen Overlay */}
                             {gameState === "gameover" && (
                                 <div className="absolute inset-0 z-30 flex flex-col items-center justify-center p-6 bg-black/90 backdrop-blur-sm text-center">
-                                    <div className="text-3xl mb-2">🛋️</div>
-                                    <h4 className="text-xl md:text-2xl font-bold text-white mb-1">
+                                    <div className="text-4xl mb-2">🛋️</div>
+                                    <h4 className="text-xl md:text-3xl font-bold text-white mb-1">
                                         Cruise Interrupted!
                                     </h4>
-                                    <p className="text-xs md:text-sm text-pink-400 font-medium max-w-sm mb-4 leading-relaxed">
+                                    <p className="text-xs md:text-sm text-pink-400 font-medium max-w-sm mb-5 leading-relaxed">
                                         {gameOverReason}
                                     </p>
 
-                                    <div className="flex items-center gap-4 bg-gray-900/80 px-4 py-2.5 rounded-xl border border-gray-800 mb-6 text-xs font-mono">
+                                    <div className="flex items-center gap-3 sm:gap-4 bg-gray-900/90 px-4 py-3 rounded-2xl border border-gray-800 mb-6 text-xs font-mono shadow-lg">
                                         <div>
                                             <span className="text-gray-400 block text-[10px]">DISTANCE</span>
-                                            <span className="text-white font-bold">{score}m</span>
+                                            <span className="text-white font-bold text-sm sm:text-base">{score}m</span>
                                         </div>
-                                        <div className="w-px h-6 bg-gray-800" />
+                                        <div className="w-px h-7 bg-gray-800" />
+                                        <div>
+                                            <span className="text-gray-400 block text-[10px]">TOP SPEED</span>
+                                            <span className="text-cyan-300 font-bold text-sm sm:text-base">{maxSpeed} km/h</span>
+                                        </div>
+                                        <div className="w-px h-7 bg-gray-800" />
                                         <div>
                                             <span className="text-gray-400 block text-[10px]">CHAI CUPS</span>
-                                            <span className="text-yellow-400 font-bold">{chaiCount} ☕</span>
+                                            <span className="text-yellow-400 font-bold text-sm sm:text-base">{chaiCount} ☕</span>
                                         </div>
-                                        <div className="w-px h-6 bg-gray-800" />
+                                        <div className="w-px h-7 bg-gray-800" />
                                         <div>
                                             <span className="text-gray-400 block text-[10px]">RECORD</span>
-                                            <span className="text-neon-green font-bold">{highScore}m</span>
+                                            <span className="text-neon-green font-bold text-sm sm:text-base">{highScore}m</span>
                                         </div>
                                     </div>
 
                                     <button
                                         onClick={startGame}
-                                        className="bg-white text-black font-bold px-7 py-3 rounded-xl text-xs hover:bg-gray-200 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2"
+                                        className="bg-white text-black font-bold px-8 py-3.5 rounded-xl text-xs hover:bg-gray-200 active:scale-95 transition-all cursor-pointer inline-flex items-center gap-2 shadow-lg"
                                     >
                                         <RefreshCw size={14} />
                                         <span>Ride Again [SPACE]</span>
@@ -514,14 +651,14 @@ export default function BurgmanGame() {
                             )}
                         </div>
 
-                        {/* Mobile Touch Steering Controls */}
-                        <div className="p-3 bg-gray-950 flex items-center justify-between gap-3 text-xs">
+                        {/* Mobile / Touch Steering Controls */}
+                        <div className="p-3.5 bg-gray-950 flex items-center justify-between gap-3 text-xs border-t border-gray-800">
                             <button
                                 onClick={moveLeft}
                                 disabled={gameState !== "playing"}
-                                className="flex-1 py-3 rounded-xl bg-gray-900 hover:bg-gray-800 active:bg-cyan-500/20 text-white font-bold border border-gray-800 active:border-cyan-400 transition-all cursor-pointer flex items-center justify-center gap-1.5 touch-manipulation disabled:opacity-40"
+                                className="flex-1 py-3.5 rounded-xl bg-gray-900 hover:bg-gray-800 active:bg-cyan-500/20 text-white font-bold border border-gray-800 active:border-cyan-400 transition-all cursor-pointer flex items-center justify-center gap-1.5 touch-manipulation disabled:opacity-40"
                             >
-                                <span>◀</span>
+                                <span className="text-base">◀</span>
                                 <span>Steer Left</span>
                             </button>
                             <div className="text-[11px] text-gray-500 font-mono text-center px-2 hidden sm:block">
@@ -530,10 +667,10 @@ export default function BurgmanGame() {
                             <button
                                 onClick={moveRight}
                                 disabled={gameState !== "playing"}
-                                className="flex-1 py-3 rounded-xl bg-gray-900 hover:bg-gray-800 active:bg-cyan-500/20 text-white font-bold border border-gray-800 active:border-cyan-400 transition-all cursor-pointer flex items-center justify-center gap-1.5 touch-manipulation disabled:opacity-40"
+                                className="flex-1 py-3.5 rounded-xl bg-gray-900 hover:bg-gray-800 active:bg-cyan-500/20 text-white font-bold border border-gray-800 active:border-cyan-400 transition-all cursor-pointer flex items-center justify-center gap-1.5 touch-manipulation disabled:opacity-40"
                             >
                                 <span>Steer Right</span>
-                                <span>▶</span>
+                                <span className="text-base">▶</span>
                             </button>
                         </div>
                     </div>
@@ -543,7 +680,7 @@ export default function BurgmanGame() {
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        className="lg:col-span-3 space-y-4"
+                        className={`${isExpanded ? "hidden" : "lg:col-span-3 space-y-4 order-3"}`}
                     >
                         {/* High Score & Storage Transparency Card */}
                         <div className="p-5 rounded-2xl bg-gray-950/80 border border-gray-800 backdrop-blur-xl shadow-lg">
