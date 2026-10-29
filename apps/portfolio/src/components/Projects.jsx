@@ -11,6 +11,7 @@ import {
     Zap,
     Smartphone
 } from "lucide-react";
+import BurgmanGame from "./BurgmanGame";
 
 const projectsData = [
     {
@@ -48,8 +49,8 @@ const projectsData = [
             }
         ],
         sourceUrl: "https://github.com/iamjothees",
-        liveUrl: "https://showcase.joecodes.in/#ecommerce",
-        previewBadge: "Live on showcase.joecodes.in • 1-Click Access"
+        liveUrl: null, // Hidden since no standalone live demo URL is deployed yet
+        previewBadge: "GitHub Repo Available"
     },
     {
         id: "food-ordering-app",
@@ -86,8 +87,8 @@ const projectsData = [
             }
         ],
         sourceUrl: "https://github.com/iamjothees",
-        liveUrl: "https://showcase.joecodes.in/#food-ordering",
-        previewBadge: "Live on showcase.joecodes.in • 1-Click Access"
+        liveUrl: null, // Hidden since no standalone live demo URL is deployed yet
+        previewBadge: "GitHub Repo Available"
     },
     {
         id: "qwik-preview",
@@ -123,8 +124,8 @@ const projectsData = [
             }
         ],
         sourceUrl: "https://github.com/iamjothees/qwik-mobile-preview",
-        liveUrl: "https://qwik-preview.joecodes.in/",
-        previewBadge: "Live on qwik-preview.joecodes.in"
+        liveUrl: "https://qwik-preview.joecodes.in/", // Real live demo!
+        previewBadge: "Live Web Tool Available"
     }
 ];
 
@@ -151,7 +152,7 @@ export default function Projects() {
 
             <div className="max-w-7xl mx-auto relative z-10">
                 {/* Header Section */}
-                <div className="text-center max-w-3xl mx-auto mb-16">
+                <div className="text-center max-w-3xl mx-auto mb-10">
                     <motion.div
                         initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -209,8 +210,11 @@ export default function Projects() {
                     </motion.div>
                 </div>
 
+                {/* Option C: The 30 km/h Burgman Cruiser Retro Mini-Game */}
+                <BurgmanGame />
+
                 {/* Projects Grid: Clean, Responsive Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
                     {projectsData.map((project) => {
                         const Icon = project.icon;
                         return (
@@ -290,35 +294,41 @@ export default function Projects() {
                                 {/* Action Buttons */}
                                 <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                                     <div className="flex flex-wrap items-center gap-3">
-                                        {/* Try Live Demo button */}
-                                        <a
-                                            href={project.liveUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-neon-blue to-neon-pink text-black hover:opacity-90 transition-all shadow-[0_0_20px_rgba(0,255,255,0.25)] active:scale-95 cursor-pointer no-underline"
-                                        >
-                                            <Play size={13} className="fill-black" />
-                                            <span>Try Live Demo</span>
-                                            <ArrowUpRight size={13} className="text-black" />
-                                        </a>
+                                        {/* Try Live Demo button (Only rendered if a real live demo URL exists) */}
+                                        {project.liveUrl && (
+                                            <a
+                                                href={project.liveUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-neon-blue to-neon-pink text-black hover:opacity-90 transition-all shadow-[0_0_20px_rgba(0,255,255,0.25)] active:scale-95 cursor-pointer no-underline"
+                                            >
+                                                <Play size={13} className="fill-black" />
+                                                <span>Try Live Demo</span>
+                                                <ArrowUpRight size={13} className="text-black" />
+                                            </a>
+                                        )}
 
                                         {/* View Code button */}
-                                        <a
-                                            href={project.sourceUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-300 hover:text-white bg-white/5 border border-white/10 hover:border-white/30 transition-all active:scale-95"
-                                        >
-                                            <Github size={14} />
-                                            <span>View Code</span>
-                                        </a>
+                                        {project.sourceUrl && (
+                                            <a
+                                                href={project.sourceUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-300 hover:text-white bg-white/5 border border-white/10 hover:border-white/30 transition-all active:scale-95"
+                                            >
+                                                <Github size={14} />
+                                                <span>View Code</span>
+                                            </a>
+                                        )}
                                     </div>
 
                                     {/* Sub-text Badge */}
-                                    <div className="flex items-center gap-1.5 text-[11px] text-neon-green shrink-0">
-                                        <ShieldCheck size={14} className="shrink-0" />
-                                        <span>{project.previewBadge}</span>
-                                    </div>
+                                    {project.previewBadge && (
+                                        <div className="flex items-center gap-1.5 text-[11px] text-neon-green shrink-0">
+                                            <ShieldCheck size={14} className="shrink-0" />
+                                            <span>{project.previewBadge}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </motion.div>
                         );
