@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "dev": "concurrently -n \"portfolio,showcase\" -c \"magenta,cyan\" \"npm run dev -w portfolio\" \"npm run dev -w showcase\"",
+    "dev:host": "concurrently -n \"portfolio,showcase\" -c \"magenta,cyan\" \"npm run dev -w portfolio -- --host\" \"npm run dev -w showcase -- --host\"",
     "dev:portfolio": "npm run dev -w portfolio",
     "dev:showcase": "npm run dev -w showcase",
     "build": "npm run build --workspaces",
