@@ -34,24 +34,30 @@ const HOMEBODY_TIPS = [
     "A 30-minute nap is officially classified as offline rendering."
 ];
 
-// Helper: Calculate progressive speed & metadata from distance
-const calculateSpeedInfo = (dist) => {
-    // Starts at 15 km/h, climbs smoothly up to 50 km/h
-    const kmph = Math.min(50, Math.round(15 + Math.sqrt(dist) * 1.3));
+// Progressive speed based on elapsed cruising seconds (not instant score spikes)
+// Stays at gentle 15 km/h for the first 6 seconds, then accelerates gradually
+const calculateSpeedInfoByTime = (elapsedSec) => {
+    let kmph = 15;
+    if (elapsedSec > 6) {
+        // Starts gently accelerating after 6 seconds:
+        // 10s: ~20 km/h | 20s: ~29 km/h | 35s: ~38 km/h | 55s+: 46-50 km/h
+        const t = elapsedSec - 6;
+        kmph = Math.min(50, Math.round(15 + Math.sqrt(t) * 4.3));
+    }
 
-    // Fall step speed in percentage units per 50ms tick
-    // Starts at 1.8 at 0m, reaches ~2.8 at 250m, caps at 4.8 at high speed
-    const fallSpeed = Math.min(4.8, 1.8 + (kmph - 15) * 0.085);
+    // Fall step speed in % per 50ms tick:
+    // Starts at 1.7% (~2.5s from top to scooter) -> 2.8% at 30 km/h -> 4.6% at 50 km/h
+    const fallSpeed = Math.min(4.8, 1.7 + (kmph - 15) * 0.088);
 
-    let phase = "Gentle Warmup";
+    let phase = "Gentle Warmup ☕";
     let phaseBadge = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
-    if (kmph >= 45) {
+    if (kmph >= 44) {
         phase = "Burgman Turbo 🚀";
         phaseBadge = "bg-red-500/10 text-red-400 border-red-500/30";
-    } else if (kmph >= 37) {
+    } else if (kmph >= 36) {
         phase = "Brisk Glide ⚡";
         phaseBadge = "bg-amber-500/10 text-amber-300 border-amber-500/30";
-    } else if (kmph >= 29) {
+    } else if (kmph >= 28) {
         phase = "30 km/h Sweet Spot ✨";
         phaseBadge = "bg-cyan-500/10 text-cyan-300 border-cyan-500/30";
     } else if (kmph >= 20) {
@@ -68,7 +74,9 @@ export default function BurgmanGame() {
     const [score, setScore] = useState(0);
     const [chaiCount, setChaiCount] = useState(0);
     const [lives, setLives] = useState(2);
+    const [isInvulnerable, setIsInvulnerable] = useState(false);
     const [items, setItems] = useState([]);
+    const [currentSpeed, setCurrentSpeed] = useState(() => calculateSpeedInfoByTime(0));
     const [maxSpeed, setMaxSpeed] = useState(15);
     const [isExpanded, setIsExpanded] = useState(false);
     const [highScore, setHighScore] = useState(() => {
@@ -85,17 +93,18 @@ export default function BurgmanGame() {
     const gameLoopRef = useRef(null);
     const playerLaneRef = useRef(playerLane);
     const livesRef = useRef(lives);
-    const chaiCountRef = useRef(chaiCount);
     const scoreRef = useRef(score);
     const maxSpeedRef = useRef(maxSpeed);
+    const elapsedTicksRef = useRef(0);
+    const itemsRef = useRef([]);
+    const invulnerableUntilRef = useRef(0);
 
     useEffect(() => {
         playerLaneRef.current = playerLane;
         livesRef.current = lives;
-        chaiCountRef.current = chaiCount;
         scoreRef.current = score;
         maxSpeedRef.current = maxSpeed;
-    }, [playerLane, lives, chaiCount, score, maxSpeed]);
+    }, [playerLane, lives, score, maxSpeed]);
 
     // Toast feedback helper
     const showToast = (text) => {
@@ -118,15 +127,20 @@ export default function BurgmanGame() {
     const startGame = () => {
         setGameState("playing");
         setPlayerLane(1);
+        playerLaneRef.current = 1;
         setScore(0);
         scoreRef.current = 0;
         setChaiCount(0);
-        chaiCountRef.current = 0;
         setLives(2);
         livesRef.current = 2;
+        setIsInvulnerable(false);
+        invulnerableUntilRef.current = 0;
+        elapsedTicksRef.current = 0;
+        setCurrentSpeed(calculateSpeedInfoByTime(0));
         setMaxSpeed(15);
         maxSpeedRef.current = 15;
         setItems([]);
+        itemsRef.current = [];
         setGameOverReason("");
         setTipIndex((prev) => (prev + 1) % HOMEBODY_TIPS.length);
     };
@@ -135,6 +149,7 @@ export default function BurgmanGame() {
     const endGame = useCallback((reason) => {
         setGameState("gameover");
         setGameOverReason(reason);
+        setIsInvulnerable(false);
         if (scoreRef.current > highScore) {
             setHighScore(scoreRef.current);
             try {
@@ -177,7 +192,7 @@ export default function BurgmanGame() {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [gameState, moveLeft, moveRight]);
 
-    // Adaptive Spawner Loop: Starts leisurely (1500ms) and speeds up dynamically as speed climbs
+    // Adaptive Spawner Loop: Starts leisurely (1650ms) and speeds up dynamically as cruising speed climbs
     useEffect(() => {
         if (gameState !== "playing") return;
 
@@ -192,21 +207,24 @@ export default function BurgmanGame() {
             const newItem = {
                 id: Date.now() + Math.random(),
                 lane,
-                y: -10, // top of the road
+                y: -10, // above the top of the road
                 ...template
             };
 
-            setItems((prev) => [...prev, newItem]);
+            const updated = [...itemsRef.current, newItem];
+            itemsRef.current = updated;
+            setItems(updated);
 
-            // Calculate next spawn delay based on current score
-            const currentSpeed = calculateSpeedInfo(scoreRef.current);
-            const nextDelay = Math.max(820, 1550 - (currentSpeed.kmph - 15) * 21);
+            // Calculate next spawn delay based on elapsed time speed
+            const elapsedSec = elapsedTicksRef.current * 0.05;
+            const currentSpeed = calculateSpeedInfoByTime(elapsedSec);
+            const nextDelay = Math.max(850, 1650 - (currentSpeed.kmph - 15) * 23);
 
             timeoutId = setTimeout(spawnNext, nextDelay);
         };
 
-        // First spawn after a gentle 800ms lead-in
-        timeoutId = setTimeout(spawnNext, 800);
+        // First spawn after a gentle 1000ms lead-in
+        timeoutId = setTimeout(spawnNext, 1000);
 
         return () => {
             isCancelled = true;
@@ -214,75 +232,108 @@ export default function BurgmanGame() {
         };
     }, [gameState]);
 
-    // Main Game Loop: Tick item positions & collision detection
+    // Main Game Loop: Tick item positions & collision detection (Safe from React StrictMode replays)
     useEffect(() => {
         if (gameState !== "playing") return;
 
         const interval = setInterval(() => {
-            const currentSpeed = calculateSpeedInfo(scoreRef.current);
+            elapsedTicksRef.current += 1;
+            const elapsedSec = elapsedTicksRef.current * 0.05;
+            const speed = calculateSpeedInfoByTime(elapsedSec);
+            setCurrentSpeed(speed);
 
-            // Increment cruising distance score based on current velocity
-            const distanceGain = Math.max(2, Math.round(currentSpeed.kmph / 10));
+            // Increment cruising distance score based on velocity
+            const distanceGain = Math.max(2, Math.round(speed.kmph / 10));
             const updatedScore = scoreRef.current + distanceGain;
             scoreRef.current = updatedScore;
             setScore(updatedScore);
 
-            if (currentSpeed.kmph > maxSpeedRef.current) {
-                maxSpeedRef.current = currentSpeed.kmph;
-                setMaxSpeed(currentSpeed.kmph);
+            if (speed.kmph > maxSpeedRef.current) {
+                maxSpeedRef.current = speed.kmph;
+                setMaxSpeed(speed.kmph);
             }
 
-            setItems((prevItems) => {
-                const nextItems = [];
-                for (const item of prevItems) {
-                    const nextY = item.y + currentSpeed.fallSpeed; // Progressive falling speed
+            const now = Date.now();
+            const invulnerableActive = now < invulnerableUntilRef.current;
 
-                    // Collision check when item reaches player's vertical area (76% to 92%)
-                    if (nextY >= 76 && nextY <= 92 && item.lane === playerLaneRef.current) {
-                        if (item.isBad) {
-                            const remainingLives = livesRef.current - 1;
-                            livesRef.current = remainingLives;
-                            setLives(remainingLives);
-                            if (remainingLives <= 0) {
-                                let reason = "Hit a road hazard!";
-                                if (item.type === "sun") {
-                                    reason = "Blinded by harsh sunlight! Retreating indoors immediately.";
-                                } else if (item.type === "barrier") {
-                                    reason = "Crashed into a road barrier! Appa gave you a stern 30 km/h lecture.";
-                                } else if (item.type === "jogger") {
-                                    reason = "Accidentally witnessed outdoor exercise. Too exhausting!";
-                                }
-                                endGame(reason);
-                                return [];
-                            } else {
-                                showToast("⚠️ Bump! 1 Heart Left");
-                            }
-                        } else {
-                            // Collectible
-                            if (item.type === "chai") {
-                                setChaiCount((c) => c + 1);
-                                const bonusScore = scoreRef.current + 50;
-                                scoreRef.current = bonusScore;
-                                setScore(bonusScore);
-                                showToast("+50 Chai Power! ☕");
-                            } else {
-                                const bonusScore = scoreRef.current + 30;
-                                scoreRef.current = bonusScore;
-                                setScore(bonusScore);
-                                showToast("+30 Maximum Comfort! 🛋️");
+            // Process items outside of any state setter to prevent double-execution
+            const currentItems = itemsRef.current;
+            const nextItems = [];
+            let tookDamage = false;
+            let damageReason = "";
+            let collectedChai = false;
+            let collectedCushion = false;
+
+            for (const item of currentItems) {
+                const nextY = item.y + speed.fallSpeed;
+
+                // Collision check when item reaches player's vertical area (76% to 92%)
+                if (nextY >= 76 && nextY <= 92 && item.lane === playerLaneRef.current) {
+                    if (item.isBad) {
+                        if (!invulnerableActive && !tookDamage) {
+                            tookDamage = true;
+                            if (item.type === "sun") {
+                                damageReason = "Blinded by harsh sunlight! Retreating indoors immediately.";
+                            } else if (item.type === "barrier") {
+                                damageReason = "Crashed into a road barrier! Appa gave you a stern 30 km/h lecture.";
+                            } else if (item.type === "jogger") {
+                                damageReason = "Accidentally witnessed outdoor exercise. Too exhausting!";
                             }
                         }
-                        // Discard item on collision
+                        // Discard obstacle on collision
+                        continue;
+                    } else {
+                        // Collectible item
+                        if (item.type === "chai") {
+                            collectedChai = true;
+                        } else {
+                            collectedCushion = true;
+                        }
                         continue;
                     }
-
-                    // Keep item if still on screen
-                    if (nextY < 105) {
-                        nextItems.push({ ...item, y: nextY });
-                    }
                 }
-                return nextItems;
-            });
+
+                // Keep item if still on screen
+                if (nextY < 105) {
+                    nextItems.push({ ...item, y: nextY });
+                }
+            }
+
+            // Update surviving items
+            itemsRef.current = nextItems;
+            setItems(nextItems);
+
+            // Award collectibles
+            if (collectedChai) {
+                setChaiCount((c) => c + 1);
+                const bonusScore = scoreRef.current + 50;
+                scoreRef.current = bonusScore;
+                setScore(bonusScore);
+                showToast("+50 Chai Power! ☕");
+            }
+            if (collectedCushion) {
+                const bonusScore = scoreRef.current + 30;
+                scoreRef.current = bonusScore;
+                setScore(bonusScore);
+                showToast("+30 Maximum Comfort! 🛋️");
+            }
+
+            // Handle damage & lives safely with invulnerability period
+            if (tookDamage) {
+                const remaining = livesRef.current - 1;
+                livesRef.current = remaining;
+                setLives(remaining);
+
+                if (remaining <= 0) {
+                    endGame(damageReason || "Hit a road hazard!");
+                } else {
+                    // Activate 1.5s invulnerability shield
+                    invulnerableUntilRef.current = now + 1500;
+                    setIsInvulnerable(true);
+                    setTimeout(() => setIsInvulnerable(false), 1500);
+                    showToast("⚠️ Bump! 1 Heart Left");
+                }
+            }
         }, 50);
 
         gameLoopRef.current = interval;
@@ -297,7 +348,6 @@ export default function BurgmanGame() {
         return { title: "Sunday Starter", badge: "bg-gray-800 text-gray-300 border-gray-700" };
     };
 
-    const currentSpeed = calculateSpeedInfo(score);
     const currentRank = getRank(highScore);
     const roadScrollDuration = gameState === "playing"
         ? Math.max(0.18, 0.72 - (currentSpeed.kmph - 15) * 0.014)
@@ -336,12 +386,12 @@ export default function BurgmanGame() {
                         viewport={{ once: true }}
                         className="text-gray-300 text-base leading-relaxed font-normal"
                     >
-                        Take a breather before getting in touch. Starts at an easy 15 km/h warmup, then gently speeds up as you cruise. Pick up chai ☕ and dodge outdoor hazards!
+                        Take a breather before getting in touch. Starts slow at 15 km/h for the first several seconds, then gently revs up. You have 2 hearts to survive the ride!
                     </motion.p>
                 </div>
 
                 {/* Layout: Either Standard 3-Column or Expanded Desktop Theater View */}
-                <div className={`grid grid-cols-1 ${isExpanded ? "lg:grid-cols-12" : "lg:grid-cols-12"} gap-6 items-start`}>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     {/* LEFT PANEL: What to Collect vs What to Dodge (Rules & Legend) */}
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
@@ -377,28 +427,28 @@ export default function BurgmanGame() {
                         <div className="p-5 rounded-2xl bg-gray-950/80 border border-gray-800 backdrop-blur-xl shadow-lg">
                             <div className="flex items-center gap-2 text-xs font-bold text-red-400 uppercase tracking-wider mb-3">
                                 <AlertTriangle size={15} />
-                                <span>Dodge These (-1 Heart)</span>
+                                <span>Dodge These (2 Hearts)</span>
                             </div>
                             <ul className="space-y-2.5 text-xs">
                                 <li className="flex items-center gap-2.5 p-2 rounded-xl bg-red-950/20 border border-red-500/20 text-gray-300">
                                     <span className="text-2xl">🚧</span>
                                     <div>
                                         <p className="font-bold text-white">Road Barrier</p>
-                                        <p className="text-[11px] text-red-400">Damages the scooty!</p>
+                                        <p className="text-[11px] text-red-400">-1 Heart on impact</p>
                                     </div>
                                 </li>
                                 <li className="flex items-center gap-2.5 p-2 rounded-xl bg-orange-950/20 border border-orange-500/20 text-gray-300">
                                     <span className="text-2xl">☀️</span>
                                     <div>
                                         <p className="font-bold text-white">Blazing Sun</p>
-                                        <p className="text-[11px] text-orange-400">Harsh heat & sweat!</p>
+                                        <p className="text-[11px] text-orange-400">-1 Heart on impact</p>
                                     </div>
                                 </li>
                                 <li className="flex items-center gap-2.5 p-2 rounded-xl bg-yellow-950/20 border border-yellow-500/20 text-gray-300">
                                     <span className="text-2xl">🏃</span>
                                     <div>
                                         <p className="font-bold text-white">Outdoor Jogger</p>
-                                        <p className="text-[11px] text-yellow-400">Unwanted cardio!</p>
+                                        <p className="text-[11px] text-yellow-400">-1 Heart on impact</p>
                                     </div>
                                 </li>
                             </ul>
@@ -514,12 +564,15 @@ export default function BurgmanGame() {
                                         <span className="hidden sm:inline opacity-75">• {currentSpeed.phase}</span>
                                     </div>
 
+                                    {/* Lives HUD: Two Distinct Hearts */}
                                     <div className="flex items-center gap-1 bg-black/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-gray-800 shadow-md">
                                         {[...Array(2)].map((_, i) => (
                                             <Heart
                                                 key={i}
-                                                size={14}
-                                                className={`${i < lives ? "fill-red-500 text-red-500" : "text-gray-600"}`}
+                                                size={15}
+                                                className={`transition-colors duration-200 ${
+                                                    i < lives ? "fill-red-500 text-red-500" : "text-gray-600 fill-none"
+                                                }`}
                                             />
                                         ))}
                                     </div>
@@ -562,7 +615,7 @@ export default function BurgmanGame() {
                                     transition={{ type: "spring", stiffness: 450, damping: 28 }}
                                 >
                                     {/* Breeze indicator at higher speeds */}
-                                    {currentSpeed.kmph >= 30 && (
+                                    {currentSpeed.kmph >= 30 && !isInvulnerable && (
                                         <motion.div
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={{ opacity: 1, scale: 1 }}
@@ -573,7 +626,20 @@ export default function BurgmanGame() {
                                         </motion.div>
                                     )}
 
-                                    <div className="relative text-4xl sm:text-5xl lg:text-6xl filter drop-shadow-[0_0_20px_rgba(0,255,255,0.7)]">
+                                    {/* Shield recovery status when hit */}
+                                    {isInvulnerable && (
+                                        <div className="absolute -top-5 whitespace-nowrap flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/90 text-white text-[9px] font-mono font-bold animate-bounce shadow-md">
+                                            <span>🛡️ 1 HEART LEFT</span>
+                                        </div>
+                                    )}
+
+                                    <div
+                                        className={`relative text-4xl sm:text-5xl lg:text-6xl transition-opacity duration-150 ${
+                                            isInvulnerable
+                                                ? "opacity-60 animate-pulse filter drop-shadow-[0_0_20px_rgba(255,80,80,0.9)]"
+                                                : "filter drop-shadow-[0_0_20px_rgba(0,255,255,0.7)]"
+                                        }`}
+                                    >
                                         🛵
                                     </div>
                                     <div className="text-[10px] sm:text-xs font-mono font-bold text-cyan-300 mt-1 flex items-center gap-1">
@@ -593,7 +659,7 @@ export default function BurgmanGame() {
                                         The Sunday 30 km/h Cruise
                                     </h4>
                                     <p className="text-xs md:text-sm text-gray-300 max-w-md mb-6 leading-relaxed">
-                                        Starts at a calm 15 km/h, then revs up as you cover ground! Pick up hot chai ☕, cozy cushions 🛋️, and dodge barriers 🚧 & blazing sun ☀️.
+                                        Starts slow & calm at 15 km/h for the first several seconds, then gently revs up. You have <strong className="text-red-400">2 Hearts</strong> — pick up hot chai ☕, cozy cushions 🛋️, and dodge barriers 🚧!
                                     </p>
                                     <button
                                         onClick={startGame}
